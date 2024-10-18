@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/17 21:44:06 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/17 21:51:19 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // [x] gerer : echo 'this is a "test"' - affiche 1 token->  this is a "test"
 // [x] gerer : echo 'this is a "test' - affiche 1 token ->  this is a "test
 // [x] gerer : echo "this is a 'test" - affiche 1 token->  this is a 'test
-// [x] echo"test" | grep "test ok" ne fonctionne pas donc 4 token et pas 5 (+ error)
+// [x] echo"test" | grep "test ok" ne doit pas fonctionner donc 4 token et pas 5 (+ error)
 // [] echo "test"123 fonctionne et affiche test123
 // [] echo "test">file.txt fonctionne
 // [] echo "test"&123 ne fonctionne pas
