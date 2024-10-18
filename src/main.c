@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/12 20:28:09 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/17 16:19:21 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 int	main(void)
 {
 	char	*input;
+	t_parser_data parser;
 
 	while (1)
 	{
@@ -31,10 +32,14 @@ int	main(void)
 		if (input == NULL)
 			break ;
 		// add_history(input);
-		split_into_tokens(input);
+		parser.token_array = split_into_tokens(input);
+		if (parser.token_array == NULL)
+		{
+			printf("Missing last quote");
+		}
 		// check_type_cmd(cmd);
-		// if (ft_strcmp(cmd[0], "exit") == 0)
-		// 	break ;
+		if (ft_strcmp(parser.token_array[0], "exit") == 0)
+			break ;
 	}
 	return (0);
 }

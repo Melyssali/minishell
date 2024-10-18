@@ -21,8 +21,8 @@ BUILTIN_PATH = ./src/parser/builtin/
 UTILS_PATH = ./src/utils/
 # -----------------------------
 OBJS = $(SRCS:.c=.o)
-SRCS = src/main.c $(UTILS_PATH)utils.c $(PARSER_PATH)builtin.c $(PARSER_PATH)check_type.c $(PARSER_PATH)exec.c \
-		$(PARSER_PATH)tokenization.c 
+SRCS = src/main.c $(UTILS_PATH)utils.c $(UTILS_PATH)utils_tokenization.c $(PARSER_PATH)builtin.c $(PARSER_PATH)check_type.c $(PARSER_PATH)exec.c \
+		$(PARSER_PATH)tokenization.c $(UTILS_PATH)utils_tokenization2.c $(UTILS_PATH)utils_check_quotes.c
 # ---------- REGLES MAKEFILE  ----------
 all : readline_script $(NAME)
 

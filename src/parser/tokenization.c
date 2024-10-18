@@ -6,50 +6,90 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/12 21:01:55 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/17 21:44:06 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-#include <stdlib.h>
+#include "../../include/minishell.h"
+#include "libft.h"
 
-t_tree *create_node(int type)
+// [x] gerer : echo 'this is a "test"' - affiche 1 token->  this is a "test"
+// [x] gerer : echo 'this is a "test' - affiche 1 token ->  this is a "test
+// [x] gerer : echo "this is a 'test" - affiche 1 token->  this is a 'test
+// [x] echo"test" | grep "test ok" ne fonctionne pas donc 4 token et pas 5 (+ error)
+// [] echo "test"123 fonctionne et affiche test123
+// [] echo "test">file.txt fonctionne
+// [] echo "test"&123 ne fonctionne pas
+
+char	**split_into_tokens(char *s);
+static int	count_tokens(char *s);
+static char	**fill_arr(char **arr, char *s, int how_many_tokens);
+
+static int	count_tokens(char *s)
 {
-	t_tree *node = (t_tree*)malloc(sizeof(t_tree));
-	node->type = type;
-	node->left = NULL;
-	node->right = NULL;
-	return (node);
-}
-// wc -l < Makefile | grep "test"
+	int	count;
+	char	quote;
 
-void    split_into_tokens(char *s)
-{
-	char *ptr;
-	int how_many;
-
-	ptr = s;
+	count = 0;
 	while (*s)
 	{
-		if (is_operator(*s++) != NULL)
+		s = skip_space(s);
+		s = iterate_word(s);
+		if (*s && (*s == ' ' || *s == '\t' || *s == '\n') && *(s + 1) != '\0')
+			s = skip_space(s);
+		else if (*s && (*s == '\"' || *s == '\'') && *(s + 1) != '\0')
 		{
-			how_many = s - ptr;
-			//do something
+			quote = *s;
+			if (find_last_quote(s, quote) == ERROR)
+				return (ERROR);
+			else
+				s = handle_quote(s, quote);
 		}
-		s++;
+		count++;
 	}
+	return (count);
 }
 
-int is_operator(char c)
+static char	**fill_arr(char **arr, char *s, int how_many_tokens)
 {
-	if (c == '>')
-		return(LREDIRECTION);
-	else if (c == '>>')
-		return(APPEND);
-	else if (c == '<')
-		return(RREDIRECTION);
-	else if (c == '|')
-		return(PIPE);
-	else 
-		return(0);
+	int	count;
+	char *start_string;
+	char	quote;
+
+	count = 0;
+	while (count < how_many_tokens)
+	{
+		s = skip_space(s);
+		start_string = s;
+		s = iterate_word(s);
+		if (*s == '\"' || *s == '\'')
+		{
+			quote = *s;
+			s = handle_quote(s, quote);
+		}
+		handle_arr(s, arr, &count, start_string);
+	}	
+	return (arr);
+}
+
+char	**split_into_tokens(char *s)
+{
+	char	**arr;
+	int		how_many_tokens;
+
+	if (!s)
+		return (NULL);
+	how_many_tokens = count_tokens(s);
+	if (how_many_tokens == ERROR)
+	{
+		return (NULL);
+	}
+	arr = NULL;
+	arr = malloc(sizeof(char *) * (how_many_tokens + 1));
+	if (!arr)
+	{
+		perror("Malloc failed. ");
+		exit(EXIT_FAILURE);
+	}
+	return (fill_arr(arr, s, how_many_tokens));
 }
