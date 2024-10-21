@@ -17,18 +17,22 @@ RM = rm -rf
 # ---------- PATH  ----------
 LIBFT_DIR = ./libs/Libft
 PARSER_PATH = ./src/parser/
-BUILTIN_PATH = ./src/parser/builtin/
+EXEC_PATH = ./src/exec/
+BUILTIN_PATH = ./src/builtin/
 UTILS_PATH = ./src/utils/
-# -----------------------------
+
+# ---------- SOURCES  ----------
 OBJS = $(SRCS:.c=.o)
-SRCS = src/main.c $(UTILS_PATH)utils.c $(PARSER_PATH)builtin.c $(PARSER_PATH)check_type.c $(PARSER_PATH)exec.c \
-		$(PARSER_PATH)tokenization.c 
+SRCS = src/main.c 	$(UTILS_PATH)utils.c $(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
+					$(BUILTIN_PATH)exit.c $(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c  \
+					$(PARSER_PATH)check_type.c $(PARSER_PATH)tokenization.c 
+
 # ---------- REGLES MAKEFILE  ----------
 all : readline_script $(NAME)
 
 $(NAME): $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR)
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft $(CFLAGS) $(RLFLAGS) -o $(NAME)
+	@$(CC) $(OBJS) -L$(LIBFT_DIR) -lft $(CFLAGS) $(RLFLAGS) -o $(NAME)
 	@echo "$(GREEN)Compilation successful. Library: $(NAME)$(WHITE)"
 
 %.o: %.c $(DEPS)
@@ -37,10 +41,6 @@ $(NAME): $(OBJS)
 debug: CFLAGS += -g
 debug: re
 
-# ---------- BASH SCRIPT  ----------
-# guide to configure https://tiswww.case.edu/php/chet/readline/INSTALL
-# creating a little script to install readline
-# grep -q is quiet mode, don't show result in shell
 readline_script :
 	@if ls /usr/local/include | grep -q readline; then \
     	echo "$(GREEN)readline est installé"; \

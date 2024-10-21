@@ -1,8 +1,0 @@
-{
-    "makefile.configureOnOpen": false,
-    "files.associations": {
-        "*.ejs": "html",
-        "readline.h": "c",
-        "minishell.h": "c"
-    }
-}

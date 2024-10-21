@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-void    check_type_cmd(char **cmd)
-{
-    execute_builtin(cmd);
+// void    check_type_cmd(char **cmd)
+// {
+//     execute_builtin(cmd);
     
-}
+// }

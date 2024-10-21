@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "../libs/Libft/libft.h"
+#include <readline/readline.h>
 
 // typedef struct s_data
 // {
@@ -38,8 +40,7 @@ typedef struct s_tree {
     char    *filename;          // Nom du fichier (si type = REDIRECT)
 } t_tree;
 
+// -- BUILTINS -- //
+int     ft_cd(char **cmd);
 
-void    check_type_cmd(char **cmd);
-void    execute_builtin(char **cmd);
-void	handle_executable(char **cmd);
 #endif
