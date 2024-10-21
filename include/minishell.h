@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/12 20:34:15 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/21 16:11:17 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "../libs/Libft/libft.h"
+#include "../libs/libft/libft.h"
 #include <readline/readline.h>
 
 // typedef struct s_data
@@ -30,6 +30,11 @@ typedef enum {
     APPEND,
     PIPE,
 } e_type ;
+
+typedef struct s_minishell {
+	char *oldpwd;
+	char *pwd;
+}	t_minishell;
 
 typedef struct s_tree {
     e_type    type;
