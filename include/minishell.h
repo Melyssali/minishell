@@ -6,7 +6,7 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/21 16:11:17 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:19:49 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ typedef enum {
 } e_type ;
 
 typedef struct s_minishell {
-	char *oldpwd;
-	char *pwd;
+	char **env;
 }	t_minishell;
 
 typedef struct s_tree {
