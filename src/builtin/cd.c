@@ -6,15 +6,13 @@
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 15:39:11 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:03:00 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// pour terminer cd, il faudra update pwd et oldpwd dans l'env
-// chercher pwd dans le tableau env, le modifier a chaque fois que chdir success.
-// chercher oldpwd dans le tableau env, le modifier a chaque fois que chdir success.
+
 int cd_error(int i, char **cmd)
 {
     if (i == 1)
@@ -28,6 +26,28 @@ int cd_error(int i, char **cmd)
     return (1);
 }
 
+int	update_old_pwd(t_minishell *minishell)
+{
+	static int first_time = 0;
+
+	if (first_time == 0)
+	{
+		// ft_export();
+	}
+	else 
+    	if (update_env_var("OLDPWD=", minishell) != 0)
+       		return (1);
+	return(0);
+}
+
+int update_pwd(char *old, char *current, t_minishell *minishell)
+{
+	
+    if (update_env_var("PWD=", current, minishell) != 0)
+        return (1);
+    return (0);
+}
+
 int cd_oldpwd(t_minishell *minishell)
 {
 	char *tmp;
@@ -35,13 +55,13 @@ int cd_oldpwd(t_minishell *minishell)
 	if (tmp == NULL)
 		return(cd_error(2, NULL));
 	if (chdir(tmp) == 0)
+	{
+		update_pwd();
+		update_old_pwd(minishell);
 		return(0);
+	}
 	else
 		return(cd_error(3, NULL));
-}
-int update_pwd(t_minishell *minishell)
-{
-	
 }
 
 int cd_home(t_minishell *minishell)
@@ -52,7 +72,11 @@ int cd_home(t_minishell *minishell)
     if (home == NULL)
         return(cd_error(2, NULL));
     if (chdir(home) == 0)
+	{
+		update_pwd();
+		update_old_pwd(minishell);
         return(0);
+	}
     else
         return(cd_error(3, NULL));
 }
@@ -60,17 +84,13 @@ int cd_home(t_minishell *minishell)
 int mini_cd(char **cmd, t_minishell *minishell)
 {
     char cwd[10000];
-
-    if(ft_count_args(cmd) > 2)
-        return(cd_error(1, cmd));
-    else if (ft_count_args(cmd) == 1)
+	
+    if (ft_count_args(cmd) == 1 || ft_strcmp(cmd[1], "~") == 0)
         return(cd_home(minishell));
-    else
+    else if (strncmp(cmd[1], "-", 1) == 0)
+		return(cd_oldpwd(minishell));
+	else
     {
-        if(strcmp(cmd[1], "~") == 0)
-            return(cd_home(minishell));
-        // else if (strcmp(cmd[1], "-") == 0)
-        //     return(cd_oldpwd(minishell));
         if (chdir(cmd[1]) == 0)
         {
             if (getcwd(cwd, sizeof(cwd)) != NULL)
