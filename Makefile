@@ -11,7 +11,6 @@ WHITE=\033[0m# WHITE
 # ---------- VARIABLES  ----------
 NAME = minishell
 CFLAGS = -Werror -Wextra -Wall
-RLFLAGS = -L./readline-master -lreadline -lncurses
 DEPS = ./include/minishell.h
 RM = rm -rf
 # ---------- PATH  ----------
@@ -23,12 +22,11 @@ UTILS_PATH = ./src/utils/
 
 # ---------- SOURCES  ----------
 OBJS = $(SRCS:.c=.o)
-SRCS = src/main.c 	$(UTILS_PATH)utils.c $(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
+SRCS = 	main.c 	$(UTILS_PATH)utils.c $(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
 					$(BUILTIN_PATH)exit.c $(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c  \
-					$(PARSER_PATH)check_type.c $(PARSER_PATH)tokenization.c 
 
 # ---------- REGLES MAKEFILE  ----------
-all : readline_script $(NAME)
+all : $(NAME)
 
 $(NAME): $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR)
@@ -39,16 +37,9 @@ $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) -c -o $@ $< -I$(LIBFT_DIR)
 
 debug: CFLAGS += -g
+
 debug: re
 
-readline_script :
-	@if ls /usr/local/include | grep -q readline; then \
-    	echo "$(GREEN)readline est installé"; \
-	else \
-    	cd readline-master  && ./configure && make && sudo make install; \
-		echo "$(GREEN) readling a été installé"; \
-	fi
-	
 clean:
 	@$(RM) $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR) clean

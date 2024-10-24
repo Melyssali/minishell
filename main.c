@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_type.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/10 10:59:19 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/24 14:40:09 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "include/minishell.h"
 
-// void    check_type_cmd(char **cmd)
-// {
-//     execute_builtin(cmd);
-    
-// }
+int	main(void)
+{
+	char	**input;
+
+	while (1)
+	{
+		input = readline("minishell % ");
+		if (input == NULL)
+			break ;
+		mini_cd(input);
+		if (ft_strcmp(input, "exit") == 0)
+			break ;
+	}
+	return (0);
+}
