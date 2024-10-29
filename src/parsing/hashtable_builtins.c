@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/28 21:44:03 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/28 21:49:42 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ void	insert(t_builtin **table, char *key)
 int search(t_builtin **table, char *key)
 {
     unsigned int index;
+    t_builtin *entry;
 	
 	index = hash(key);
-    t_builtin *entry;
-
 	entry = table[index];
     while (entry)
     {
