@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/17 21:51:19 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/23 15:15:32 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static int	count_tokens(char *s)
 	{
 		s = skip_space(s);
 		s = iterate_word(s);
-		if (*s && (*s == ' ' || *s == '\t' || *s == '\n') && *(s + 1) != '\0')
+		if (*s && (*s == SPACE || *s == TAB || *s == NEWLINE) && *(s + 1) != '\0')
 			s = skip_space(s);
-		else if (*s && (*s == '\"' || *s == '\'') && *(s + 1) != '\0')
+		else if (*s && (*s == DQUOTE || *s == SQUOTE) && *(s + 1) != '\0')
 		{
 			quote = *s;
 			if (find_last_quote(s, quote) == ERROR)
@@ -62,7 +62,7 @@ static char	**fill_arr(char **arr, char *s, int how_many_tokens)
 		s = skip_space(s);
 		start_string = s;
 		s = iterate_word(s);
-		if (*s == '\"' || *s == '\'')
+		if (*s == DQUOTE || *s == SQUOTE)
 		{
 			quote = *s;
 			s = handle_quote(s, quote);

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/17 21:03:56 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/23 15:16:37 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 char	*skip_space(char *s)
 {
-	while (*s && (*s == ' ' || *s == '\t'))
+	while (*s && (*s == SPACE || *s == TAB))
 		s++;
 	return (s);
 }
 char	*iterate_word(char *s)
 {
-	while (*s && *s != ' ' && *s != '\t' && *s != '\"' && *s != '\'')
+	while (*s && *s != SPACE && *s != TAB && *s != DQUOTE && *s != SQUOTE)
 		s++;
 	return (s);
 }

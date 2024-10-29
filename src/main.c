@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/17 16:19:21 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/28 21:14:36 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,19 @@
 //	>> 	(echo "Ajouté à la fin" >> fichier.txt) doit rediriger la sortie en mode append (ajout à la fin du fichier).
 //  | 	doit rediriger la sortie de la commande à gauche du pipe vers l’entrée de la commande à droite du pipe.
 
+//  Your shell must implement the following builtins:
+// ◦ echo with option -n
+// ◦ cd with only a relative or absolute path
+// ◦ pwd with no options
+// ◦ export with no options
+// ◦ unset with no options
+// ◦ env with no options or arguments
+// ◦ exit with no options
 int	main(void)
 {
+	t_command_line *ptr;
 	char	*input;
-	t_parser_data parser;
+	char **tokens;
 
 	while (1)
 	{
@@ -32,13 +41,41 @@ int	main(void)
 		if (input == NULL)
 			break ;
 		// add_history(input);
-		parser.token_array = split_into_tokens(input);
-		if (parser.token_array == NULL)
+		tokens = split_into_tokens(input);
+		if (tokens == NULL)
 		{
 			printf("Missing last quote");
 		}
-		// check_type_cmd(cmd);
-		if (ft_strcmp(parser.token_array[0], "exit") == 0)
+		ptr = parsing(tokens);
+		if (ptr == NULL)
+			{
+   			 printf("Error: ptr is NULL, linked list is empty.\n");
+   			 return (1);  // Arrêter le programme si la liste est vide
+		}
+		t_command_line *tmp = ptr;
+		// Affichage de la liste avant la libération
+		while (tmp)
+		{
+			printf("NODE : \n");
+			printf("--------------\n");
+			for (int i = 0; tmp->command[i]; i++)
+				printf("  CMD[%d] : %s", i, tmp->command[i]);
+			printf("\nis_builtin : %d\n, input : %s\n, output : %s\n, is_append : %d\n NEXT : --->\n", tmp->is_builtin, tmp->input_file, tmp->output_file, tmp->append_output);
+			printf("--------------\n");
+			tmp = tmp->next;
+		}
+
+		// Libération de la liste après l'affichage
+		t_command_line *current;
+		while (ptr != NULL)
+		{
+			current = ptr;
+			ptr = ptr->next;
+			free(current); // Libère le nœud
+		}
+
+
+		if (ft_strcmp(tokens[0], "exit") == 0)
 			break ;
 	}
 	return (0);
