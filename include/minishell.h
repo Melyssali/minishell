@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/28 21:42:36 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/29 13:36:14 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 # define ERROR -1
 
-# define PIPE "|"
-# define REDIR_INPUT "<"
-# define REDIR_OUTPUT ">"
-# define HEREDOC "<<"
-# define APPEND_OUTPUT ">>"
+// # define PIPE "|"
+// # define REDIR_INPUT "<"
+// # define REDIR_OUTPUT ">"
+// # define HEREDOC "<<"
+// # define APPEND_OUTPUT ">>"
 
 # define SQUOTE '\''
 # define DQUOTE '\"'
@@ -27,18 +27,35 @@
 # define TAB '\t'
 # define NEWLINE '\n'
 
-# define HASH_TABLE_SIZE 10
+# define TABLE_BUILTINS_SIZE 11
+# define TABLE_OPERATORS_SIZE 7
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
 
-typedef struct s_builtin
+typedef enum
+{
+	REDIR_OUTPUT,
+	APPEND_OUTPUT,
+	REDIR_INPUT,
+	HEREDOC,
+	PIPE
+}							e_operators;
+// hash table for builtins
+typedef struct s_hash_builtin
 {
 	char					*key;
-	struct s_builtin		*next;
-}							t_builtin;
+	struct s_hash_builtin	*next;
+}							t_hash_builtins;
+// hash table for operators
+typedef struct s_hash_operators
+{
+	char					*key;
+	int						type;
+	struct s_hash_operators	*next;
+}							t_hash_operators;
 
 typedef struct s_command_line
 {
@@ -63,19 +80,26 @@ void						handle_arr(char *s, char **arr, int *count,
 void						free_arr_tokenization(char **arr);
 
 // Parsing
-t_command_line				*parsing(char **tokens);
-t_command_line				*create_node(char **command, int *index,
-								t_builtin **hash_table);
-int							calculate_width(char **tokens, int *index);
-int							is_builtin_command(char *cmd, t_builtin **hash_table);
+t_command_line				*parsing(char *tokens[]);
+t_command_line				*create_node(t_hash_operators *table_operators[],
+								char *tokens[], int *index,
+								t_hash_builtins *table_builtins[]);
+int							calculate_width(t_hash_operators *table_operators[],
+								char *tokens[], int *index);
+int							is_builtin_command(char *cmd,
+								t_hash_builtins *table_builtins[]);
 
 // tokenization - quote verifications
 int							find_last_quote(char *s, char quote);
 int							is_space_before_quote(char *s);
 
-// hash table
-unsigned int				hash(char *str);
-void						insert(t_builtin **table, char *key);
-int							search(t_builtin **table, char *key);
-void						initialize_builtins(t_builtin **hash_table);
+// hash table builtins
+void						initialize_builtins(t_hash_builtins *table_builtins[]);
+int							search(t_hash_builtins *table[], char *key);
+
+// hash table operators
+void						initialize_operators(t_hash_operators *table_operators[]);
+int							get_operator_type(t_hash_operators *table_operators[],
+								char *str);
+
 #endif

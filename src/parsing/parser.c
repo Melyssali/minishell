@@ -6,78 +6,69 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/28 21:45:28 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:18:51 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "libft.h"
 
-// ls -l | grep ".txt" > output.txt
-// ls -l | echo "hello"
-// ls, -l, |, echo, "hello", NULL
-// ls, -l, >, echo, "hello", NULL
-//  0   1  2    3      4
-// we check if it's a builtin or not -> this func return 1 or 0 (true or false)
-// implement a hash table
-int	is_builtin_command(char *cmd, t_builtin **hash_table)
+// This file processes the input and creates a linked list to pass to the execution part
+
+int	is_builtin_command(char *cmd, t_hash_builtins *table_builtins[])
 {
-	return (search(hash_table, cmd));
-	
-	// return (strcmp(cmd, "echo") == 0 || strcmp(cmd, "cd") == 0 || strcmp(cmd,
-	// 		"pwd") == 0 || strcmp(cmd, "export") == 0 ||  strcmp(cmd, "unset") == 0 ||
-	// 		 strcmp(cmd, "env") == 0 || strcmp(cmd, "exit") == 0);
+	return (search(table_builtins, cmd));
 }
-// if Pipe, we create nodes to link two commands or more
 // strdup(tokens[++i]); -> j'incremente i (++i) et apres je strdup
 // gestion erreur : ls > touch "file.txt" ne fonctionne pas car une redirection peut pas se faire
 // sur un executable
 
-//  checker les erreurs
-// si y'a quelque chose avant le pipe, ça fonctionne pas parce qu'il ne rentre jamais dans !new_node 
-t_command_line	*parsing(char **tokens)
+// Je dois découper cette fonction :
+t_command_line	*parsing(char *tokens[])
 {
-	t_command_line	*head;
-	t_command_line	*current;
-	t_command_line	*new_node;
-	// est-ce que je peux declarer comme ça ?
-	t_builtin 		*hash_table[HASH_TABLE_SIZE] = {NULL};
-	int				i;
+	t_command_line		*head;
+	t_command_line		*current;
+	t_command_line		*new_node;
+	t_hash_builtins		*table_builtins[TABLE_BUILTINS_SIZE] = {NULL};
+	t_hash_operators	*table_operators[TABLE_OPERATORS_SIZE] = {NULL};
+	int					i;
+	int					operator_type;
 
 	head = NULL;
 	current = NULL;
 	new_node = NULL;
 	i = 0;
-	initialize_builtins(hash_table);
-	new_node = create_node(tokens, &i, hash_table);
+	initialize_builtins(table_builtins);
+	initialize_operators(table_operators);
+	new_node = create_node(table_operators, tokens, &i, table_builtins);
 	if (!head)
 		head = new_node;
 	current = new_node;
 	while (tokens[i])
 	{
-		if (ft_strcmp(tokens[i], REDIR_OUTPUT) == 0 || ft_strcmp(tokens[i], APPEND_OUTPUT) == 0)
+		operator_type = get_operator_type(table_operators, tokens[i]);
+		if (operator_type == REDIR_OUTPUT || operator_type == APPEND_OUTPUT)
 		{
-			new_node->append_output = (ft_strcmp(tokens[i], APPEND_OUTPUT) == 0);
+			new_node->append_output = (operator_type == APPEND_OUTPUT);
 			new_node->output_file = ft_strdup(tokens[++i]);
 		}
-		else if (ft_strcmp(tokens[i], REDIR_INPUT) == 0)
+		else if (operator_type == REDIR_INPUT)
 		{
 			new_node->input_file = ft_strdup(tokens[++i]);
 		}
-		else if (ft_strcmp(tokens[i], HEREDOC) == 0)
+		else if (operator_type == HEREDOC)
 		{
 			new_node->heredoc_delimiter = ft_strdup(tokens[++i]);
 		}
-		else if (ft_strcmp(tokens[i], PIPE) == 0)
+		else if (operator_type == PIPE)
 		{
 			i++;
-			new_node = create_node(tokens, &i, hash_table);
+			new_node = create_node(table_operators, tokens, &i, table_builtins);
 			current->next = new_node;
 			current = new_node;
 			i--;
 		}
 		i++;
 	}
-	return (head);		
+	return (head);
 }
-

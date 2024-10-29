@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/28 21:14:36 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:21:43 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ int	main(void)
 		}
 		ptr = parsing(tokens);
 		if (ptr == NULL)
-			{
+		{
    			 printf("Error: ptr is NULL, linked list is empty.\n");
-   			 return (1);  // Arrêter le programme si la liste est vide
+   			 return (1);
 		}
+		
+	// delete me ---------------------------------------------------------v
 		t_command_line *tmp = ptr;
-		// Affichage de la liste avant la libération
 		while (tmp)
 		{
 			printf("NODE : \n");
@@ -71,12 +72,12 @@ int	main(void)
 		{
 			current = ptr;
 			ptr = ptr->next;
-			free(current); // Libère le nœud
+			free(current);
 		}
+	// delete me ---------------------------------------------------------^
 
-
-		if (ft_strcmp(tokens[0], "exit") == 0)
-			break ;
+		// if (ft_strcmp(tokens[0], "exit") == 0)
+		// 	break ;
 	}
 	return (0);
 }
