@@ -12,22 +12,16 @@
 
 #include "../../include/minishell.h"
 
-int    ft_pwd(char **cmd)
+int    ft_pwd(t_minishell *minishell)
 {
-    char	cwd[10000];
-    
-	if (ft_strcmp(cmd[0], "pwd") == 0)
-	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
-		{
-			printf("%s\n", cwd);
-            return(0);
-		}
-		else
-		{
-			perror("pwd");
-            return(1);
-		}
-	}
-	return(1);
+    t_env_var *ptr;
+
+    ptr = minishell->env;
+    while (ptr != NULL)
+    {
+        if (strcmp(ptr->key, "PWD") == 0)
+            return (ptr->value);
+        ptr = ptr->next;
+    }
+    return (NULL);
 }

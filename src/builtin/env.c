@@ -12,24 +12,16 @@
 
 #include "../../include/minishell.h"
 
-int ft_env(t_minishell *minishell)
+void print_env(t_minishell *minishell)
 {
-	int i;
+	t_env_var *ptr;
 
-	i = 0;
-	while (minishell->env[i])
+	ptr = minishell->env;
+	while (ptr != NULL)
 	{
-		printf("%s\n", minishell->env[i]);
-		i++;
+		printf("%s", ptr->key);
+		printf("=");
+		printf("%s\n", ptr->value);
+		ptr = ptr->next;
 	}
-	return (0);
 }
-
-// int main (int argc, char **argv, char **envp)
-// {
-// 	t_minishell minishell;
-	
-// 	copy_env(&minishell, envp);
-// 	ft_env(&minishell);
-// 	return (0);
-// }

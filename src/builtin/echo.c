@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#define FALSE 0
-#define TRUE 1
 
 int ft_count_args(char **cmd)
 {
@@ -69,12 +67,4 @@ int echo(char **cmd, t_minishell *minishell)
 	if (with_n == FALSE)
 		printf("\n");
 	return(0);
-}
-
-int main(int argc, char**argv)
-{
-	t_minishell minishell;
-	char *cmd[] = {"echo", "-n", "-e", "-n", NULL};
-	echo(cmd, &minishell);
-	return (0);
 }
