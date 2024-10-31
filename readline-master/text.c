@@ -85,8 +85,7 @@ int _rl_optimize_typeahead = 1;	/* rl_insert tries to read typeahead */
 int
 rl_insert_text (const char *string)
 {
-  register int i;
-  size_t l;
+  register int i, l;
 
   l = (string && *string) ? strlen (string) : 0;
   if (l == 0)
@@ -705,11 +704,7 @@ static mbstate_t ps = {0};
 
 /* Insert the character C at the current location, moving point forward.
    If C introduces a multibyte sequence, we read the whole sequence and
-   then insert the multibyte char into the line buffer.
-   If C == 0, we immediately insert any pending partial multibyte character,
-   assuming that we have read a character that doesn't map to self-insert.
-   This doesn't completely handle characters that are part of a multibyte
-   character but map to editing functions. */
+   then insert the multibyte char into the line buffer. */
 int
 _rl_insert_char (int count, int c)
 {
@@ -723,28 +718,11 @@ _rl_insert_char (int count, int c)
   static int stored_count = 0;
 #endif
 
-#if !defined (HANDLE_MULTIBYTE)
   if (count <= 0)
     return 0;
-#else
-  if (count < 0)
-    return 0;
-  if (count == 0)
-    {
-      if (pending_bytes_length == 0)
-	return 0;
-      if (stored_count <= 0)
-	stored_count = count;
-      else
-	count = stored_count;
 
-      memcpy (incoming, pending_bytes, pending_bytes_length);
-      incoming[pending_bytes_length] = '\0';
-      incoming_length = pending_bytes_length;
-      pending_bytes_length = 0;
-      memset (&ps, 0, sizeof (mbstate_t));
-    }
-  else if (MB_CUR_MAX == 1 || rl_byte_oriented)
+#if defined (HANDLE_MULTIBYTE)
+  if (MB_CUR_MAX == 1 || rl_byte_oriented)
     {
       incoming[0] = c;
       incoming[1] = '\0';
@@ -752,9 +730,6 @@ _rl_insert_char (int count, int c)
     }
   else if (_rl_utf8locale && (c & 0x80) == 0)
     {
-      if (pending_bytes_length)
-	_rl_insert_char (0, 0);
-
       incoming[0] = c;
       incoming[1] = '\0';
       incoming_length = 1;
@@ -789,8 +764,7 @@ _rl_insert_char (int count, int c)
 	  incoming[1] = '\0';
 	  incoming_length = 1;
 	  pending_bytes_length--;
-	  if (pending_bytes_length)
-	    memmove (pending_bytes, pending_bytes + 1, pending_bytes_length);
+	  memmove (pending_bytes, pending_bytes + 1, pending_bytes_length);
 	  /* Clear the state of the byte sequence, because in this case the
 	     effect of mbstate is undefined. */
 	  memset (&ps, 0, sizeof (mbstate_t));
@@ -853,11 +827,7 @@ _rl_insert_char (int count, int c)
       rl_insert_text (string);
       xfree (string);
 
-#if defined (HANDLE_MULTIBYTE)
-      return (pending_bytes_length != 0);
-#else
       return 0;
-#endif
     }
 
   if (count > TEXT_COUNT_MAX)
@@ -890,8 +860,6 @@ _rl_insert_char (int count, int c)
       xfree (string);
       incoming_length = 0;
       stored_count = 0;
-
-      return (pending_bytes_length != 0);
 #else /* !HANDLE_MULTIBYTE */
       char str[TEXT_COUNT_MAX+1];
 
@@ -905,9 +873,9 @@ _rl_insert_char (int count, int c)
 	  rl_insert_text (str);
 	  count -= decreaser;
 	}
+#endif /* !HANDLE_MULTIBYTE */
 
       return 0;
-#endif /* !HANDLE_MULTIBYTE */
     }
 
   if (MB_CUR_MAX == 1 || rl_byte_oriented)
@@ -935,11 +903,9 @@ _rl_insert_char (int count, int c)
       rl_insert_text (incoming);
       stored_count = 0;
     }
-  
-  return (pending_bytes_length != 0);
-#else
-  return 0;
 #endif
+
+  return 0;
 }
 
 /* Overwrite the character at point (or next COUNT characters) with C.
@@ -1017,11 +983,6 @@ rl_insert (int count, int c)
 	break;
     }
 
-  /* If we didn't insert n and there are pending bytes, we need to insert
-     them if _rl_insert_char didn't do that on its own. */
-  if (r == 1 && rl_insert_mode == RL_IM_INSERT)
-    r = _rl_insert_char (0, 0);		/* flush partial multibyte char */
-
   if (n != (unsigned short)-2)		/* -2 = sentinel value for having inserted N */
     {
       /* setting rl_pending_input inhibits setting rl_last_func so we do it
@@ -1093,8 +1054,6 @@ _rl_insert_next_callback (_rl_callback_generic_arg *data)
 int
 rl_quoted_insert (int count, int key)
 {
-  int r;
-
   /* Let's see...should the callback interface futz with signal handling? */
 #if defined (HANDLE_SIGNALS)
   if (RL_ISSTATE (RL_STATE_CALLBACK) == 0)
@@ -1113,17 +1072,15 @@ rl_quoted_insert (int count, int key)
   /* A negative count means to quote the next -COUNT characters. */
   if (count < 0)
     {
+      int r;
+
       do
 	r = _rl_insert_next (1);
       while (r == 0 && ++count < 0);
+      return r;
     }
-  else
-    r = _rl_insert_next (count);
 
-  if (r == 1)
-    _rl_insert_char (0, 0);	/* insert partial multibyte character */
-
-  return r;
+  return _rl_insert_next (count);
 }
 
 /* Insert a tab character. */
@@ -1807,7 +1764,8 @@ _rl_char_search (int count, int fdir, int bdir)
 
 #if defined (READLINE_CALLBACKS)
 static int
-_rl_char_search_callback (_rl_callback_generic_arg *data)
+_rl_char_search_callback (data)
+     _rl_callback_generic_arg *data;
 {
   _rl_callback_func = 0;
   _rl_want_redisplay = 1;

@@ -899,17 +899,8 @@ _rl_dispatch_subseq (register int key, Keymap map, int got_subseq)
 	{
 	  /* Special case rl_do_lowercase_version (). */
 	  if (func == rl_do_lowercase_version)
-	    {
-	      /* Should we do anything special if key == ANYOTHERKEY? */
-	      newkey = _rl_to_lower ((unsigned char)key);
-	      if (newkey != key)
-		return (_rl_dispatch (newkey, map));
-	      else
-		{
-		  rl_ding ();		/* gentle failure */
-		  return 0;
-		}
-	    }
+	    /* Should we do anything special if key == ANYOTHERKEY? */
+	    return (_rl_dispatch (_rl_to_lower ((unsigned char)key), map));
 
 	  rl_executing_keymap = map;
 	  rl_executing_key = key;
@@ -1118,11 +1109,7 @@ _rl_subseq_result (int r, Keymap map, int key, int got_subseq)
       type = m[ANYOTHERKEY].type;
       func = m[ANYOTHERKEY].function;
       if (type == ISFUNC && func == rl_do_lowercase_version)
-	{
-	  int newkey = _rl_to_lower ((unsigned char)key);
-	  /* check that there is actually a lowercase version to avoid infinite recursion */
-	  r = (newkey != key) ? _rl_dispatch (newkey, map) : 1;
-	}
+	r = _rl_dispatch (_rl_to_lower ((unsigned char)key), map);
       else if (type == ISFUNC)
 	{
 	  /* If we shadowed a function, whatever it is, we somehow need a

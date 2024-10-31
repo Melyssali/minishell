@@ -428,11 +428,7 @@ add_character:
 	{
 	  f = cxt->keymap[c].function;
 	  if (f == rl_do_lowercase_version)
-	    {
-	      f = cxt->keymap[_rl_to_lower (c)].function;
-	      if (f == rl_do_lowercase_version)
-		f = rl_insert;
-	    }
+	    f = cxt->keymap[_rl_to_lower (c)].function;
 	}
 
       if (f == rl_reverse_search_history)

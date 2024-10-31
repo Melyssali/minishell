@@ -978,20 +978,11 @@ _rl_read_file (char *filename, size_t *sizep)
   char *buffer;
   int i, file;
 
-  file = open (filename, O_RDONLY, 0666);
-  /* If the open is interrupted, retry once */
-  if (file < 0 && errno == EINTR)
+  file = -1;
+  if (((file = open (filename, O_RDONLY, 0666)) < 0) || (fstat (file, &finfo) < 0))
     {
-      RL_CHECK_SIGNALS ();
-      file = open (filename, O_RDONLY, 0666);
-    }
-  
-  if ((file < 0) || (fstat (file, &finfo) < 0))
-    {
-      i = errno;
       if (file >= 0)
 	close (file);
-      errno = i;
       return ((char *)NULL);
     }
 
@@ -1000,13 +991,10 @@ _rl_read_file (char *filename, size_t *sizep)
   /* check for overflow on very large files */
   if (file_size != finfo.st_size || file_size + 1 < file_size)
     {
-      i = errno;
       if (file >= 0)
 	close (file);
 #if defined (EFBIG)
       errno = EFBIG;
-#else
-      errno = i;
 #endif
       return ((char *)NULL);
     }
@@ -1179,7 +1167,9 @@ _rl_init_file_error (va_alist)
 /* **************************************************************** */
 
 static int
-parse_comparison_op (const char *s, int *indp)
+parse_comparison_op (s, indp)
+     const char *s;
+     int *indp;
 {
   int i, peekc, op;
 

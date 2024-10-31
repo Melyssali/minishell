@@ -96,7 +96,7 @@ Best Regards,
       setenv FGETS_PROMPT       "foo> "
       exec "foo" $*
   
-  Copyright (C)©2003-2004 Harold Levy.
+  Copyright (C)ï¿½2003-2004 Harold Levy.
   
   This code links to the GNU readline library, and as such is bound by the
   terms of the GNU General Public License as published by the Free Software

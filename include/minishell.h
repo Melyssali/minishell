@@ -3,37 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
+/*   Updated: 2024/10/24 14:39:38 by lscarcel         ###   ########.fr       */
 /*   Updated: 2024/10/29 13:36:14 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
 # define ERROR -1
-
-// # define PIPE "|"
-// # define REDIR_INPUT "<"
-// # define REDIR_OUTPUT ">"
-// # define HEREDOC "<<"
-// # define APPEND_OUTPUT ">>"
-
 # define SQUOTE '\''
 # define DQUOTE '\"'
 # define SPACE ' '
 # define TAB '\t'
 # define NEWLINE '\n'
+# define TRUE 1
+# define FALSE 0
 
 # define TABLE_BUILTINS_SIZE 11
 # define TABLE_OPERATORS_SIZE 7
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include "libft.h"
+// #include <readline/readline.h>
+
+typedef struct s_env_var
+{
+	char *key;
+    char *value;
+    struct s_env_var *next;
+} t_env_var;
+
+typedef struct s_minishell {
+	char **envp;
+	t_env_var *env;
+}	t_minishell;
 
 typedef enum
 {
@@ -43,12 +52,14 @@ typedef enum
 	HEREDOC,
 	PIPE
 }							e_operators;
+
 // hash table for builtins
 typedef struct s_hash_builtin
 {
 	char					*key;
 	struct s_hash_builtin	*next;
 }							t_hash_builtins;
+
 // hash table for operators
 typedef struct s_hash_operators
 {
@@ -78,6 +89,18 @@ char						*handle_quote(char *s, char quote);
 void						handle_arr(char *s, char **arr, int *count,
 								char *start_string);
 void						free_arr_tokenization(char **arr);
+
+// -- BUILTINS -- //
+int     mini_cd(char **cmd, t_minishell *minishell);
+void 	cd_error(char **cmd);
+int 	ft_count_args(char **cmd);
+char 	*ft_getenv(char *key, t_minishell *minishell);
+int 	update_env_value(char *key, char *value, t_minishell *minishell);
+void 	copy_env(t_minishell *minishell);
+int 	add_node(char *str, t_minishell *minishell);
+void	print_env(t_minishell *minishell);
+void	declare(t_minishell *minishell);
+void	ft_pwd(t_minishell *minishell);
 
 // Parsing
 t_command_line				*parsing(char *tokens[]);
