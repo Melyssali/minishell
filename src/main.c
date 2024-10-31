@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/12 20:28:09 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/10/31 10:48:29 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-#include "libft.h"
-#include <readline/readline.h>
 // les redirections :
 //  < 	(commande < fichier.txt) doit rediriger l’entrée. Si le fichier existe, il est simplement utilisé comme source d'entrée. Pas de troncature ni d'ajout, juste une lecture du fichier.
 //  > 	(echo "Nouveau contenu" > fichier.txt) doit rediriger la sortie. Si le fichier existe, son contenu est truncaté (écrasé) et remplacé par la nouvelle sortie de la commande.

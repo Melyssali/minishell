@@ -45,7 +45,7 @@ readline_script :
 	@if ls /usr/local/include | grep -q readline; then \
     	echo "$(GREEN)readline est installé"; \
 	else \
-    	cd readline-master  && ./configure && make && sudo make install; \
+    	cd readline-master  && ./configure && make && make install; \
 		echo "$(GREEN) readling a été installé"; \
 	fi
 	
