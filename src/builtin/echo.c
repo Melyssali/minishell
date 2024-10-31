@@ -44,7 +44,7 @@ void print_echo(char **cmd, int i)
 	}
 }
 
-int echo(char **cmd, t_minishell *minishell)
+int echo(char **cmd)
 {
 	int i;
 	int with_n;

@@ -120,3 +120,4 @@ int add_node(char *str, t_minishell *minishell)
     last->next = node;
     return 0;
 }
+
