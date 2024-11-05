@@ -49,21 +49,54 @@ debug: re
 # guide to configure https://tiswww.case.edu/php/chet/readline/INSTALL
 # creating a little script to install readline
 # grep -q is quiet mode, don't show result in shell
+
 readline_script:
-	@if ls /usr/local/include | grep -q readline; then \
-    	echo "$(GREEN)readline est déjà installé"; \
-	else \
-    	echo "Installation de readline et vérification des dépendances..."; \
-    	cd readline-master && ./configure --with-curses && make && sudo make install; \
-    	echo "$(GREEN)readline a été installé"; \
-	fi
-	@if ldconfig -p | grep -q libncurses; then \
-    	echo "$(GREEN)ncurses est déjà installé"; \
-	else \
-    	echo "$(RED)ncurses manquant, installation en cours..."; \
-    	sudo apt-get install -y libncurses5-dev libncursesw5-dev; \
-    	echo "$(GREEN)ncurses a été installé"; \
-	fi
+	@OS=$$(uname -s); \
+	echo "OS detected: $$OS"; \
+	case "$$OS" in \
+	    Linux) \
+	        if command -v apt-get &> /dev/null; then \
+	            sudo apt-get update; \
+	            sudo apt-get install -y build-essential libncurses5-dev libncursesw5-dev; \
+	        elif command -v yum &> /dev/null; then \
+	            sudo yum groupinstall -y "Development Tools"; \
+	            sudo yum install -y ncurses-devel; \
+	        elif command -v pacman &> /dev/null; then \
+	            sudo pacman -S --needed base-devel ncurses; \
+	        else \
+	            echo "Unsupported Linux distribution. Please install build tools and ncurses manually."; \
+	            exit 1; \
+	        fi; \
+	        ;; \
+	    Darwin*) \
+	        if command -v brew &> /dev/null; then \
+	            brew install ncurses; \
+	        else \
+	            echo "Homebrew not found. Please install Homebrew and rerun the script."; \
+	            exit 1; \
+	        fi; \
+	        ;; \
+	    *) \
+	        echo "Unsupported operating system: $$OS"; \
+	        exit 1; \
+	        ;; \
+	esac
+
+# readline_script:
+# 	@if ls /usr/local/include | grep -q readline; then \
+#     	echo "$(GREEN)readline est déjà installé"; \
+# 	else \
+#     	echo "Installation de readline et vérification des dépendances..."; \
+#     	cd readline-master && ./configure --with-curses && make && sudo make install; \
+#     	echo "$(GREEN)readline a été installé"; \
+# 	fi
+# 	@if ldconfig -p | grep -q libncurses; then \
+#     	echo "$(GREEN)ncurses est déjà installé"; \
+# 	else \
+#     	echo "$(RED)ncurses manquant, installation en cours..."; \
+#     	sudo apt-get install -y libncurses5-dev libncursesw5-dev; \
+#     	echo "$(GREEN)ncurses a été installé"; \
+# 	fi
 
 # readline_script:
 # 	@if ls /usr/lib/x86_64-linux-gnu | grep -q readline; then \

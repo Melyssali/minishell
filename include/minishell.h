@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/24 14:39:38 by lscarcel         ###   ########.fr       */
-/*   Updated: 2024/10/29 13:36:14 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/04 22:33:59 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -51,12 +51,24 @@ typedef enum
 	REDIR_INPUT,
 	HEREDOC,
 	PIPE
-}							e_operators;
+}		
+					e_operators;
+typedef enum
+{
+	CD,
+	ECHO,
+	ENV,
+	EXIT,
+	EXPORT,
+	PWD,
+	UNSET
+}							e_builtins;
 
 // hash table for builtins
 typedef struct s_hash_builtin
 {
 	char					*key;
+	int						type;
 	struct s_hash_builtin	*next;
 }							t_hash_builtins;
 
@@ -72,12 +84,17 @@ typedef struct s_command_line
 {
 	char					**command;
 	int						is_builtin;
+	int						builtin_type;
 	char					*input_file;
 	char					*output_file;
 	int						append_output;
 	char					*heredoc_delimiter;
 	struct s_command_line	*next;
 }							t_command_line;
+typedef struct s_data
+{
+	int						pipe_count;
+}							t_data;
 
 // tokenization
 char						**split_into_tokens(char *s);
@@ -103,7 +120,7 @@ void	declare(t_minishell *minishell);
 void	ft_pwd(t_minishell *minishell);
 
 // Parsing
-t_command_line				*parsing(char *tokens[]);
+t_command_line				*parsing(char *tokens[], t_data *data);
 t_command_line				*create_node(t_hash_operators *table_operators[],
 								char *tokens[], int *index,
 								t_hash_builtins *table_builtins[]);

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/29 13:48:53 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/04 22:59:59 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static unsigned int	hash(char *str)
 {
 	unsigned int	hash;
 
+	hash = 0;
 	while (*str)
 	{
 		hash = (hash << 5) + *str;
