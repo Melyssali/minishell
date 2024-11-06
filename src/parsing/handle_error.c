@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 20:37:21 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 20:39:38 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ int	classify_tokens(char *tokens[], t_data *data)
 		}
 		else if (i == 0 || builtin_type != -1
 			|| (data->previous_state == OPERATOR
-				&& data->previous_op_state == PIPE && tokens[i][0] != 0))
+				&& data->previous_op_state == PIPE && tokens[i][0] != '\0'))
 		{
 			data->token_types[i] = COMMAND;
 		}
 		else if (data->previous_state == OPERATOR &&
-				(data->previous_op_state >= REDIR_OUTPUT && data->previous_op_state <= HEREDOC) && tokens[i][0] != 0)
+				(data->previous_op_state >= REDIR_OUTPUT && data->previous_op_state <= HEREDOC) && tokens[i][0] != '\0')
 			data->token_types[i] = ARGUMENT_FILE;
 		else if (data->previous_state == COMMAND && handle_operators_error(tokens[i]))
 			data->token_types[i] = ARGUMENT;
