@@ -1,39 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_tokenization.c                               :+:      :+:    :+:   */
+/*   utils_handle_error.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 18:51:06 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 14:30:36 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*skip_space(char *s)
+int	calculate_array_length(char *tokens[])
 {
-	while (*s && (*s == SPACE || *s == TAB))
-		s++;
-	return (s);
-}
-char	*iterate_word(char *s)
-{
-	while (*s && *s != SPACE && *s != TAB && *s != DQUOTE && *s != SQUOTE)
-		s++;
-	return (s);
-}
+	int	i;
 
-char	*skip_quotes(char *s, char quote)
-{
-	while (*s && *s == quote)
-		s++;
-	return (s);
-}
-char	*iterate_inside_quotes(char *s, char quote)
-{
-	while (*s && *s != quote)
-		s++;
-	return (s);
+	i = 0;
+	while (tokens[i])
+		i++;
+	return (i);
 }

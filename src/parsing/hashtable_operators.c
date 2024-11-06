@@ -6,21 +6,20 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/04 22:59:59 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:22:34 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
 
 static unsigned int	hash(char *str)
 {
 	unsigned int	hash;
 
-	hash = 0;
+	hash = 5381;
 	while (*str)
 	{
-		hash = (hash << 5) + *str;
+		hash = ((hash << 5) + hash) + *str;
 		str++;
 	}
 	return (hash % TABLE_OPERATORS_SIZE);

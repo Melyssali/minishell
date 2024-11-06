@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/04 22:33:59 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:38:51 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define FALSE 0
 
 # define TABLE_BUILTINS_SIZE 11
-# define TABLE_OPERATORS_SIZE 7
+# define TABLE_OPERATORS_SIZE 11
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -62,7 +62,17 @@ typedef enum
 	EXPORT,
 	PWD,
 	UNSET
-}							e_builtins;
+}					e_builtins;
+
+typedef enum
+{
+	COMMAND = 1,
+    OPERATOR,
+    OPERATOR_PIPE,
+    ARGUMENT,
+    ARGUMENT_FILE,
+    REDIRECTION
+}							e_token_type;
 
 // hash table for builtins
 typedef struct s_hash_builtin
@@ -93,7 +103,12 @@ typedef struct s_command_line
 }							t_command_line;
 typedef struct s_data
 {
+	t_hash_builtins			*table_builtins[TABLE_BUILTINS_SIZE];
+	t_hash_operators		*table_operators[TABLE_OPERATORS_SIZE];
 	int						pipe_count;
+	int						previous_state;
+	int						previous_op_state;
+	int						*token_types;
 }							t_data;
 
 // tokenization
@@ -107,7 +122,7 @@ void						handle_arr(char *s, char **arr, int *count,
 								char *start_string);
 void						free_arr_tokenization(char **arr);
 
-// -- BUILTINS -- //
+// -- BUILTINS -- 
 int     mini_cd(char **cmd, t_minishell *minishell);
 void 	cd_error(char **cmd);
 int 	ft_count_args(char **cmd);
@@ -119,7 +134,7 @@ void	print_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
 void	ft_pwd(t_minishell *minishell);
 
-// Parsing
+// -- PARSING -- 
 t_command_line				*parsing(char *tokens[], t_data *data);
 t_command_line				*create_node(t_hash_operators *table_operators[],
 								char *tokens[], int *index,
@@ -129,17 +144,23 @@ int							calculate_width(t_hash_operators *table_operators[],
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
 
-// tokenization - quote verifications
+// -- tokenization - quote verifications --
 int							find_last_quote(char *s, char quote);
 int							is_space_before_quote(char *s);
 
-// hash table builtins
+// -- hash table builtins --
 void						initialize_builtins(t_hash_builtins *table_builtins[]);
 int							search(t_hash_builtins *table[], char *key);
 
-// hash table operators
+// -- hash table operators --
+void						initialize_table(t_hash_operators *table[], t_hash_builtins *table_builtins[]);
 void						initialize_operators(t_hash_operators *table_operators[]);
 int							get_operator_type(t_hash_operators *table_operators[],
 								char *str);
 
+// -- ERROR -- 
+int							calculate_array_length(char *tokens[]);
+int							handle_operators_error(char *s);
+int							handle_error(int *token_types);
+int							classify_tokens(char *tokens[], t_data *data);
 #endif

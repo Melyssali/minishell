@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/04 23:01:23 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:25:29 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,17 @@
 // ◦ env with no options or arguments
 // ◦ exit with no options
 
-// GERER   < ls | wc -l
-//  ls > test ok
+
 int	main(void)
 {
 	t_data data;
 	t_command_line *ptr;
 	char	*input;
 	char **tokens;
-
+	
+	initialize_table(data.table_operators, data.table_builtins);
+	initialize_operators(data.table_operators);
+	initialize_builtins(data.table_builtins);
 	while (1)
 	{
 		input = readline("minishell % ");
@@ -47,17 +49,18 @@ int	main(void)
 		// add_history(input);
 		tokens = split_into_tokens(input);
 		if (tokens == NULL)
-		{
 			printf("Missing last quote");
-		}
-		ptr = parsing(tokens, &data);
-		if (ptr == NULL)
+		if (classify_tokens(tokens, &data))
 		{
-   			 printf("Error: ptr is NULL, linked list is empty.\n");
-   			 return (1);
+			ptr = parsing(tokens, &data);
+			if (ptr == NULL)
+			{
+				printf("Error: ptr is NULL, linked list is empty.\n");
+				return (1);
+			}
+			printf("pipe count : %d\n", data.pipe_count);
 		}
-		printf("pipe count : %d\n", data.pipe_count);
-		
+
 	// delete me ---------------------------------------------------------v
 		t_command_line *tmp = ptr;
 		while (tmp)

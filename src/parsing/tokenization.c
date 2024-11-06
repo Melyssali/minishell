@@ -6,12 +6,11 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/29 14:15:14 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 17:41:04 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
 // this file tokenize an input into array
 // delete me ---------------------------------------------------------
 // [x] gerer : echo 'this is a "test"' - affiche 1 token->  this is a "test"

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/04 21:15:13 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:57:29 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	calculate_width(t_hash_operators *table_operators[], char *tokens[],
 	while (tokens[*index])
 	{
 		operator_type = get_operator_type(table_operators, tokens[*index]);
-		if (operator_type != REDIR_INPUT && operator_type != REDIR_OUTPUT
-			&& operator_type != PIPE && operator_type != APPEND_OUTPUT
-			&& operator_type != HEREDOC)
+		printf("function : calculate_width. op_type: %d\n", operator_type);
+		printf("function : calculate_width. token: %s\n", tokens[*index]);
+		if (operator_type == -1)
 			(*index)++;
 		else
 			break;
@@ -41,6 +41,7 @@ char	**duplicate_arr(t_hash_operators *table_operators[], char *tokens[],
 	y = 0;
 	i = *index;
 	width = calculate_width(table_operators, tokens, index) - i;
+	printf("function : duplicate_arr. width: %d\n", width);
 	arr = malloc(sizeof(char *) * width + 1);
 	arr[width] = NULL;
 	while (y < width)

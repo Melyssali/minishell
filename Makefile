@@ -30,6 +30,7 @@ SRCS = 	main.c $(UTILS_PATH)builtin_utils.c $(UTILS_PATH)utils_tokenization.c\
 		$(UTILS_PATH)utils_parsing.c $(PARSING_PATH)hashtable_builtins.c $(PARSING_PATH)hashtable_operators.c \
 		$(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
 		$(BUILTIN_PATH)exit.c $(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c  \
+		$(UTILS_PATH)utils_handle_error.c $(PARSING_PATH)handle_error.c
 
 # ---------- REGLES MAKEFILE  ----------
 all : readline_script $(NAME)
