@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/12 12:22:51 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/04 11:28:35 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void mini_unset(char **cmd, t_minishell *minishell)
+int mini_unset(char **cmd, t_minishell *minishell)
 {
 	t_env_var *ptr;
 	t_env_var *prev;
@@ -29,7 +29,7 @@ void mini_unset(char **cmd, t_minishell *minishell)
 			ptr = ptr->next;
 		}
 		if (ptr == NULL)
-			return ;
+			return (0);
 		if (prev == NULL)
 			minishell->env = ptr->next;
 		else
@@ -37,4 +37,5 @@ void mini_unset(char **cmd, t_minishell *minishell)
 		free(ptr->value);
 		free(ptr);
 	}
+	return(0);
 }

@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-void	ft_pwd(t_minishell *minishell)
+int	mini_pwd(t_minishell *minishell)
 {
 	t_env_var *ptr;
 
@@ -25,4 +25,5 @@ void	ft_pwd(t_minishell *minishell)
 		}
 		ptr = ptr->next;
 	}
+	return(0);
 }

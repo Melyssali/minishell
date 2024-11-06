@@ -1,28 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2024/11/03 15:55:51 by lscarcel          #+#    #+#             */
+/*   Updated: 2024/11/03 15:58:34 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int mini_exit(char **cmd)
-{
-	if (ft_strcmp(cmd[0], "exit") == 0)
-	{
-		if (ft_count_args(cmd) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
-	}
-	return (1);
-}
+// executer ici la fonction actuelle de la liste chainée. 
+// prendre en compte les redirections, pipes, append et le heredoc. 
+// 

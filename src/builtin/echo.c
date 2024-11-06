@@ -34,7 +34,7 @@ void print_echo(char **cmd, int i)
 	}
 }
 
-int echo(char **cmd)
+int mini_echo(char **cmd)
 {
 	int i;
 	int with_n;

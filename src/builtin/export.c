@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-int export(char **cmd, t_minishell *minishell)
+int mini_export(char **cmd, t_minishell *minishell)
 {
 	if (cmd[1] != NULL)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/29 14:21:43 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 11:16:39 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@
 // GERER   < ls | wc -l
 int	main(void)
 {
+	t_data data;
 	t_command_line *ptr;
 	char	*input;
 	char **tokens;
 
 	while (1)
 	{
-		input = readline("minishell % ");
+		input = readline("minishell> ");
 		if (input == NULL)
 			break ;
 		// add_history(input);
@@ -48,13 +49,13 @@ int	main(void)
 		{
 			printf("Missing last quote");
 		}
-		ptr = parsing(tokens);
+		ptr = parsing(tokens, &data);
 		if (ptr == NULL)
 		{
    			 printf("Error: ptr is NULL, linked list is empty.\n");
    			 return (1);
 		}
-		
+		printf("pipe count : %d\n", data.pipe_count);
 	// delete me ---------------------------------------------------------v
 		t_command_line *tmp = ptr;
 		while (tmp)
@@ -63,7 +64,7 @@ int	main(void)
 			printf("--------------\n");
 			for (int i = 0; tmp->command[i]; i++)
 				printf("  CMD[%d] : %s", i, tmp->command[i]);
-			printf("\nis_builtin : %d\n, input : %s\n, output : %s\n, is_append : %d\n NEXT : --->\n", tmp->is_builtin, tmp->input_file, tmp->output_file, tmp->append_output);
+			printf("\nis_builtin : %d,\n builtin_type : %d,\n input : %s,\n output : %s,\n is_append : %d,\n NEXT : --->\n", tmp->is_builtin, tmp->builtin_type, tmp->input_file, tmp->output_file, tmp->append_output);
 			printf("--------------\n");
 			tmp = tmp->next;
 		}

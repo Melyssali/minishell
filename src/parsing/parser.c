@@ -1,17 +1,17 @@
-/* ************************************************************************** */
+!/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/29 14:18:51 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 10:05:48 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
+
 
 // This file processes the input and creates a linked list to pass to the execution part
 
@@ -24,7 +24,9 @@ int	is_builtin_command(char *cmd, t_hash_builtins *table_builtins[])
 // sur un executable
 
 // Je dois découper cette fonction :
-t_command_line	*parsing(char *tokens[])
+// GERER   < ls | wc -l
+//  ls > test ok -- output ecrit que "test" et pas test ok
+t_command_line	*parsing(char *tokens[], t_data *data)
 {
 	t_command_line		*head;
 	t_command_line		*current;
@@ -37,6 +39,7 @@ t_command_line	*parsing(char *tokens[])
 	head = NULL;
 	current = NULL;
 	new_node = NULL;
+	data->pipe_count = 0;
 	i = 0;
 	initialize_builtins(table_builtins);
 	initialize_operators(table_operators);
@@ -66,6 +69,7 @@ t_command_line	*parsing(char *tokens[])
 			new_node = create_node(table_operators, tokens, &i, table_builtins);
 			current->next = new_node;
 			current = new_node;
+			data->pipe_count++;
 			i--;
 		}
 		i++;
