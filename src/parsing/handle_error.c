@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 20:21:30 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 20:23:21 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,14 @@
 // GERER < file.txt cat
 //  > file.txt | grep "test"
 // if !COMMAND -> If PIPE ? DO something : PROMPT to someone
-//  ls > test ok
-// 	A command must be followed by an operator (or the end of the input).
-// •	An operator (e.g., >, >>,
-// |) must be followed by a command or a valid argument (e.g., a filename).
-// •	No two operators should follow each other without a valid command or argument in between.
-// •	Certain operators (>, >>,
-// <) must have a filename or argument after them.
-// •	A pipe (|) should be surrounded by valid commands (i.e.,
-// a command before and a command after).
-// Une commande ne doit pas être suivie immédiatement par une autre commande (e.g.,
-// cat ls).
-// 	•	Un opérateur | ne doit pas être le premier ou le dernier token de la commande.
+//  
+// 	•	Un opérateur | ne doit pas être le dernier token de la commande.
 // 	•	Un opérateur > ou >> doit être suivi d’un nom de fichier valide.
 // 	•	Un opérateur < doit être suivi d’un nom de fichier valide.
 // 	•	Un opérateur | doit être entouré de commandes valides.
 
 // une commande doit être suivi d'un argument file.txt "qqchose" ou - ou --
-// pipe doit toujours être suivi d,une commande
+// pipe doit toujours être suivi d'une commande
 //  redirection < ou > doit toujours être suivi d'un fichier
 //  > doit être précédé d'une commande valide
 
@@ -117,7 +107,6 @@ int	handle_error(int *token_types)
 	}
 	return (1);
 }
-// ls >> test
 
 int	handle_operators_error(char *s)
 {
