@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 20:23:21 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 20:37:21 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,12 @@ int	handle_error(int *token_types)
 	i = 0;
 	while (token_types[i])
 	{
-		if (token_types[i] == COMMAND && token_types[i - 1] == COMMAND)
+		if (token_types[i] == COMMAND && token_types[i + 1] == COMMAND)
 		{
 			printf("Erreur : deux commandes à la suite.\n");
 			return (0);
 		}
-		else if (token_types[i] == OPERATOR && token_types[i - 1] == OPERATOR)
+		else if (token_types[i] == OPERATOR && token_types[i + 1] == OPERATOR)
 		{
 			printf("Erreur : deux opérateurs à la suite.\n");
 			return (0);
