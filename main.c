@@ -6,75 +6,90 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:25:29 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/19 20:24:54 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 #include "libft.h"
+#include <signal.h>
 #include <readline/readline.h>
-// les redirections :
-//  < 	(commande < fichier.txt) doit rediriger l’entrée. Si le fichier existe, il est simplement utilisé comme source d'entrée. Pas de troncature ni d'ajout, juste une lecture du fichier.
-//  > 	(echo "Nouveau contenu" > fichier.txt) doit rediriger la sortie. Si le fichier existe, son contenu est truncaté (écrasé) et remplacé par la nouvelle sortie de la commande.
-//  << 	(commande << DELIMITEUR) doit recevoir un délimiteur et lire l’input donné jusqu’à rencontrer une ligne
-// 		contenant le délimiteur. Cependant, l’historique n’a pas à être mis à jour !
-//	>> 	(echo "Ajouté à la fin" >> fichier.txt) doit rediriger la sortie en mode append (ajout à la fin du fichier).
-//  | 	doit rediriger la sortie de la commande à gauche du pipe vers l’entrée de la commande à droite du pipe.
+#include <readline/history.h>
 
-//  Your shell must implement the following builtins:
-// ◦ echo with option -n
-// ◦ cd with only a relative or absolute path
-// ◦ pwd with no options
-// ◦ export with no options
-// ◦ unset with no options
-// ◦ env with no options or arguments
-// ◦ exit with no options
-
-
+void	handler_signal(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 int	main(void)
 {
 	t_data data;
 	t_command_line *ptr;
-	char	*input;
+	char *input;
 	char **tokens;
 	
 	initialize_table(data.table_operators, data.table_builtins);
 	initialize_operators(data.table_operators);
 	initialize_builtins(data.table_builtins);
+	signal(SIGINT, handler_signal);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		input = readline("minishell % ");
 		if (input == NULL)
+		{
+			printf("bye.\n");
 			break ;
-		// add_history(input);
+		}
+		add_history(input);
 		tokens = split_into_tokens(input);
 		if (tokens == NULL)
-			printf("Missing last quote");
-		if (classify_tokens(tokens, &data))
+			printf("Problem with quotes.\n");
+		else
 		{
-			ptr = parsing(tokens, &data);
-			if (ptr == NULL)
+			if (ft_strcmp(tokens[0], "exit") == 0)
+				exit(EXIT_SUCCESS);
+			if (classify_tokens(tokens, &data))
 			{
-				printf("Error: ptr is NULL, linked list is empty.\n");
-				return (1);
+				ptr = parsing(tokens, &data);
+				if (ptr == NULL)
+				{
+					printf("Error: ptr is NULL, linked list is empty.\n");
+					return (1);
+				}
+				printf("pipe count : %d\n", data.pipe_count);
 			}
-			printf("pipe count : %d\n", data.pipe_count);
 		}
-
 	// delete me ---------------------------------------------------------v
 		t_command_line *tmp = ptr;
 		while (tmp)
 		{
 			printf("NODE : \n");
 			printf("--------------\n");
-			for (int i = 0; tmp->command[i]; i++)
-				printf("  CMD[%d] : %s", i, tmp->command[i]);
-			printf("\nis_builtin : %d,\n builtin_type : %d,\n input : %s,\n output : %s,\n is_append : %d,\n NEXT : --->\n", tmp->is_builtin, tmp->builtin_type, tmp->input_file, tmp->output_file, tmp->append_output);
+			if (tmp->command)
+			{
+				for (int i = 0; tmp->command[i]; i++)
+					printf("  CMD[%d] : %s", i, tmp->command[i]);
+			}
+			else
+				printf("cmd : NULL\n");
+			printf("\nis_builtin : %d,\n builtin_type : %d,\n input : %s,\n output : %s,\n is_append : %d,\n heredoc : %s,\n NEXT : --->\n", tmp->is_builtin, tmp->builtin_type, tmp->input_file, tmp->output_file, tmp->append_output, tmp->heredoc_delimiter);
+			// print array;
+			if (tmp->heredoc_delimiter)
+			{
+				for (int h = 0; tmp->lines_heredoc[h]; h++)
+					printf("heredoc phrase[%d]: %s\n", h, tmp->lines_heredoc[h]);
+			}
 			printf("--------------\n");
 			tmp = tmp->next;
 		}
 
-		// Libération de la liste après l'affichage
+	// 	Libération de la liste après l'affichage
 		t_command_line *current;
 		while (ptr != NULL)
 		{
@@ -83,9 +98,6 @@ int	main(void)
 			free(current);
 		}
 	// delete me ---------------------------------------------------------^
-
-		// if (ft_strcmp(tokens[0], "exit") == 0)
-		// 	break ;
 	}
 	return (0);
 }

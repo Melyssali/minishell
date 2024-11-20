@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:57:29 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:18:38 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int	calculate_width(t_hash_operators *table_operators[], char *tokens[],
 	while (tokens[*index])
 	{
 		operator_type = get_operator_type(table_operators, tokens[*index]);
-		printf("function : calculate_width. op_type: %d\n", operator_type);
-		printf("function : calculate_width. token: %s\n", tokens[*index]);
 		if (operator_type == -1)
 			(*index)++;
 		else
@@ -41,7 +39,8 @@ char	**duplicate_arr(t_hash_operators *table_operators[], char *tokens[],
 	y = 0;
 	i = *index;
 	width = calculate_width(table_operators, tokens, index) - i;
-	printf("function : duplicate_arr. width: %d\n", width);
+	if (*index == 0)
+		return (NULL);
 	arr = malloc(sizeof(char *) * width + 1);
 	arr[width] = NULL;
 	while (y < width)
@@ -66,8 +65,16 @@ t_command_line	*create_node(t_hash_operators *table_operators[],
 		exit(EXIT_FAILURE);
 	}
 	node->command = duplicate_arr(table_operators, tokens, index);
-	node->builtin_type = is_builtin_command(node->command[0], table_builtins);
-	node->is_builtin = (node->builtin_type != -1);
+	if (node->command == NULL)
+	{
+		node->builtin_type = 0;
+		node->is_builtin = 0;
+	}
+	else
+	{
+		node->builtin_type = is_builtin_command(node->command[0], table_builtins);
+		node->is_builtin = (node->builtin_type != -1);
+	}
 	node->input_file = NULL;
 	node->output_file = NULL;
 	node->append_output = 0;

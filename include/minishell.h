@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:38:51 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/19 20:21:10 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 # define MINISHELL_H
 # define ERROR -1
 # define SQUOTE '\''
-# define DQUOTE '\"'
+# define DQUOTE '"'
 # define SPACE ' '
 # define TAB '\t'
 # define NEWLINE '\n'
 # define TRUE 1
 # define FALSE 0
+#define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
 # define TABLE_OPERATORS_SIZE 11
@@ -99,8 +100,10 @@ typedef struct s_command_line
 	char					*output_file;
 	int						append_output;
 	char					*heredoc_delimiter;
+	char 					**lines_heredoc;
 	struct s_command_line	*next;
 }							t_command_line;
+
 typedef struct s_data
 {
 	t_hash_builtins			*table_builtins[TABLE_BUILTINS_SIZE];
@@ -144,7 +147,7 @@ int							calculate_width(t_hash_operators *table_operators[],
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
 
-// -- tokenization - quote verifications --
+// -- TOKENISATION - quote verifications --
 int							find_last_quote(char *s, char quote);
 int							is_space_before_quote(char *s);
 
@@ -163,4 +166,8 @@ int							calculate_array_length(char *tokens[]);
 int							handle_operators_error(char *s);
 int							handle_error(int *token_types);
 int							classify_tokens(char *tokens[], t_data *data);
+
+// -- HERE DOC -- 
+void						handle_heredoc(char *delimiter, t_command_line *node);
+void						fill_lines(char *input, t_command_line *node, int index);
 #endif

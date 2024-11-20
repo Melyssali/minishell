@@ -6,20 +6,14 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 17:41:04 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/19 16:43:48 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
 // this file tokenize an input into array
+#include "../../include/minishell.h"
 // delete me ---------------------------------------------------------
-// [x] gerer : echo 'this is a "test"' - affiche 1 token->  this is a "test"
-// [x] gerer : echo 'this is a "test' - affiche 1 token ->  this is a "test
-// [x] gerer : echo "this is a 'test" - affiche 1 token->  this is a 'test
-// [x] echo"test" | grep "test ok" ne doit pas fonctionner donc 4 token et pas 5 (+ error)
 // [] echo "test"123 fonctionne et affiche test123
-// [] echo "test">file.txt fonctionne
-// [] echo "test"&123 ne fonctionne pas
 // delete me ---------------------------------------------------------
 
 char	**split_into_tokens(char *s);
@@ -44,7 +38,14 @@ static int	count_tokens(char *s)
 			if (find_last_quote(s, quote) == ERROR)
 				return (ERROR);
 			else
+			{
 				s = handle_quote(s, quote);
+				if (s == NULL)
+				{
+					printf("Need space before first quote\n");
+					return (ERROR);
+				}
+			}
 		}
 		count++;
 	}

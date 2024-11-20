@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 20:39:38 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/19 17:46:40 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@
 //  > doit être précédé d'une commande valide
 
 // ls > file.txt | grep cd "test"
-// 0  1     2    3   4     5
 
-// > file.txt | grep "test"
-// 0    1     2   3     4
 int	classify_tokens(char *tokens[], t_data *data)
 {
 	int	i;
@@ -51,6 +48,11 @@ int	classify_tokens(char *tokens[], t_data *data)
 		builtin_type = search(data->table_builtins, tokens[i]);
 		if (operator_type != -1)
 		{
+			if (i == 0 && operator_type == PIPE)
+			{
+				printf("Erreur : Pipe can't be first !\n");
+				return (0);
+			}
 			data->token_types[i] = OPERATOR;
 			data->previous_op_state = operator_type;
 		}

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/23 15:16:57 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/19 12:51:43 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ char	*handle_quote(char *s, char quote)
 {
 	if (is_space_before_quote(s) == ERROR)
 	{
-		while (*s && *s != SPACE && *s != TAB && *s != NEWLINE)
-			s++;
+		return (NULL);
+		// while (*s && *s != SPACE && *s != TAB && *s != NEWLINE)
+		// 	s++;
 	}
 	else
 	{
@@ -41,6 +42,11 @@ void	handle_arr(char *s, char **arr, int *count, char *start_string)
 		perror("Malloc array failed.");
 		free_arr_tokenization(arr);
 		return ;
+	}
+	if (*start_string == DQUOTE || *s == SQUOTE)
+	{
+		start_string++;
+		s--;
 	}
 	ft_strlcpy(arr[*count], start_string, s - start_string + 1);
 	arr[*count][s - start_string] = '\0';
