@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 12:12:46 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 12:57:23 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,47 +67,6 @@ int	main(void)
 				printf("pipe count : %d\n", data.pipe_count);
 			}
 		}
-	// delete me ---------------------------------------------------------v
-		t_command_line *tmp = ptr;
-		while (tmp)
-		{
-			printf("NODE : \n");
-			printf("--------------\n");
-			if (tmp->command)
-			{
-				for (int i = 0; tmp->command[i]; i++)
-					printf("  CMD[%d] : %s", i, tmp->command[i]);
-			}
-			else
-				printf("cmd : NULL\n");
-			printf("\nis_builtin : %d,\n builtin_type : %d,\n input : %s,\n output : %s,\n is_append : %d,\n heredoc : %s,\n NEXT : --->\n", tmp->is_builtin, tmp->builtin_type, tmp->input_file, tmp->output_file, tmp->append_output, tmp->heredoc_delimiter);
-			// print array;
-			if (tmp->heredoc_delimiter)
-			{
-				char* c = (char*)calloc(100, sizeof(char));
-				int sz;
-				int fd = open(tmp->heredoc_file, O_RDONLY);
-				if (fd < 0) {
-					perror("r1");
-					exit(1);
-				}
-				sz = read(fd, c, 1000000);
-				c[sz] = '\0';
-				printf("heredoc file: %s\n", c);
-			}
-			printf("--------------\n");
-			tmp = tmp->next;
-		}
-
-	// 	Libération de la liste après l'affichage
-		t_command_line *current;
-		while (ptr != NULL)
-		{
-			current = ptr;
-			ptr = ptr->next;
-			free(current);
-		}
-	// delete me ---------------------------------------------------------^
 	}
 	return (0);
 }
