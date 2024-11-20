@@ -6,60 +6,44 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 21:40:45 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 12:54:47 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <readline/readline.h>
-
+#include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
 
 void	handle_heredoc(char *delimiter, t_command_line *node)
 {
+	int	fd;
+	char *file_path;
 	char *input;
-	int i;
 
-	i = 0;
-	input = readline("> ");
-	while (ft_strcmp(input, delimiter) != 0)
+	input = NULL;
+	file_path = "/tmp/heredoc_tmp";
+	fd = open(file_path, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+	if (fd == -1)
 	{
-		fill_lines(input, node, i);
+ 		perror("Error:");
+		return ;
+	}
+	while (1)
+	{
 		input = readline("> ");
-		rl_on_new_line();
-		rl_replace_line(input, 0);
-		i++;
-	}
-}
-
-void	fill_lines(char *input, t_command_line *node, int index)
-{
-	char **temp_arr;
-	static int capacity;
-	int i;
-
-	i = 0;
-	if (index == 0)
-	{
-		capacity = INITIAL_SIZE;
-		node->lines_heredoc = malloc(sizeof(char *) * (capacity + 1));
-	}
-	if (index < capacity)
-	{
-		node->lines_heredoc[index] = ft_strdup(input);
-		node->lines_heredoc[index + 1] = NULL;
-	}
-	else
-	{
-		capacity *= 2;
-		temp_arr = malloc(sizeof(char *) * (capacity + 1));
-		while (node->lines_heredoc[i])
+		if (!input || ft_strcmp(input, delimiter) == 0)
 		{
-			temp_arr[i] = ft_strdup(node->lines_heredoc[i]);
-			i++;
+			free(input);
+			break ;
 		}
-		temp_arr[i] = ft_strdup(input);
-		temp_arr[i + 1] = NULL;
-		free(node->lines_heredoc);
-		node->lines_heredoc = temp_arr;
+		write(fd, input, ft_strlen(input));
+		write(fd, "\n", 1);
+		free(input);
 	}
+	close(fd);
+	node->heredoc_file = ft_strdup(file_path);
+	if (!node->heredoc_file)
+		perror("Error:");
 }

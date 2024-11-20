@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 20:08:24 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 12:04:32 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_command_line	*parsing(char *tokens[], t_data *data)
 		{
 			new_node->heredoc_delimiter = ft_strdup(tokens[++i]);
 			handle_heredoc(new_node->heredoc_delimiter, new_node);
-			return (head);
+			// return (head);
 		}
 		else if (operator_type == PIPE)
 		{

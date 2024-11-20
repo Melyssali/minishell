@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 20:21:10 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 11:40:01 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef struct s_command_line
 	char					*output_file;
 	int						append_output;
 	char					*heredoc_delimiter;
-	char 					**lines_heredoc;
+	char 					*heredoc_file;
 	struct s_command_line	*next;
 }							t_command_line;
 

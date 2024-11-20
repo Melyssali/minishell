@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 20:24:54 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 12:12:46 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 void	handler_signal(int signum)
 {
@@ -82,8 +84,16 @@ int	main(void)
 			// print array;
 			if (tmp->heredoc_delimiter)
 			{
-				for (int h = 0; tmp->lines_heredoc[h]; h++)
-					printf("heredoc phrase[%d]: %s\n", h, tmp->lines_heredoc[h]);
+				char* c = (char*)calloc(100, sizeof(char));
+				int sz;
+				int fd = open(tmp->heredoc_file, O_RDONLY);
+				if (fd < 0) {
+					perror("r1");
+					exit(1);
+				}
+				sz = read(fd, c, 1000000);
+				c[sz] = '\0';
+				printf("heredoc file: %s\n", c);
 			}
 			printf("--------------\n");
 			tmp = tmp->next;
