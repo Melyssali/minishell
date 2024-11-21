@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/10 15:03:01 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 22:08:49 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,13 @@ void	initialize_builtins(t_hash_builtins *table_builtins[])
 	insert(table_builtins, "export", EXPORT);
 }
 
-void initialize_table(t_hash_operators *table[], t_hash_builtins *table_builtins[])
+void	initialize_table(t_hash_operators *table[],
+		t_hash_builtins *table_builtins[])
 {
 	int	i;
 
 	i = 0;
-	while (i < TABLE_OPERATORS_SIZE)
+	while (i < TABLE_OP_SIZE)
 	{
 		table[i] = NULL;
 		i++;

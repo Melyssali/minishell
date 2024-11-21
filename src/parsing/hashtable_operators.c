@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hashtable_operators.c                              :+:      :+:    :+:   */
+/*   hashtable_op.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:22:34 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 22:07:03 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@ static unsigned int	hash(char *str)
 		hash = ((hash << 5) + hash) + *str;
 		str++;
 	}
-	return (hash % TABLE_OPERATORS_SIZE);
+	return (hash % TABLE_OP_SIZE);
 }
 
-static void	insert(t_hash_operators *table_operators[], char *key,
-		int type)
+static void	insert(t_hash_operators *table_op[], char *key, int type)
 {
 	unsigned int		index;
 	t_hash_operators	*new_node;
@@ -35,17 +34,17 @@ static void	insert(t_hash_operators *table_operators[], char *key,
 	new_node = malloc(sizeof(t_hash_operators));
 	new_node->key = ft_strdup(key);
 	new_node->type = type;
-	new_node->next = table_operators[index];
-	table_operators[index] = new_node;
+	new_node->next = table_op[index];
+	table_op[index] = new_node;
 }
 
-int	get_operator_type(t_hash_operators *table_operators[], char *str)
+int	get_operator_type(t_hash_operators *table_op[], char *str)
 {
 	t_hash_operators	*ptr;
 	int					index;
 
 	index = hash(str);
-	ptr = table_operators[index];
+	ptr = table_op[index];
 	while (ptr)
 	{
 		if (ft_strcmp(ptr->key, str) == 0)
@@ -55,11 +54,11 @@ int	get_operator_type(t_hash_operators *table_operators[], char *str)
 	return (-1);
 }
 
-void	initialize_operators(t_hash_operators *table_operators[])
+void	initialize_operators(t_hash_operators *table_op[])
 {
-	insert(table_operators, ">", REDIR_OUTPUT);
-	insert(table_operators, ">>", APPEND_OUTPUT);
-	insert(table_operators, "<", REDIR_INPUT);
-	insert(table_operators, "<<", HEREDOC);
-	insert(table_operators, "|", PIPE);
+	insert(table_op, ">", REDIR_OUTPUT);
+	insert(table_op, ">>", APPEND_OUTPUT);
+	insert(table_op, "<", REDIR_INPUT);
+	insert(table_op, "<<", HEREDOC);
+	insert(table_op, "|", PIPE);
 }

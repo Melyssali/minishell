@@ -6,21 +6,21 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/10 20:18:38 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 22:08:37 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include "libft.h"
 
-int	calculate_width(t_hash_operators *table_operators[], char *tokens[],
+int	calculate_width(t_hash_operators *table_op[], char *tokens[],
 		int *index)
 {
 	int	operator_type;
 
 	while (tokens[*index])
 	{
-		operator_type = get_operator_type(table_operators, tokens[*index]);
+		operator_type = get_operator_type(table_op, tokens[*index]);
 		if (operator_type == -1)
 			(*index)++;
 		else
@@ -28,7 +28,7 @@ int	calculate_width(t_hash_operators *table_operators[], char *tokens[],
 	}
 	return (*index);
 }
-char	**duplicate_arr(t_hash_operators *table_operators[], char *tokens[],
+char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 		int *index)
 {
 	char	**arr;
@@ -38,7 +38,7 @@ char	**duplicate_arr(t_hash_operators *table_operators[], char *tokens[],
 
 	y = 0;
 	i = *index;
-	width = calculate_width(table_operators, tokens, index) - i;
+	width = calculate_width(table_op, tokens, index) - i;
 	if (*index == 0)
 		return (NULL);
 	arr = malloc(sizeof(char *) * width + 1);
@@ -53,7 +53,7 @@ char	**duplicate_arr(t_hash_operators *table_operators[], char *tokens[],
 	return (arr);
 }
 // node->is_builtin = (node->builtin_type >= 0); means if node->builtin_type >= 0 is true 1 or false 0
-t_command_line	*create_node(t_hash_operators *table_operators[],
+t_command_line	*create_node(t_hash_operators *table_op[],
 		char *tokens[], int *index, t_hash_builtins *table_builtins[])
 {
 	t_command_line	*node;
@@ -64,7 +64,7 @@ t_command_line	*create_node(t_hash_operators *table_operators[],
 		printf("Malloc failed.");
 		exit(EXIT_FAILURE);
 	}
-	node->command = duplicate_arr(table_operators, tokens, index);
+	node->command = duplicate_arr(table_op, tokens, index);
 	if (node->command == NULL)
 	{
 		node->builtin_type = 0;

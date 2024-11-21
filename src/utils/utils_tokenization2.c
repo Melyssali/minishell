@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 12:51:43 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 14:23:24 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ char	*handle_quote(char *s, char quote)
 	if (is_space_before_quote(s) == ERROR)
 	{
 		return (NULL);
-		// while (*s && *s != SPACE && *s != TAB && *s != NEWLINE)
-		// 	s++;
 	}
 	else
 	{

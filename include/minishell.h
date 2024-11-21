@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 11:40:01 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/20 22:08:49 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define ERROR -1
 # define SQUOTE '\''
 # define DQUOTE '"'
+# define DOLLAR '$'
 # define SPACE ' '
 # define TAB '\t'
 # define NEWLINE '\n'
@@ -24,7 +25,7 @@
 #define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
-# define TABLE_OPERATORS_SIZE 11
+# define TABLE_OP_SIZE 11
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,18 +33,6 @@
 #include <unistd.h>
 #include "libft.h"
 // #include <readline/readline.h>
-
-typedef struct s_env_var
-{
-	char *key;
-    char *value;
-    struct s_env_var *next;
-} t_env_var;
-
-typedef struct s_minishell {
-	char **envp;
-	t_env_var *env;
-}	t_minishell;
 
 typedef enum
 {
@@ -74,6 +63,18 @@ typedef enum
     ARGUMENT_FILE,
     REDIRECTION
 }							e_token_type;
+
+typedef struct s_env_var
+{
+	char *key;
+    char *value;
+    struct s_env_var *next;
+} t_env_var;
+
+typedef struct s_minishell {
+	char **envp;
+	t_env_var *env;
+}	t_minishell;
 
 // hash table for builtins
 typedef struct s_hash_builtin
@@ -107,11 +108,14 @@ typedef struct s_command_line
 typedef struct s_data
 {
 	t_hash_builtins			*table_builtins[TABLE_BUILTINS_SIZE];
-	t_hash_operators		*table_operators[TABLE_OPERATORS_SIZE];
+	t_hash_operators		*table_op[TABLE_OP_SIZE];
+	char					**tokens;
+	char					*variable_value;
+	int						*token_types;
 	int						pipe_count;
 	int						previous_state;
 	int						previous_op_state;
-	int						*token_types;
+	int						operator_type;
 }							t_data;
 
 // tokenization
@@ -138,14 +142,17 @@ void	declare(t_minishell *minishell);
 void	ft_pwd(t_minishell *minishell);
 
 // -- PARSING -- 
-t_command_line				*parsing(char *tokens[], t_data *data);
-t_command_line				*create_node(t_hash_operators *table_operators[],
+t_command_line				*parsing(t_data *data);
+void		handle_pipe(t_command_line **new_node, t_command_line **current, t_data *data, int *i);
+void	handle_redirections(t_command_line **new_node, t_data *data, int *i);
+t_command_line				*create_node(t_hash_operators *table_op[],
 								char *tokens[], int *index,
 								t_hash_builtins *table_builtins[]);
-int							calculate_width(t_hash_operators *table_operators[],
+int							calculate_width(t_hash_operators *table_op[],
 								char *tokens[], int *index);
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
+
 
 // -- TOKENISATION - quote verifications --
 int							find_last_quote(char *s, char quote);
@@ -157,15 +164,15 @@ int							search(t_hash_builtins *table[], char *key);
 
 // -- hash table operators --
 void						initialize_table(t_hash_operators *table[], t_hash_builtins *table_builtins[]);
-void						initialize_operators(t_hash_operators *table_operators[]);
-int							get_operator_type(t_hash_operators *table_operators[],
+void						initialize_operators(t_hash_operators *table_op[]);
+int							get_operator_type(t_hash_operators *table_op[],
 								char *str);
 
 // -- ERROR -- 
 int							calculate_array_length(char *tokens[]);
 int							handle_operators_error(char *s);
 int							handle_error(int *token_types);
-int							classify_tokens(char *tokens[], t_data *data);
+int							classify_tokens(t_data *data);
 
 // -- HERE DOC -- 
 void						handle_heredoc(char *delimiter, t_command_line *node);
