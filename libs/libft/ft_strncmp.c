@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/18 08:36:57 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/10/23 16:47:33 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	size_t	i;
+
+	i = 0;
+	if (s1 == NULL || s2 == NULL)
+		return (0);
+	while (i < n && (s1[i] || s2[i]))
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
 	}
-	return (1);
+	return (0);
 }

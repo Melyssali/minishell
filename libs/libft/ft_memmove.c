@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/19 20:03:11 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/10/25 13:00:18 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	unsigned char	*ptrdst;
+	unsigned char	*ptrsrc;
+
+	ptrsrc = (unsigned char *)src;
+	ptrdst = (unsigned char *)dst;
+	if (dst == NULL || src == NULL)
+		return (0);
+	if (ptrsrc < ptrdst && ptrsrc + len >= ptrdst)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
+		while (len > 0)
 		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
+			ptrdst[len - 1] = ptrsrc[len - 1];
+			len--;
 		}
-		else
-			exit(0);
 	}
-	return (1);
+	else
+	{
+		ft_memcpy(dst, src, len);
+	}
+	return (dst);
 }

@@ -12,28 +12,37 @@
 
 #include "../../include/minishell.h"
 
-void cd_error(char **cmd)
+static char	*cmd_not_found(char *cmd)
 {
-	printf("minishell : cd : %s: No such file or directory", cmd[1]);
+    write(2, "minishell : ", 11);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": No such file or directory\n", 21);
+	return (NULL);
 }
 
-int mini_cd(t_minishell *minishell)
+int	build_cmd(t_minishell *minishell)
 {
-	char cwd[10000];
-	
-	if (chdir(minishell->t_command_line->command[1]) == 0)
+	char	**path_tab;
+	char	*cmd_path;
+	int		i;
+
+	path_tab = ft_split(minishell->envp, ':');
+	i = 0;
+	while (path_tab && path_tab[i])
 	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
+		path_tab[i] = ft_strjoin(path_tab[i], "/");
+		cmd_path = ft_strjoin_no_free(path_tab[i], minishell->cmd_tab[0]);
+		if (access(cmd_path, X_OK) == 0)
 		{
-			printf("%s\n", cwd);
-			update_env_value("PWD", cwd, minishell);	
-			return(0);
+			free_tab(path_tab);
+			minishell->command_line->cmd_path = cmd_path;
+			return (SUCCESS);
 		}
-		else 
-		{
-			cd_error(cmd);
-			return(1);			
-		}
+		free(cmd_path);
+		i++;
 	}
-	return(0);
+	free_tab(path_tab);
+	cmd_not_found(minishell->command_line->command[0]);
+    return (FAIL);
 }
+

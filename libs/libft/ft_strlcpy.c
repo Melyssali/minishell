@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/25 08:08:26 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/10/30 17:30:53 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	size_t	src_len;
+
+	if (dst == NULL || src == NULL)
+		return (0);
+	src_len = ft_strlen(src);
+	if (dstsize == 0)
+		return (src_len);
+	while (*src != '\0' && dstsize > 1)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		*dst = *src;
+		src++;
+		dst++;
+		dstsize--;
 	}
-	return (1);
+	*dst = '\0';
+	return (src_len);
 }

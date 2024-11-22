@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <readline/readline.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <errno.h>
 
 void	handle_heredoc(char *delimiter, t_command_line *node)
 {

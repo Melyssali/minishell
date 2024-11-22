@@ -1,28 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/11/09 13:18:09 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/09 13:29:23 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "ft_printf.h"
 
-int mini_exit(t_minishell *minishell)
+char	*ft_strdup(const char *s1)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	int		size;
+	char	*dest;
+	int		j;
+
+	size = 0;
+	if (!s1)
+		return (0);
+	while (s1[size] != '\0')
+		size++;
+	dest = malloc(sizeof(char) * (size + 1));
+	if (dest == NULL)
+		return (NULL);
+	j = 0;
+	while (s1[j] != '\0')
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		dest[j] = s1[j];
+		j++;
 	}
-	return (1);
+	dest[j] = '\0';
+	return (dest);
 }

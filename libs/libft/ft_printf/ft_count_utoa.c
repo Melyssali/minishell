@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_count_utoa.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/11/09 13:02:08 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/15 14:55:22 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "ft_printf.h"
 
-int mini_exit(t_minishell *minishell)
+int	ft_count_utoa(unsigned int n)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	char			str[11];
+	int				len;
+	unsigned int	temp_n;
+	int				j;
+
+	len = 0;
+	if (n == 0)
+		return (write(1, "0", 1));
+	temp_n = n;
+	while (temp_n != 0)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		len++;
+		temp_n /= 10;
 	}
-	return (1);
+	str[len] = '\0';
+	j = len - 1;
+	while (n > 0)
+	{
+		str[j--] = (n % 10) + '0';
+		n /= 10;
+	}
+	return (write(1, str, len));
 }

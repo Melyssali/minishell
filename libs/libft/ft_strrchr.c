@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/25 14:04:34 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/10/25 14:28:49 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+char	*ft_strrchr(const char *s, int c)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	int		i;
+	char	p;
+
+	p = (char)c;
+	i = ft_strlen(s);
+	if (s == NULL)
+		return (0);
+	while (i >= 0)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
+		if (s[i] == p)
+			return ((char *)&s[i]);
 		else
-			exit(0);
+			i--;
 	}
-	return (1);
+	return (0);
 }

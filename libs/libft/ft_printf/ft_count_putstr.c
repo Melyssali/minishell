@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_count_putstr.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/11/01 18:31:57 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/15 14:55:15 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "ft_printf.h"
 
-int mini_exit(t_minishell *minishell)
+void	ft_putstr(char *s)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	int	i;
+
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i] != '\0')
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		write(1, &s[i], 1);
+		i++;
 	}
-	return (1);
+}
+
+int	ft_count_putstr(char *s)
+{
+	if (s == NULL)
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	ft_putstr(s);
+	return (ft_strlen(s));
 }

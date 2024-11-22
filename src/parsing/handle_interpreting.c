@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./include/minishell.h"
+#include "../../include/minishell.h"
     
 //  voir si lolo gere le fait que la variable tapée est valide ou non
 // Une variable doit obligatoirement commencer par lettre ou underscore mais pas par un chiffre

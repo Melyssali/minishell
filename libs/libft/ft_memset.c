@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/18 11:06:41 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/01 19:27:07 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	unsigned char	*ptrtemp;
+
+	if (!b)
+		return (0);
+	ptrtemp = (unsigned char *)b;
+	while (len > 0)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		*ptrtemp = (unsigned char)c;
+		ptrtemp++;
+		len--;
 	}
-	return (1);
+	return (b);
 }

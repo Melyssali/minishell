@@ -101,13 +101,9 @@ int add_node(char *str, t_minishell *minishell)
 	i = 0;
 	node = (t_env_var *)malloc(sizeof(t_env_var));
 	if (!node)
-	{
 		return(0);
-	}
 	while (str[i] && str[i] != '=')
-	{
 		i++;
-	}
 	node->key = strndup(str, i);
 	if (str[i] == '=')
 	{
@@ -116,9 +112,7 @@ int add_node(char *str, t_minishell *minishell)
 			return(0);
 	}
 	else
-	{
 		node->value = NULL;
-	}
 	node->next = NULL;
 	last = minishell->env;
 	while (last->next)

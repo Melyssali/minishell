@@ -34,7 +34,7 @@ void print_echo(char **cmd, int i)
 	}
 }
 
-int echo(char **cmd)
+int mini_echo(t_minishell *minishell)
 {
 	int i;
 	int with_n;
@@ -46,14 +46,14 @@ int echo(char **cmd)
 		printf("\n");
 		return(0);
 	}
-	if(strcmp (cmd[i], "-n") == 0)
-	{			
+	if(strcmp (minishell->t_command_line->command[i], "-n") == 0)
+	{
 		with_n = TRUE;
-		i = skip_n_option(cmd, i);
+		i = skip_n_option(minishell->t_command_line->command, i);
 		if(i == 0)
 			return(0);
 	}
-	print_echo(cmd, i);
+	print_echo(minishell->t_command_line->command, i);
 	if (with_n == FALSE)
 		printf("\n");
 	return(0);

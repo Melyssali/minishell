@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_count_putchar.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/11/01 18:25:48 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/15 14:55:02 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "ft_printf.h"
 
-int mini_exit(t_minishell *minishell)
+void	ft_putchar(char c)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
-	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
-	}
+	write(1, &c, 1);
+}
+
+int	ft_count_putchar(char c)
+{
+	ft_putchar(c);
 	return (1);
 }

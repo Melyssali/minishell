@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
 
 
 // echo"test" will not work, shell makes one token 

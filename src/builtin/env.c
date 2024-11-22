@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-void print_env(t_minishell *minishell)
+void mini_env(t_minishell *minishell)
 {
 	t_env_var *ptr;
 

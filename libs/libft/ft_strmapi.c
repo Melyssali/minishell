@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/11/01 17:40:53 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/01 17:55:27 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	size_t	len;
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	if (!s || !f)
+		return (0);
+	len = ft_strlen(s);
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (str == NULL)
+		return (0);
+	while (i < len)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
+		str[i] = f(i, s[i]);
+		i++;
 	}
-	return (1);
+	str[i] = '\0';
+	return (str);
 }

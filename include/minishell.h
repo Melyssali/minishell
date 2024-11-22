@@ -30,9 +30,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <fcntl.h>
 #include <unistd.h>
-#include "libft.h"
-// #include <readline/readline.h>
+#include <errno.h>
+#include "../libs/libft/libft.h"
 
 typedef enum
 {
@@ -71,10 +75,6 @@ typedef struct s_env_var
     struct s_env_var *next;
 } t_env_var;
 
-typedef struct s_minishell {
-	char **envp;
-	t_env_var *env;
-}	t_minishell;
 
 // hash table for builtins
 typedef struct s_hash_builtin
@@ -95,6 +95,7 @@ typedef struct s_hash_operators
 typedef struct s_command_line
 {
 	char					**command;
+	char					*cmd_path;
 	int						is_builtin;
 	int						builtin_type;
 	char					*input_file;
@@ -117,6 +118,13 @@ typedef struct s_data
 	int						previous_op_state;
 	int						operator_type;
 }							t_data;
+
+typedef struct s_minishell {
+	char			**envp;
+	t_env_var		*env;
+	t_command_line	*command_line;
+	t_data			*data
+}	t_minishell;
 
 // tokenization
 char						**split_into_tokens(char *s);

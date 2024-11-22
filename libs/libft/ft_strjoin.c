@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/26 10:38:05 by lscarcel          #+#    #+#             */
+/*   Updated: 2024/07/23 11:24:40 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int mini_exit(t_minishell *minishell)
+char	*ft_strjoin(char *s1, char const *s2)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
-	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
-	}
-	return (1);
+	size_t	s1len;
+	size_t	s2len;
+	char	*newstring;
+
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
+	s1len = ft_strlen(s1);
+	s2len = ft_strlen(s2);
+	newstring = malloc((s1len + s2len) + 1);
+	ft_strlcpy(newstring, s1, s1len + 1);
+	ft_strlcat(newstring, s2, s1len + s2len + 1);
+	free(s1);
+	return (newstring);
 }

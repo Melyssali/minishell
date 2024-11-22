@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Created: 2023/10/19 14:03:32 by lscarcel          #+#    #+#             */
+/*   Updated: 2023/11/16 07:32:22 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdarg.h>
 
-int mini_exit(t_minishell *minishell)
-{
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
-	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
-		{
-			printf("minishell: exit: too many arguments\n");
-			return (1);
-		}
-		else
-			exit(0);
-	}
-	return (1);
-}
+int			ft_printf(const char *format, ...);
+int			ft_count_putchar(char c);
+int			ft_count_putstr(char *s);
+int			ft_putnbr(unsigned long nbr, char *base);
+size_t		ft_strlen(const char *s);
+int			ft_count_itoa(int n);
+char		*ft_strdup(const char *s1);
+int			ft_count_utoa(unsigned int n);
+int			ft_check_identifier(char format, va_list args);

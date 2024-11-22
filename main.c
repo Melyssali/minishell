@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-#include "libft.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 void	handler_signal(int signum)
 {

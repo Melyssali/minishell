@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
 
 int	calculate_width(t_hash_operators *table_op[], char *tokens[],
 		int *index)
