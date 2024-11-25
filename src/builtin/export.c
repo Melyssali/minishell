@@ -14,17 +14,17 @@
 
 int mini_export(t_minishell *minishell)
 {
-	if (minishell->t_command_line->command[1] != NULL)
+	if (minishell->command_line->command[1] != NULL)
 	{
-		char *equal_sign = strchr(cmd[1], '=');
+		char *equal_sign = strchr(minishell->command_line->command[1], '=');
 		if (equal_sign != NULL)
 		{
-			int key_length = equal_sign - minishell->t_command_line->command[1];
-			char *key = strndup(minishell->t_command_line->command[1], key_length);
+			int key_length = equal_sign - minishell->command_line->command[1];
+			char *key = strndup(minishell->command_line->command[1], key_length);
 			if (ft_getenv(key, minishell))
-				update_env_value(key, minishell->t_command_line->command[1], minishell);
+				update_env_value(key, minishell->command_line->command[1], minishell);
 			else
-				add_node(minishell->t_command_line->command[1], minishell);
+				add_node(minishell->command_line->command[1], minishell);
 			free(key);
 		}
 		return(0);

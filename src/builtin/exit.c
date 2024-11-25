@@ -14,9 +14,9 @@
 
 int mini_exit(t_minishell *minishell)
 {
-	if (ft_strcmp(minishell->t_command_line->command[0], "exit") == 0)
+	if (ft_strcmp(minishell->command_line->command[0], "exit") == 0)
 	{
-		if (ft_count_args(minishell->t_command_line->command) > 2)
+		if (ft_count_args(minishell->command_line->command) > 2)
 		{
 			printf("minishell: exit: too many arguments\n");
 			return (1);

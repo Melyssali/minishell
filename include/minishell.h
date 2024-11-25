@@ -20,6 +20,8 @@
 # define SPACE ' '
 # define TAB '\t'
 # define NEWLINE '\n'
+# define FAIL 1
+# define SUCCESS 0
 # define TRUE 1
 # define FALSE 0
 #define INITIAL_SIZE 10
@@ -116,14 +118,15 @@ typedef struct s_data
 	int						pipe_count;
 	int						previous_state;
 	int						previous_op_state;
-	int						operator_type;
+	int						operator_type; 
+	int						return_value;
 }							t_data;
 
 typedef struct s_minishell {
 	char			**envp;
 	t_env_var		*env;
 	t_command_line	*command_line;
-	t_data			*data
+	t_data			*data;
 }	t_minishell;
 
 // tokenization
@@ -138,16 +141,35 @@ void						handle_arr(char *s, char **arr, int *count,
 void						free_arr_tokenization(char **arr);
 
 // -- BUILTINS -- 
-int     mini_cd(char **cmd, t_minishell *minishell);
-void 	cd_error(char **cmd);
+int 	mini_cd(t_minishell *minishell);
+int 	mini_echo(t_minishell *minishell);
+int		mini_env(t_minishell *minishell);
+int		mini_exit(t_minishell *minishell);
+int		mini_export(t_minishell *minishell);
+int		mini_pwd(void);
+int		mini_unset(t_minishell *minishell);
+
+// -- BUILTINS UTILS -- 
 int 	ft_count_args(char **cmd);
 char 	*ft_getenv(char *key, t_minishell *minishell);
 int 	update_env_value(char *key, char *value, t_minishell *minishell);
 void 	copy_env(t_minishell *minishell);
-int 	add_node(char *str, t_minishell *minishell);
-void	print_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
-void	ft_pwd(t_minishell *minishell);
+int 	add_node(char *str, t_minishell *minishell);
+
+// -- EXECUTION -- 
+int		execution(t_minishell *minishell);
+int		execute_builtin(t_minishell *minishell);
+
+// -- EXECUTION UTILS --
+int		execute_builtin(t_minishell *minishell);
+void	skip_cmd(t_minishell *minishell);
+int		setup_redirections(t_command_line *command_line);
+int		redirect_input(t_command_line *command_line);
+int		redirect_output(t_command_line *command_line);
+void	free_table(char **table);
+void	init_struct(t_minishell *minishell, char **envp);
+
 
 // -- PARSING -- 
 t_command_line				*parsing(t_data *data);

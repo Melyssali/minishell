@@ -12,26 +12,21 @@
 
 #include "../../include/minishell.h"
 
-void cd_error(char **cmd)
-{
-	printf("minishell : cd : %s: No such file or directory", cmd[1]);
-}
-
 int mini_cd(t_minishell *minishell)
 {
 	char cwd[10000];
-	
-	if (chdir(minishell->t_command_line->command[1]) == 0)
+
+	if (chdir(minishell->command_line->command[1]) == 0)
 	{
 		if (getcwd(cwd, sizeof(cwd)) != NULL)
 		{
-			printf("%s\n", cwd);
+			// printf("%s\n", cwd);
 			update_env_value("PWD", cwd, minishell);	
 			return(0);
 		}
 		else 
 		{
-			cd_error(cmd);
+			printf("minishell : cd : %s: No such file or directory", minishell->command_line->command[1]);
 			return(1);			
 		}
 	}

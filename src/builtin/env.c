@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-void mini_env(t_minishell *minishell)
+int mini_env(t_minishell *minishell)
 {
 	t_env_var *ptr;
 
@@ -24,4 +24,5 @@ void mini_env(t_minishell *minishell)
 		printf("%s\n", ptr->value);
 		ptr = ptr->next;
 	}
+	return (0);
 }

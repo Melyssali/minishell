@@ -12,17 +12,20 @@
 
 #include "../../include/minishell.h"
 
-void	mini_pwd(t_minishell *minishell)
+int mini_pwd(void)
 {
-	t_env_var *ptr;
+	char *cwd;
 
-	ptr = minishell->env;
-	while (ptr != NULL)
+	cwd = getcwd(NULL, 0);
+	if (cwd)
 	{
-		if (strcmp(ptr->key, "PWD") == 0)
-		{
-			printf("%s=%s",ptr->key, ptr->value);
-		}
-		ptr = ptr->next;
+		printf("%s\n", cwd);
+		free(cwd);
 	}
+	else
+	{
+		perror("getcwd");
+		return(1);
+	}
+	return(0);
 }

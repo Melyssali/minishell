@@ -14,10 +14,11 @@
 
 int setup_redirections(t_command_line *command_line)
 {
-	if (command_line->input_file >= 0)
+	if (command_line->input_file != NULL)
 		redirect_input(command_line);
-	else if (command_line->output_file >= 0)
+	else if (command_line->output_file != NULL)
 		redirect_output(command_line);
+	return SUCCESS;
 }
 
 int redirect_input(t_command_line *command_line)

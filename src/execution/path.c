@@ -23,25 +23,27 @@ static char	*cmd_not_found(char *cmd)
 int	build_cmd(t_minishell *minishell)
 {
 	char	**path_tab;
+	char	*path;
 	char	*cmd_path;
 	int		i;
 
-	path_tab = ft_split(minishell->envp, ':');
+	path = ft_getenv("PATH", minishell);
+	path_tab = ft_split(path, ':');
 	i = 0;
 	while (path_tab && path_tab[i])
 	{
 		path_tab[i] = ft_strjoin(path_tab[i], "/");
-		cmd_path = ft_strjoin_no_free(path_tab[i], minishell->cmd_tab[0]);
+		cmd_path = ft_strjoin_no_free(path_tab[i], minishell->command_line->command[0]);
 		if (access(cmd_path, X_OK) == 0)
 		{
-			free_tab(path_tab);
+			free_table(path_tab);
 			minishell->command_line->cmd_path = cmd_path;
 			return (SUCCESS);
 		}
 		free(cmd_path);
 		i++;
 	}
-	free_tab(path_tab);
+	free_table(path_tab);
 	cmd_not_found(minishell->command_line->command[0]);
     return (FAIL);
 }
