@@ -12,13 +12,16 @@
 
 #include "../../include/minishell.h"
 
-int setup_redirections(t_command_line *command_line)
+void setup_redirections(t_command_line *command_line, int *pipe)
 {
+	close(pipe[0]);
 	if (command_line->input_file != NULL)
 		redirect_input(command_line);
-	else if (command_line->output_file != NULL)
+	if (command_line->output_file != NULL)
 		redirect_output(command_line);
-	return SUCCESS;
+	else if (command_line->next != NULL)
+		dup2(pipe[1], STDOUT_FILENO);
+	close(pipe[1]);
 }
 
 int redirect_input(t_command_line *command_line)
@@ -41,7 +44,7 @@ int redirect_output(t_command_line *command_line)
 {
 	int fd_out;
 	
-	 if (command_line->append_output >= 0)
+	 if (command_line->append_output > 0)
         {
             fd_out = open(command_line->output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
         }

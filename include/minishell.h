@@ -24,6 +24,8 @@
 # define SUCCESS 0
 # define TRUE 1
 # define FALSE 0
+# define GET 0
+# define SET 1
 #define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
@@ -37,7 +39,8 @@
 #include <readline/history.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
+#include <errno.h> // for perror
+#include <sys/wait.h> //for waitpid
 #include "../libs/libft/libft.h"
 
 typedef enum
@@ -120,6 +123,8 @@ typedef struct s_data
 	int						previous_op_state;
 	int						operator_type; 
 	int						return_value;
+	int						save_stdin;
+	int						save_stdout;
 }							t_data;
 
 typedef struct s_minishell {
@@ -160,16 +165,20 @@ int 	add_node(char *str, t_minishell *minishell);
 // -- EXECUTION -- 
 int		execution(t_minishell *minishell);
 int		execute_builtin(t_minishell *minishell);
+void	parent_process(t_minishell *minishell, int *pipe);
+void	child_process(t_minishell *minishell, int *pipe);
+int		build_cmd(t_minishell *minishell);
+int		exec_cmd(t_minishell *minishell, int *pipe);
 
 // -- EXECUTION UTILS --
 int		execute_builtin(t_minishell *minishell);
 void	skip_cmd(t_minishell *minishell);
-int		setup_redirections(t_command_line *command_line);
+void	setup_redirections(t_command_line *command_line, int *pipe);
 int		redirect_input(t_command_line *command_line);
 int		redirect_output(t_command_line *command_line);
 void	free_table(char **table);
 void	init_struct(t_minishell *minishell, char **envp);
-
+int		save_or_restore_fds(t_minishell *minishell, int order);
 
 // -- PARSING -- 
 t_command_line				*parsing(t_data *data);

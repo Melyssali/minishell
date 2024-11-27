@@ -20,7 +20,6 @@ int mini_cd(t_minishell *minishell)
 	{
 		if (getcwd(cwd, sizeof(cwd)) != NULL)
 		{
-			// printf("%s\n", cwd);
 			update_env_value("PWD", cwd, minishell);	
 			return(0);
 		}
