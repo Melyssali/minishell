@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 22:08:37 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/25 14:21:27 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,19 @@ int	main(void)
                 printf("cmd : NULL\n");
             printf("\nis_builtin : %d,\n builtin_type : %d,\n input : %s,\n output : %s,\n is_append : %d,\n heredoc : %s,\n NEXT : --->\n", tmp->is_builtin, tmp->builtin_type, tmp->input_file, tmp->output_file, tmp->append_output, tmp->heredoc_delimiter);
             // print file heredoc;
-            if (tmp->heredoc_delimiter)
-            {
-                char* c = (char*)calloc(100, sizeof(char));
-                int sz;
-                int fd = open(tmp->heredoc_file, O_RDONLY);
-                if (fd < 0) {
-                    perror("r1");
-                    exit(1);
-                }
-                sz = read(fd, c, 1000000);
-                c[sz] = '\0';
-                printf("heredoc file: %s\n", c);
-            }
+            // if (tmp->heredoc_delimiter)
+            // {
+            //     char* c = (char*)calloc(100, sizeof(char));
+            //     int sz;
+            //     int fd = open(tmp->heredoc_file, O_RDONLY);
+            //     if (fd < 0) {
+            //         perror("r1");
+            //         exit(1);
+            //     }
+            //     sz = read(fd, c, 1000000);
+            //     c[sz] = '\0';
+            //     printf("heredoc file: %s\n", c);
+            // }
             printf("--------------\n");
             tmp = tmp->next;
         }

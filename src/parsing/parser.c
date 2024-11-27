@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 22:11:11 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/22 20:07:36 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ t_command_line	*parsing(t_data *data)
 	new_node = NULL;
 	data->pipe_count = 0;
 	i = 0;
-	new_node = create_node(data->table_op, data->tokens, &i, data->table_builtins);
+	new_node = create_node(data->table_op, data->tokens, &i,
+			data->table_builtins);
 	if (!head)
 		head = new_node;
 	current = new_node;
