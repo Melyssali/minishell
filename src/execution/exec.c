@@ -26,7 +26,6 @@ int execution(t_minishell *minishell)
     return(0);
 }
 
-
 int save_or_restore_fds(t_minishell *minishell, int order)
 {
     if (!minishell->data)
@@ -50,10 +49,15 @@ int save_or_restore_fds(t_minishell *minishell, int order)
 int exec_loop(t_minishell *minishell)
 {
     int return_value;
-    int pipe[2];
+    int fd_tab[2];
 
     return_value = SUCCESS;
-    if (setup_redirections(minishell->command_line, pipe) == FAIL)
+    if (pipe(fd_tab) == -1)
+    {
+        perror("pipe");
+        return (FAIL);
+    }
+    if (setup_redirections(minishell->command_line, fd_tab) == FAIL)
     {
         skip_cmd(minishell);
         return_value = FAIL;
@@ -61,7 +65,7 @@ int exec_loop(t_minishell *minishell)
     if (minishell->command_line->is_builtin == TRUE)
         execute_builtin(minishell);
     else
-        exec_cmd(minishell, pipe);
+        exec_cmd(minishell, fd_tab);
     skip_cmd(minishell);
     save_or_restore_fds(minishell, RESTORE);
     return (return_value);
