@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* ************************************************************************ */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   handle_interpreting.c                              :+:      :+:    :+:   */
@@ -6,16 +6,17 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 21:38:29 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/27 13:49:00 by melyssa          ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/* ************************************************************************ */
 
 #include "../../include/minishell.h"
+#include <errno.h>
     
 //  voir si lolo gere le fait que la variable tapée est valide ou non
 // Une variable doit obligatoirement commencer par lettre ou underscore mais pas par un chiffre
 
-char	**handle_interpreting(t_env_var *ptr, t_data *data, t_minishell *minishell)
+char	**handle_interpreting(t_data *data, t_minishell *minishell)
 {
 	int	y;
 	int x;
@@ -42,6 +43,11 @@ char	**handle_interpreting(t_env_var *ptr, t_data *data, t_minishell *minishell)
 					if (!value)
 						value = "";
 					data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x], value, size);
+				}
+				else
+				{
+					if (ft_strcmp(data->tokens[y], "$?") == 0)
+						return (NULL);
 				}
 			}
 			x++;
@@ -87,7 +93,7 @@ char *copy_value(char *token, char *start, char *value, int size)
     int total_size;
     char *new_token;
 
-	len_before = start - token;
+	len_before = start - token - 1;
 	len_value = ft_strlen(value);
 	len_after = ft_strlen(start + size);
 	total_size = len_before + len_value + len_after;
@@ -97,7 +103,7 @@ char *copy_value(char *token, char *start, char *value, int size)
     ft_memcpy(new_token, token, len_before);
     ft_memcpy(new_token + len_before, value, len_value);
     ft_memcpy(new_token + len_before + len_value, start + size, len_after);
-    new_token[total_size - 1] = '\0';
+    new_token[total_size] = '\0';
     free(token);
     return (new_token);
 }

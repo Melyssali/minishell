@@ -24,8 +24,8 @@
 # define SUCCESS 0
 # define TRUE 1
 # define FALSE 0
-# define GET 0
-# define SET 1
+# define SAVE 0
+# define RESTORE 1
 #define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
@@ -169,11 +169,18 @@ void	parent_process(t_minishell *minishell, int *pipe);
 void	child_process(t_minishell *minishell, int *pipe);
 int		build_cmd(t_minishell *minishell);
 int		exec_cmd(t_minishell *minishell, int *pipe);
+int 	exec_loop(t_minishell *minishell);
+
+// -- FILE_ACCESS -- 
+int		check_file_access(t_minishell *minishell);
+int		infile_access_check(char *input_file);
+int		outfile_access_check(char *output_file);
 
 // -- EXECUTION UTILS --
 int		execute_builtin(t_minishell *minishell);
+void    clean_up_node(t_command_line *command_line);
 void	skip_cmd(t_minishell *minishell);
-void	setup_redirections(t_command_line *command_line, int *pipe);
+int		setup_redirections(t_command_line *command_line, int *pipe);
 int		redirect_input(t_command_line *command_line);
 int		redirect_output(t_command_line *command_line);
 void	free_table(char **table);
@@ -192,6 +199,12 @@ int							calculate_width(t_hash_operators *table_op[],
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
 
+// -- INTERPRETING --
+
+char	**handle_interpreting(t_data *data, t_minishell *minishell);
+int		count_variable(char *s);
+char	*copy_variable(char *s, int size);
+char 	*copy_value(char *token, char *start, char *value, int size);
 
 // -- TOKENISATION - quote verifications --
 int							find_last_quote(char *s, char quote);

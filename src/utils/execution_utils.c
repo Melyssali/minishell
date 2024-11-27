@@ -61,4 +61,10 @@ void	init_struct(t_minishell *minishell, char **envp)
 {
 	minishell->envp = envp;
 	copy_env(minishell);
+	minishell->data = malloc(sizeof(t_data));
+	if (!minishell->data)
+	{
+    	perror("malloc failed");
+    	exit(EXIT_FAILURE);
+	}
 }

@@ -50,9 +50,11 @@ int	main(int argc, char **argv, char**envp)
 		data.tokens = split_into_tokens(input);
 		if (data.tokens == NULL)
 			printf("Syntax error: unclosed quotes.\n");
+		data.tokens = handle_interpreting(&data, &minishell);
+		if (data.tokens == NULL)
+			printf("%d\n", errno);
 		else
 		{
-			// data.tokens = handle_interpreting(&ptr, &data, &minishell);
 			if (ft_strcmp(data.tokens[0], "exit") == 0)
 				exit(EXIT_SUCCESS);
 			if (classify_tokens(&data))
@@ -64,8 +66,8 @@ int	main(int argc, char **argv, char**envp)
 					return (1);
 				}
 			}
+			execution(&minishell);
 		}
-		execution(&minishell);
 	}
 	return (0);
 }
