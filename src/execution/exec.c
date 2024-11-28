@@ -14,25 +14,18 @@
 
 int execution(t_minishell *minishell)
 {
-    if (check_file_access(minishell) == FAIL)
-        skip_cmd(minishell);
     save_or_restore_fds(minishell, SAVE);
     while (minishell->command_line != NULL)
-        {
-            if (exec_loop(minishell) == FAIL)
-                skip_cmd(minishell);
-        }
-    clean_up_node(minishell->command_line);
-    return(0);
+    {
+        exec_loop(minishell);
+        skip_and_free(minishell);
+        save_or_restore_fds(minishell, RESTORE);
+    }
+    return(SUCCESS);
 }
 
-int save_or_restore_fds(t_minishell *minishell, int order)
+void save_or_restore_fds(t_minishell *minishell, int order)
 {
-    if (!minishell->data)
-    {
-        fprintf(stderr, "Error: minishell->data is not initialized.\n");
-        exit(EXIT_FAILURE);
-    }
     if (order == SAVE)
     {
         minishell->data->save_stdin = dup(STDIN_FILENO);
@@ -43,32 +36,25 @@ int save_or_restore_fds(t_minishell *minishell, int order)
         dup2(minishell->data->save_stdin, STDIN_FILENO);
         dup2(minishell->data->save_stdout, STDOUT_FILENO);
     }
-    return(0);
 }
 
 int exec_loop(t_minishell *minishell)
 {
-    int return_value;
     int fd_tab[2];
 
-    return_value = SUCCESS;
     if (pipe(fd_tab) == -1)
     {
         perror("pipe");
         return (FAIL);
     }
     if (setup_redirections(minishell->command_line, fd_tab) == FAIL)
-    {
-        skip_cmd(minishell);
-        return_value = FAIL;
-    }
+        return (FAIL);
     if (minishell->command_line->is_builtin == TRUE)
-        execute_builtin(minishell);
+        return (execute_builtin(minishell));
     else
-        exec_cmd(minishell, fd_tab);
-    skip_cmd(minishell);
-    save_or_restore_fds(minishell, RESTORE);
-    return (return_value);
+        if (exec_cmd(minishell, fd_tab) == FAIL)
+            return(FAIL);
+    return (SUCCESS);
 }
 
 int exec_cmd(t_minishell *minishell, int *pipe)
@@ -78,26 +64,32 @@ int exec_cmd(t_minishell *minishell, int *pipe)
     if (build_cmd(minishell) == FAIL)
         return (FAIL);
     pid = fork();
-    if(pid == -1)
+    if (pid == -1)
+    {
         perror("fork");
+        return (FAIL);
+    }
     if (pid == 0)
         child_process(minishell, pipe);
     else
         parent_process(minishell, pipe);
-    return (0);
+    return (SUCCESS);
 }
 
 void child_process(t_minishell *minishell, int *pipe)
 {
+    char **envp;
+
+    envp = lst_to_arr(minishell->env);
+    if (envp == NULL) 
     if (minishell->command_line->next != NULL)
     {
         close(pipe[0]);
         dup2(pipe[1], STDOUT_FILENO);
         close(pipe[1]);
     }
-    execve(minishell->command_line->cmd_path, minishell->command_line->command, minishell->envp);
-    perror("execve");
-    exit(1);
+    if (execve(minishell->command_line->cmd_path, minishell->command_line->command, envp) == -1)
+        perror("execve");
 }
 
 void parent_process(t_minishell *minishell, int *pipe)
@@ -118,4 +110,56 @@ void    clean_up_node(t_command_line *command_line)
     free(command_line->output_file);
     free(command_line->cmd_path);
     free(command_line);
+}
+
+char **lst_to_arr(t_env_var *env)
+{
+    t_env_var *lst;
+    char **dest;
+    int i;
+    int len;
+
+    len = len_list(env);
+    dest = (char **)malloc(sizeof(char *) * (len + 1));
+    if (!dest)
+        return (NULL);
+
+    lst = env;
+    i = 0;
+    while (lst != NULL)
+    {
+        dest[i] = ft_strjoin_no_free(lst->key, "=");
+        if (!dest[i])
+        {
+            free(dest);
+            return (NULL);
+        }
+        char *full_str = ft_strjoin_no_free(dest[i], lst->value);
+        free(dest[i]);
+        if (!full_str)
+        {
+            free(dest);
+            return (NULL);
+        }
+        dest[i] = full_str;
+        lst = lst->next;
+        i++;
+    }
+    dest[i] = NULL;
+    return (dest);
+}
+
+
+
+int len_list(t_env_var *env)
+{
+    int len = 0;
+    t_env_var *tmp = env;
+
+    while (tmp != NULL)
+    {
+        len++;
+        tmp = tmp->next;
+    }
+    return len;
 }

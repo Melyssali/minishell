@@ -12,16 +12,23 @@
 
 #include "../../include/minishell.h"
 
-void skip_cmd(t_minishell *minishell)
+void skip_and_free(t_minishell *minishell)
 {
 	t_command_line *tmp;
 
 	tmp = minishell->command_line;
+
 	minishell->command_line = minishell->command_line->next;
-	free(tmp->command);
-	free(tmp->input_file);
-	free(tmp->output_file);
-	free(tmp->heredoc_delimiter);
+	if(tmp->command)
+		free_table(tmp->command);
+	// if (tmp->input_file)
+	// 	free(tmp->input_file);
+	// if (tmp->output_file)
+	// 	free(tmp->output_file);
+	// if (tmp->heredoc_delimiter)
+	// 	free(tmp->heredoc_delimiter);
+	// if (tmp->heredoc_file)
+	// 	free(tmp->heredoc_file);
 	free(tmp);
 }
 
