@@ -81,3 +81,18 @@ int handle_outfile(t_command_line *command_line)
 	close(fd_out);
 	return SUCCESS;
 }
+
+
+void save_or_restore_fds(t_minishell *minishell, int order)
+{
+    if (order == SAVE)
+    {
+        minishell->data->save_stdin = dup(STDIN_FILENO);
+        minishell->data->save_stdout = dup(STDOUT_FILENO);
+    }
+    else if (order == RESTORE)
+    {
+        dup2(minishell->data->save_stdin, STDIN_FILENO);
+        dup2(minishell->data->save_stdout, STDOUT_FILENO);
+    }
+}

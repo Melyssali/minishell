@@ -121,3 +121,21 @@ int add_node(char *str, t_minishell *minishell)
 	return 0;
 }
 
+int	execute_builtin(t_minishell *minishell)
+{
+	if (ft_strncmp(minishell->command_line->command[0], "cd", 3) == 0)
+		minishell->data->return_value = mini_cd(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "echo", 5) == 0)
+		minishell->data->return_value = mini_echo(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "env", 4) == 0)
+		minishell->data->return_value = mini_env(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "export", 7) == 0)
+		minishell->data->return_value = mini_export(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "pwd", 4) == 0)
+		minishell->data->return_value = mini_pwd();
+	else if (ft_strncmp(minishell->command_line->command[0], "unset", 6) == 0)
+		minishell->data->return_value = mini_unset(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
+		minishell->data->return_value = mini_exit(minishell);
+	return(0);
+}

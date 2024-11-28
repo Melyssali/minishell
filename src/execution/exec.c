@@ -24,20 +24,6 @@ int execution(t_minishell *minishell)
     return(SUCCESS);
 }
 
-void save_or_restore_fds(t_minishell *minishell, int order)
-{
-    if (order == SAVE)
-    {
-        minishell->data->save_stdin = dup(STDIN_FILENO);
-        minishell->data->save_stdout = dup(STDOUT_FILENO);
-    }
-    else if (order == RESTORE)
-    {
-        dup2(minishell->data->save_stdin, STDIN_FILENO);
-        dup2(minishell->data->save_stdout, STDOUT_FILENO);
-    }
-}
-
 int exec_loop(t_minishell *minishell)
 {
     int fd_tab[2];
@@ -88,6 +74,7 @@ void child_process(t_minishell *minishell, int *pipe)
         dup2(pipe[1], STDOUT_FILENO);
         close(pipe[1]);
     }
+    printf("command: %s\n", minishell->command_line->cmd_path);
     if (execve(minishell->command_line->cmd_path, minishell->command_line->command, envp) == -1)
         perror("execve");
 }
@@ -101,65 +88,4 @@ void parent_process(t_minishell *minishell, int *pipe)
         close(pipe[0]);
     }
     waitpid(-1, &minishell->data->return_value, 0);
-}
-
-void    clean_up_node(t_command_line *command_line)
-{
-    free_table(command_line->command);
-    free(command_line->input_file);
-    free(command_line->output_file);
-    free(command_line->cmd_path);
-    free(command_line);
-}
-
-char **lst_to_arr(t_env_var *env)
-{
-    t_env_var *lst;
-    char **dest;
-    int i;
-    int len;
-
-    len = len_list(env);
-    dest = (char **)malloc(sizeof(char *) * (len + 1));
-    if (!dest)
-        return (NULL);
-
-    lst = env;
-    i = 0;
-    while (lst != NULL)
-    {
-        dest[i] = ft_strjoin_no_free(lst->key, "=");
-        if (!dest[i])
-        {
-            free(dest);
-            return (NULL);
-        }
-        char *full_str = ft_strjoin_no_free(dest[i], lst->value);
-        free(dest[i]);
-        if (!full_str)
-        {
-            free(dest);
-            return (NULL);
-        }
-        dest[i] = full_str;
-        lst = lst->next;
-        i++;
-    }
-    dest[i] = NULL;
-    return (dest);
-}
-
-
-
-int len_list(t_env_var *env)
-{
-    int len = 0;
-    t_env_var *tmp = env;
-
-    while (tmp != NULL)
-    {
-        len++;
-        tmp = tmp->next;
-    }
-    return len;
 }

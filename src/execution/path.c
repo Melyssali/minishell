@@ -48,3 +48,19 @@ int	build_cmd(t_minishell *minishell)
     return (FAIL);
 }
 
+void	free_table(char **table)
+{
+	int	i;
+
+	i = 0;
+	if (table == NULL)
+        return;
+	while (table[i])
+	{
+		free(table[i]);
+		i++;
+	}
+	free(table);
+	table = NULL;
+}
+

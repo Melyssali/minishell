@@ -19,49 +19,52 @@ void skip_and_free(t_minishell *minishell)
 	tmp = minishell->command_line;
 
 	minishell->command_line = minishell->command_line->next;
-	if(tmp->command)
-		free_table(tmp->command);
-	// if (tmp->input_file)
-	// 	free(tmp->input_file);
-	// if (tmp->output_file)
-	// 	free(tmp->output_file);
-	// if (tmp->heredoc_delimiter)
-	// 	free(tmp->heredoc_delimiter);
-	// if (tmp->heredoc_file)
-	// 	free(tmp->heredoc_file);
+	if (tmp->input_file)
+		free(tmp->input_file);
+	if (tmp->output_file)
+		free(tmp->output_file);
 	free(tmp);
 }
 
-int	execute_builtin(t_minishell *minishell)
+char **lst_to_arr(t_env_var *env)
 {
-	if (ft_strncmp(minishell->command_line->command[0], "cd", 3) == 0)
-		minishell->data->return_value = mini_cd(minishell);
-	else if (ft_strncmp(minishell->command_line->command[0], "echo", 5) == 0)
-		minishell->data->return_value = mini_echo(minishell);
-	else if (ft_strncmp(minishell->command_line->command[0], "env", 4) == 0)
-		minishell->data->return_value = mini_env(minishell);
-	else if (ft_strncmp(minishell->command_line->command[0], "export", 7) == 0)
-		minishell->data->return_value = mini_export(minishell);
-	else if (ft_strncmp(minishell->command_line->command[0], "pwd", 4) == 0)
-		minishell->data->return_value = mini_pwd();
-	else if (ft_strncmp(minishell->command_line->command[0], "unset", 6) == 0)
-		minishell->data->return_value = mini_unset(minishell);
-	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
-		minishell->data->return_value = mini_exit(minishell);
-	return(0);
+    t_env_var *lst;
+    char **dest;
+    int i;
+    int len;
+
+    len = len_list(env);
+    dest = (char **)malloc(sizeof(char *) * (len + 1));
+    if (!dest)
+        return (NULL);
+
+    lst = env;
+    i = 0;
+    while (lst != NULL)
+    {
+        dest[i] = ft_strjoin_no_free(lst->key, "=");
+        char *full_str = ft_strjoin_no_free(dest[i], lst->value);
+        free(dest[i]);
+        dest[i] = full_str;
+        lst = lst->next;
+        i++;
+    }
+    dest[i] = NULL;
+    return (dest);
 }
 
-void free_table(char **table)
-{
-    int i;
 
-	i = -1;
-    if (!table)
-        return;
-    while (table[++i] != NULL)
-        free(table[i]);
-    free(table);
-	table = NULL;
+int len_list(t_env_var *env)
+{
+    int len = 0;
+    t_env_var *tmp = env;
+
+    while (tmp != NULL)
+    {
+        len++;
+        tmp = tmp->next;
+    }
+    return len;
 }
 
 void	init_struct(t_minishell *minishell, char **envp)

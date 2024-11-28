@@ -172,6 +172,7 @@ int		exec_cmd(t_minishell *minishell, int *pipe);
 int 	exec_loop(t_minishell *minishell);
 int len_list(t_env_var *list);
 char **lst_to_arr(t_env_var *env);
+
 // -- FILE_UTILS -- 
 int		setup_redirections(t_command_line *command_line, int *pipe);
 int		handle_infile(t_command_line *command_line);
