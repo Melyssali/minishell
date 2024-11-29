@@ -12,20 +12,18 @@
 
 #include "../../include/minishell.h"
 
-int mini_pwd(void)
+int	mini_pwd(void)
 {
-	char *cwd;
+	char	cwd[PATH_MAX];
 
-	cwd = getcwd(NULL, 0);
-	if (cwd)
+	if (getcwd(cwd, PATH_MAX))
 	{
 		printf("%s\n", cwd);
-		free(cwd);
+		return (SUCCESS);
 	}
 	else
 	{
-		perror("getcwd");
-		return(1);
+		perror("pwd");
+		return (FAIL);
 	}
-	return(0);
 }

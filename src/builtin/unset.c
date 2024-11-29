@@ -12,18 +12,19 @@
 
 #include "../../include/minishell.h"
 
-int mini_unset(t_minishell *minishell)
+int	mini_unset(t_minishell *minishell)
 {
-	t_env_var *ptr;
-	t_env_var *prev;
-	int i;
+	t_env_var	*ptr;
+	t_env_var	*prev;
+	int			i;
 
 	i = 0;
 	ptr = minishell->env;
 	prev = NULL;
-	while(minishell->command_line->command[++i] != NULL)
+	while (minishell->command_line->command[++i] != NULL)
 	{
-		while(ptr != NULL && strcmp(ptr->key, minishell->command_line->command[i]) != 0)
+		while (ptr != NULL
+			&& strcmp(ptr->key, minishell->command_line->command[i]) != 0)
 		{
 			prev = ptr;
 			ptr = ptr->next;

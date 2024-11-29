@@ -74,7 +74,6 @@ void child_process(t_minishell *minishell, int *pipe)
         dup2(pipe[1], STDOUT_FILENO);
         close(pipe[1]);
     }
-    printf("command: %s\n", minishell->command_line->cmd_path);
     if (execve(minishell->command_line->cmd_path, minishell->command_line->command, envp) == -1)
         perror("execve");
 }

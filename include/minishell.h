@@ -42,6 +42,7 @@
 #include <errno.h> // for perror
 #include <sys/wait.h> //for waitpid
 #include "../libs/libft/libft.h"
+#include <limits.h>
 
 typedef enum
 {
@@ -161,7 +162,7 @@ int 	update_env_value(char *key, char *value, t_minishell *minishell);
 void 	copy_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
 int 	add_node(char *str, t_minishell *minishell);
-
+int		change_value(t_minishell *minishell, char *equal_sign, int key_len);
 // -- EXECUTION -- 
 int		execution(t_minishell *minishell);
 int		execute_builtin(t_minishell *minishell);
@@ -170,8 +171,8 @@ void	child_process(t_minishell *minishell, int *pipe);
 int		build_cmd(t_minishell *minishell);
 int		exec_cmd(t_minishell *minishell, int *pipe);
 int 	exec_loop(t_minishell *minishell);
-int len_list(t_env_var *list);
-char **lst_to_arr(t_env_var *env);
+int 	len_list(t_env_var *list);
+char 	**lst_to_arr(t_env_var *env);
 
 // -- FILE_UTILS -- 
 int		setup_redirections(t_command_line *command_line, int *pipe);
@@ -187,6 +188,7 @@ int		redirect_output(t_command_line *command_line);
 void	free_table(char **table);
 void	init_struct(t_minishell *minishell, char **envp);
 void	save_or_restore_fds(t_minishell *minishell, int order);
+int		print_error(char *str);
 
 // -- PARSING -- 
 t_command_line				*parsing(t_data *data);

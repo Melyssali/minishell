@@ -67,11 +67,6 @@ int	classify_tokens(t_data *data)
 			data->token_types[i] = ARGUMENT_FILE;
 		else if (data->previous_state == COMMAND && handle_operators_error(data->tokens[i]))
 			data->token_types[i] = ARGUMENT;
-		else
-		{
-			printf("Syntax error\n");
-			return (0);
-		}
 		data->previous_state = data->token_types[i];
 		i++;
 	}

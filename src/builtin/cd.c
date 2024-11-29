@@ -12,22 +12,27 @@
 
 #include "../../include/minishell.h"
 
-int mini_cd(t_minishell *minishell)
+int	mini_cd(t_minishell *minishell)
 {
-	char cwd[10000];
+	char	cwd[10000];
 
-	if (chdir(minishell->command_line->command[1]) == 0)
+	if (ft_count_args(minishell->command_line->command) > 2)
+	{
+		print_error("minishell: cd: too many arguments\n");
+		return (FAIL);
+	}
+	else if (chdir(minishell->command_line->command[1]) == 0)
 	{
 		if (getcwd(cwd, sizeof(cwd)) != NULL)
 		{
-			update_env_value("PWD", cwd, minishell);	
-			return(0);
+			update_env_value("PWD", cwd, minishell);
+			return (SUCCESS);
 		}
-		else 
-		{
-			printf("minishell : cd : %s: No such file or directory", minishell->command_line->command[1]);
-			return(1);			
-		}
+		else
+			return (FAIL);
 	}
-	return(0);
+	print_error("minishell: ");
+	print_error(minishell->command_line->command[1]);
+	print_error(":  No such file or directory\n");
+	return (FAIL);
 }

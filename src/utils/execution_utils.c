@@ -78,3 +78,10 @@ void	init_struct(t_minishell *minishell, char **envp)
     	exit(EXIT_FAILURE);
 	}
 }
+
+int	print_error(char *str)
+{
+	if (str)
+		write(2, str, ft_strlen(str));
+	return (TRUE);
+}

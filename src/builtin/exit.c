@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-int mini_exit(t_minishell *minishell)
+int	mini_exit(t_minishell *minishell)
 {
 	if (ft_strcmp(minishell->command_line->command[0], "exit") == 0)
 	{
