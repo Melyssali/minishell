@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 22:08:49 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/09 00:24:33 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,12 @@
 # define SPACE ' '
 # define TAB '\t'
 # define NEWLINE '\n'
+# define FAIL 1
+# define SUCCESS 0
 # define TRUE 1
 # define FALSE 0
+# define SAVE 0
+# define RESTORE 1
 #define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
@@ -30,9 +34,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <fcntl.h>
 #include <unistd.h>
-#include "libft.h"
-// #include <readline/readline.h>
+#include <errno.h> // for perror
+#include <sys/wait.h> //for waitpid
+#include "../libs/libft/libft.h"
+#include <limits.h>
 
 typedef enum
 {
@@ -71,10 +81,6 @@ typedef struct s_env_var
     struct s_env_var *next;
 } t_env_var;
 
-typedef struct s_minishell {
-	char **envp;
-	t_env_var *env;
-}	t_minishell;
 
 // hash table for builtins
 typedef struct s_hash_builtin
@@ -95,6 +101,7 @@ typedef struct s_hash_operators
 typedef struct s_command_line
 {
 	char					**command;
+	char					*cmd_path;
 	int						is_builtin;
 	int						builtin_type;
 	char					*input_file;
@@ -115,11 +122,22 @@ typedef struct s_data
 	int						pipe_count;
 	int						previous_state;
 	int						previous_op_state;
-	int						operator_type;
+	int						operator_type; 
+	int						return_value;
+	int						save_stdin;
+	int						save_stdout;
+	int						is_double_quotes;
 }							t_data;
 
+typedef struct s_minishell {
+	char			**envp;
+	t_env_var		*env;
+	t_command_line	*command_line;
+	t_data			*data;
+}	t_minishell;
+
 // tokenization
-char						**split_into_tokens(char *s);
+char						**split_into_tokens(char *s, t_data *data);
 char						*skip_space(char *s);
 char						*iterate_word(char *s);
 char						*skip_quotes(char *s, char quote);
@@ -130,16 +148,48 @@ void						handle_arr(char *s, char **arr, int *count,
 void						free_arr_tokenization(char **arr);
 
 // -- BUILTINS -- 
-int     mini_cd(char **cmd, t_minishell *minishell);
-void 	cd_error(char **cmd);
+int 	mini_cd(t_minishell *minishell);
+int 	mini_echo(t_minishell *minishell);
+int		mini_env(t_minishell *minishell);
+int		mini_exit(t_minishell *minishell);
+int		mini_export(t_minishell *minishell);
+int		mini_pwd(void);
+int		mini_unset(t_minishell *minishell);
+
+// -- BUILTINS UTILS -- 
 int 	ft_count_args(char **cmd);
 char 	*ft_getenv(char *key, t_minishell *minishell);
 int 	update_env_value(char *key, char *value, t_minishell *minishell);
 void 	copy_env(t_minishell *minishell);
-int 	add_node(char *str, t_minishell *minishell);
-void	print_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
-void	ft_pwd(t_minishell *minishell);
+int 	add_node(char *str, t_minishell *minishell);
+int		change_value(t_minishell *minishell, char *equal_sign, int key_len);
+// -- EXECUTION -- 
+int		execution(t_minishell *minishell);
+int		execute_builtin(t_minishell *minishell);
+void	parent_process(t_minishell *minishell, int *pipe);
+void	child_process(t_minishell *minishell, int *pipe);
+int		build_cmd(t_minishell *minishell);
+int		exec_cmd(t_minishell *minishell, int *pipe);
+int 	exec_loop(t_minishell *minishell);
+int 	len_list(t_env_var *list);
+char 	**lst_to_arr(t_env_var *env);
+
+// -- FILE_UTILS -- 
+int		setup_redirections(t_command_line *command_line, int *pipe);
+int		handle_infile(t_command_line *command_line);
+int 	handle_outfile(t_command_line *command_line);
+
+// -- EXECUTION UTILS --
+int		execute_builtin(t_minishell *minishell);
+void    clean_up_node(t_command_line *command_line);
+void	skip_and_free(t_minishell *minishell);
+int		redirect_input(t_command_line *command_line);
+int		redirect_output(t_command_line *command_line);
+void	free_table(char **table);
+void	init_struct(t_minishell *minishell, char **envp);
+void	save_or_restore_fds(t_minishell *minishell, int order);
+int		print_error(char *str);
 
 // -- PARSING -- 
 t_command_line				*parsing(t_data *data);
@@ -153,6 +203,12 @@ int							calculate_width(t_hash_operators *table_op[],
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
 
+// -- INTERPRETING --
+
+char	**handle_interpreting(t_data *data, t_minishell *minishell);
+int		count_variable(char *s);
+char	*copy_variable(char *s, int size);
+char 	*copy_value(char *token, char *start, char *value, int size);
 
 // -- TOKENISATION - quote verifications --
 int							find_last_quote(char *s, char quote);
@@ -177,4 +233,13 @@ int							classify_tokens(t_data *data);
 // -- HERE DOC -- 
 void						handle_heredoc(char *delimiter, t_command_line *node);
 void						fill_lines(char *input, t_command_line *node, int index);
+
+// FREE
+void						free_nodes_parsing(t_command_line *head);
+void						free_builtins_table(t_hash_builtins *table_builtins[]);
+void						free_operators_table(t_hash_operators *table_op[]);
+void						free_arr_tokenization(char **arr);
+void						free_all(t_command_line *head,
+								t_hash_operators *table_op[],
+								t_hash_builtins *table_builtins[]);
 #endif

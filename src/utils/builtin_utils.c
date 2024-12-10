@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:54:18 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/07 17:29:42 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char *ft_getenv(char *key, t_minishell *minishell)
 	}
 	return (NULL);
 }
-
 
 int update_env_value(char *key, char *value, t_minishell *minishell)
 {
@@ -101,13 +100,9 @@ int add_node(char *str, t_minishell *minishell)
 	i = 0;
 	node = (t_env_var *)malloc(sizeof(t_env_var));
 	if (!node)
-	{
 		return(0);
-	}
 	while (str[i] && str[i] != '=')
-	{
 		i++;
-	}
 	node->key = strndup(str, i);
 	if (str[i] == '=')
 	{
@@ -116,9 +111,7 @@ int add_node(char *str, t_minishell *minishell)
 			return(0);
 	}
 	else
-	{
 		node->value = NULL;
-	}
 	node->next = NULL;
 	last = minishell->env;
 	while (last->next)
@@ -127,3 +120,21 @@ int add_node(char *str, t_minishell *minishell)
 	return 0;
 }
 
+int	execute_builtin(t_minishell *minishell)
+{
+	if (ft_strncmp(minishell->command_line->command[0], "cd", 3) == 0)
+		minishell->data->return_value = mini_cd(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "echo", 5) == 0)
+		minishell->data->return_value = mini_echo(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "env", 4) == 0)
+		minishell->data->return_value = mini_env(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "export", 7) == 0)
+		minishell->data->return_value = mini_export(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "pwd", 4) == 0)
+		minishell->data->return_value = mini_pwd();
+	else if (ft_strncmp(minishell->command_line->command[0], "unset", 6) == 0)
+		minishell->data->return_value = mini_unset(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
+		minishell->data->return_value = mini_exit(minishell);
+	return(0);
+}

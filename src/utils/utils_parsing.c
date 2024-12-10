@@ -6,15 +6,13 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 22:08:37 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/07 17:28:58 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "libft.h"
 
-int	calculate_width(t_hash_operators *table_op[], char *tokens[],
-		int *index)
+int	calculate_width(t_hash_operators *table_op[], char *tokens[], int *index)
 {
 	int	operator_type;
 
@@ -24,10 +22,11 @@ int	calculate_width(t_hash_operators *table_op[], char *tokens[],
 		if (operator_type == -1)
 			(*index)++;
 		else
-			break;
+			break ;
 	}
 	return (*index);
 }
+
 char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 		int *index)
 {
@@ -41,7 +40,9 @@ char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 	width = calculate_width(table_op, tokens, index) - i;
 	if (*index == 0)
 		return (NULL);
-	arr = malloc(sizeof(char *) * width + 1);
+	arr = malloc(sizeof(char *) * (width + 1));
+	if (!arr)
+		return (NULL);
 	arr[width] = NULL;
 	while (y < width)
 	{
@@ -52,9 +53,11 @@ char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 	arr[y] = NULL;
 	return (arr);
 }
-// node->is_builtin = (node->builtin_type >= 0); means if node->builtin_type >= 0 is true 1 or false 0
-t_command_line	*create_node(t_hash_operators *table_op[],
-		char *tokens[], int *index, t_hash_builtins *table_builtins[])
+
+// node->is_builtin = (node->builtin_type >= 0); means 
+// if node->builtin_type >= 0 is true 1 or false 0
+t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
+		int *index, t_hash_builtins *table_builtins[])
 {
 	t_command_line	*node;
 
@@ -72,7 +75,8 @@ t_command_line	*create_node(t_hash_operators *table_op[],
 	}
 	else
 	{
-		node->builtin_type = is_builtin_command(node->command[0], table_builtins);
+		node->builtin_type = is_builtin_command(node->command[0],
+				table_builtins);
 		node->is_builtin = (node->builtin_type != -1);
 	}
 	node->input_file = NULL;

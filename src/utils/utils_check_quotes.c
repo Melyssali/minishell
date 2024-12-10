@@ -16,12 +16,12 @@ int	find_last_quote(char *s, char quote)
 {
 	if (*s == quote)
 		s++;
-		while (*s)
-		{
-			if (*s == quote)
-				return (0);
-			s++;
-		}
+	while (*s)
+	{
+		if (*s == quote)
+			return (0);
+		s++;
+	}
 	return (ERROR);
 }
 

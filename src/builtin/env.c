@@ -12,11 +12,13 @@
 
 #include "../../include/minishell.h"
 
-void print_env(t_minishell *minishell)
+int	mini_env(t_minishell *minishell)
 {
-	t_env_var *ptr;
+	t_env_var	*ptr;
 
 	ptr = minishell->env;
+	if (ptr == NULL)
+		return (FAIL);
 	while (ptr != NULL)
 	{
 		printf("%s", ptr->key);
@@ -24,4 +26,5 @@ void print_env(t_minishell *minishell)
 		printf("%s\n", ptr->value);
 		ptr = ptr->next;
 	}
+	return (SUCCESS);
 }

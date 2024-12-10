@@ -12,31 +12,54 @@
 
 #include "../../include/minishell.h"
 
-int export(char **cmd, t_minishell *minishell)
+int	mini_export(t_minishell *minishell)
 {
-	if (cmd[1] != NULL)
+	int		key_len;
+	char	*equal_sign;
+
+	if (minishell->command_line->command[1] != NULL)
 	{
-		char *equal_sign = strchr(cmd[1], '=');
+		equal_sign = strchr(minishell->command_line->command[1], '=');
+		key_len = equal_sign - minishell->command_line->command[1];
 		if (equal_sign != NULL)
-		{
-			int key_length = equal_sign - cmd[1];
-			char *key = strndup(cmd[1], key_length);
-			if (ft_getenv(key, minishell))
-				update_env_value(key, cmd[1], minishell);
-			else
-				add_node(cmd[1], minishell);
-			free(key);
-		}
-		return(0);
+			return (change_value(minishell, equal_sign, key_len));
+		else
+			return (SUCCESS);
 	}
 	else
 		declare(minishell);
-	return(0);
+	return (SUCCESS);
+}
+
+int	change_value(t_minishell *minishell, char *equal_sign, int key_len)
+{
+	char	*value;
+	char	*key;
+
+	key = strndup(minishell->command_line->command[1], key_len);
+	if (!key)
+		return (FAIL);
+	if (ft_getenv(key, minishell))
+	{
+		if (ft_strlen(equal_sign) == 0)
+			update_env_value(key, NULL, minishell);
+		else
+		{
+			value = strdup(equal_sign + 1);
+			if (!value)
+				return (FAIL);
+			update_env_value(key, value, minishell);
+		}
+	}
+	else
+		add_node(minishell->command_line->command[1], minishell);
+	free(key);
+	return (SUCCESS);
 }
 
 void	declare(t_minishell *minishell)
 {
-	t_env_var *ptr;
+	t_env_var	*ptr;
 
 	ptr = minishell->env;
 	while (ptr != NULL)
@@ -45,8 +68,8 @@ void	declare(t_minishell *minishell)
 		printf("%s", ptr->key);
 		printf("=");
 		printf("\"");
-		printf("%s\n", ptr->value);
-		printf("\"");
+		printf("%s", ptr->value);
+		printf("\"\n");
 		ptr = ptr->next;
 	}
 }

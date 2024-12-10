@@ -6,48 +6,62 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 21:38:29 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/09 00:14:11 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./include/minishell.h"
-    
-//  voir si lolo gere le fait que la variable tapée est valide ou non
-// Une variable doit obligatoirement commencer par lettre ou underscore mais pas par un chiffre
+#include "../../include/minishell.h"
+#include <errno.h>
 
-char	**handle_interpreting(t_env_var *ptr, t_data *data, t_minishell *minishell)
+static int	handle_dollar(t_data *data, t_minishell *minishell, int x, int y)
+{
+	char	*value;
+	char	*temp;
+	int		size;
+
+	while (data->tokens[y][x] == DOLLAR)
+		x++;
+	if (ft_isalpha(data->tokens[y][x]) || data->tokens[y][x] == '_')
+	{
+		size = count_variable(&data->tokens[y][x]);
+		temp = copy_variable(&data->tokens[y][x], size);
+		value = ft_getenv(temp, minishell);
+		free(temp);
+		if (!value)
+			value = "";
+		data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x],
+				value, size);
+	}
+	else
+	{
+		if (ft_strcmp(data->tokens[y], "$?") == 0)
+			return (ERROR); // il faut un code d'erreur passé par lolo donc printf("%d", last_code_error)
+	}
+	return (1);
+}
+
+char	**handle_interpreting(t_data *data, t_minishell *minishell)
 {
 	int	y;
-	int x;
-	char *value;
-	char *temp;
-	int	size;
+	int	x;
+	int	return_value;
 
 	y = 0;
-	while (data->tokens[y])
-	{
-		x = 0;
-		while (data->tokens[y][x])
+		while (data->tokens[y])
 		{
-			if (data->tokens[y][x] == DOLLAR)
+			x = 0;
+			while (data->tokens[y][x])
 			{
-				while (data->tokens[y][x] == DOLLAR)
-					x++;
-				if (ft_isalpha(data->tokens[y][x]) || data->tokens[y][x] == '_')
+				if (data->tokens[y][x] == DOLLAR)
 				{
-					size = count_variable(&data->tokens[y][x]);
-					temp = copy_variable(&data->tokens[y][x], size);
-					value = ft_getenv(temp, minishell);
-					free(temp);
-					if (!value)
-						value = "";
-					data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x], value, size);
+					return_value = handle_dollar(data, minishell, x, y);
+					if (return_value == ERROR)
+						return (NULL);
 				}
+				x++;
 			}
-			x++;
+			y++;
 		}
-		y++;
-	}
 	return (data->tokens);
 }
 
@@ -57,14 +71,14 @@ int	count_variable(char *s)
 
 	count = 0;
 	while (s[count] && (ft_isalnum(s[count]) || s[count] == '_'))
-        count++;
+		count++;
 	return (count);
 }
 
 char	*copy_variable(char *s, int size)
 {
-	char *temp;
-	int i;
+	char	*temp;
+	int		i;
 
 	i = 0;
 	temp = malloc(sizeof(char) * (size + 1));
@@ -79,25 +93,25 @@ char	*copy_variable(char *s, int size)
 	return (temp);
 }
 
-char *copy_value(char *token, char *start, char *value, int size)
+char	*copy_value(char *token, char *start, char *value, int size)
 {
-    int len_before;
-    int len_value;
-    int len_after;
-    int total_size;
-    char *new_token;
+	int		len_before;
+	int		len_value;
+	int		len_after;
+	int		total_size;
+	char	*new_token;
 
-	len_before = start - token;
+	len_before = start - token - 1;
 	len_value = ft_strlen(value);
 	len_after = ft_strlen(start + size);
 	total_size = len_before + len_value + len_after;
 	new_token = malloc(sizeof(char) * (total_size + 1));
-    if (!new_token)
-        return NULL;
-    ft_memcpy(new_token, token, len_before);
-    ft_memcpy(new_token + len_before, value, len_value);
-    ft_memcpy(new_token + len_before + len_value, start + size, len_after);
-    new_token[total_size - 1] = '\0';
-    free(token);
-    return (new_token);
+	if (!new_token)
+		return (NULL);
+	ft_memcpy(new_token, token, len_before);
+	ft_memcpy(new_token + len_before, value, len_value);
+	ft_memcpy(new_token + len_before + len_value, start + size, len_after);
+	new_token[total_size] = '\0';
+	free(token);
+	return (new_token);
 }
