@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/09 01:35:22 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/16 21:22:30 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	handle_input(t_data *data, t_minishell *minishell, char *input)
 	if (data->is_double_quotes)
 		data->tokens = handle_interpreting(data, minishell);
 	if (data->tokens == NULL)
-		printf("%d\n", errno);
+		printf("bash: %d: command not found\n", data->return_value);
 	else
 	{
 		if (classify_tokens(data))
@@ -78,12 +78,12 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = readline("minishell % ");
 		if (input == NULL)
-		{
-			printf("bye\n");
 			break ;
+		if (input[0] != '\0')
+		{
+			add_history(input);
+			handle_input(&data, &minishell, input);
 		}
-		add_history(input);
-		handle_input(&data, &minishell, input);
 		free(input);
 	}
 	free_all(minishell.command_line, data.table_op, data.table_builtins);

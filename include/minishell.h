@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/09 00:24:33 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 12:51:02 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ char						*handle_quote(char *s, char quote);
 void						handle_arr(char *s, char **arr, int *count,
 								char *start_string);
 void						free_arr_tokenization(char **arr);
+int 						is_operator(char c);
 
 // -- BUILTINS -- 
 int 	mini_cd(t_minishell *minishell);

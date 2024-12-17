@@ -5,6 +5,7 @@
         "__node_handle": "c",
         "queue": "c",
         "stack": "c",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "history.h": "c"
     }
 }

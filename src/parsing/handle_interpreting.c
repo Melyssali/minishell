@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/09 00:14:11 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/16 21:00:33 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,29 @@ static int	handle_dollar(t_data *data, t_minishell *minishell, int x, int y)
 
 	while (data->tokens[y][x] == DOLLAR)
 		x++;
-	if (ft_isalpha(data->tokens[y][x]) || data->tokens[y][x] == '_')
+	if (ft_isalpha(data->tokens[y][x]) || data->tokens[y][x] == '_'
+		|| data->tokens[y][x] == '?')
 	{
 		size = count_variable(&data->tokens[y][x]);
 		temp = copy_variable(&data->tokens[y][x], size);
 		value = ft_getenv(temp, minishell);
 		free(temp);
 		if (!value)
-			value = "";
+		{
+			if (data->tokens[y][x] == '?')
+				value = ft_itoa(data->return_value);
+			else
+				value = "";
+		}
 		data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x],
 				value, size);
 	}
 	else
 	{
 		if (ft_strcmp(data->tokens[y], "$?") == 0)
-			return (ERROR); // il faut un code d'erreur passé par lolo donc printf("%d", last_code_error)
+		{
+			return (ERROR);// il faut un code d'erreur passé par lolo donc printf("%d", last_code_error)
+		}
 	}
 	return (1);
 }
@@ -101,7 +109,13 @@ char	*copy_value(char *token, char *start, char *value, int size)
 	int		total_size;
 	char	*new_token;
 
-	len_before = start - token - 1;
+	if (start[0] == '?')
+	{
+		start++;
+		len_before = start - token - 2;
+	}
+	else
+		len_before = start - token - 1;
 	len_value = ft_strlen(value);
 	len_after = ft_strlen(start + size);
 	total_size = len_before + len_value + len_after;

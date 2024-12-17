@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/09 00:52:51 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 12:54:39 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ static char	*handle_string(char *s)
 			}
 		}
 	}
+	else if (is_operator(*s))
+	{
+		while (is_operator(*s))
+			s++;
+	}
+	
 	return (s);
 }
 
@@ -68,6 +74,8 @@ static char	**fill_arr(char **arr, char *s, int how_many_tokens, t_data *data)
 				data->is_double_quotes = 0;
 			s = handle_quote(s, *s);
 		}
+		while (is_operator(*s))
+			s++;
 		handle_arr(s, arr, &count, start_string);
 	}
 	return (arr);

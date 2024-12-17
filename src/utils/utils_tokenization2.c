@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/08 22:52:39 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 12:57:46 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,42 @@
 // who is echo"test", and its not a working command
 
 
-static void	copy_array(char *dst, const char *src)
+// static void	copy_operators(char **dst, char **src)
+// {
+// 	while (is_operator(**src))
+// 	{
+// 		**dst = **src;
+// 		(*dst)++;
+// 		(*src)++;
+// 	}
+// }
+static void	copy_array(char *dst, char *src, size_t dstsize)
 {
 	char	quote;
 
 	quote = '\0';
 	if (dst == NULL || src == NULL)
 		return ;
-	while (*src)
+	while (*src && dstsize > 1)
 	{
-		if (!quote && (*src == SQUOTE || *src == DQUOTE))
-			quote = *src;	
-		if (*src != quote)
+		if (!is_operator(*src))
+		{
+			if (!quote && (*src == SQUOTE || *src == DQUOTE))
+				quote = *src;	
+			if (*src != quote)
+			{
+				*dst = *src;
+				dst++;
+			}
+		}
+		else
 		{
 			*dst = *src;
 			dst++;
 		}
 		src++;
+		dstsize--;
+		
 	}
 	*dst = '\0';
 }
@@ -45,17 +64,35 @@ char	*handle_quote(char *s, char quote)
 	return (s);
 }
 
-void	handle_arr(char *s, char **arr, int *count, char *start_string)
+void	 handle_arr(char *s, char **arr, int *count, char *start_string)
 {
-	arr[*count] = malloc(s - start_string + 1);
+	int length;
+	int	i;
+
+	length = 0;
+	i = 0;
+	while (is_operator(start_string[i]) && (start_string[i] != DQUOTE
+			|| start_string[i] != SQUOTE))
+	{
+		i++;
+		length++;
+	}
+	if (!length)
+		length = s - start_string;
+	arr[*count] = malloc(length + 1);
 	if (!arr[*count])
 	{
 		perror("Malloc array failed.");
 		free_arr_tokenization(arr);
 		return ;
 	}
-	copy_array(arr[*count], start_string);
-	arr[*count][s - start_string] = '\0';
+	copy_array(arr[*count], start_string, length + 1);
+	arr[*count][length] = '\0';
 	(*count)++;
 	arr[*count] = NULL;
+}
+
+int	is_operator(char c)
+{
+    return (c == '<' || c == '>' || c == '|');
 }
