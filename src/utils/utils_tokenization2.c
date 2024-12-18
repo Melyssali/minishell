@@ -6,25 +6,12 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/17 12:57:46 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 13:58:03 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// echo"test" will not work, shell makes one token
-// who is echo"test", and its not a working command
-
-
-// static void	copy_operators(char **dst, char **src)
-// {
-// 	while (is_operator(**src))
-// 	{
-// 		**dst = **src;
-// 		(*dst)++;
-// 		(*src)++;
-// 	}
-// }
 static void	copy_array(char *dst, char *src, size_t dstsize)
 {
 	char	quote;
@@ -37,36 +24,30 @@ static void	copy_array(char *dst, char *src, size_t dstsize)
 		if (!is_operator(*src))
 		{
 			if (!quote && (*src == SQUOTE || *src == DQUOTE))
-				quote = *src;	
-			if (*src != quote)
-			{
-				*dst = *src;
-				dst++;
-			}
+				quote = *src;
 		}
-		else
+		if (*src != quote)
 		{
 			*dst = *src;
 			dst++;
 		}
 		src++;
 		dstsize--;
-		
 	}
 	*dst = '\0';
 }
 
 char	*handle_quote(char *s, char quote)
 {
-		s = skip_quotes(s, quote);
-		s = iterate_inside_quotes(s, quote);
-		s = skip_quotes(s, quote);
+	s = skip_quotes(s, quote);
+	s = iterate_inside_quotes(s, quote);
+	s = skip_quotes(s, quote);
 	return (s);
 }
 
-void	 handle_arr(char *s, char **arr, int *count, char *start_string)
+void	handle_arr(char *s, char **arr, int *count, char *start_string)
 {
-	int length;
+	int	length;
 	int	i;
 
 	length = 0;
@@ -94,5 +75,5 @@ void	 handle_arr(char *s, char **arr, int *count, char *start_string)
 
 int	is_operator(char c)
 {
-    return (c == '<' || c == '>' || c == '|');
+	return (c == '<' || c == '>' || c == '|');
 }

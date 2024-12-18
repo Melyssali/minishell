@@ -12,34 +12,6 @@
 
 #include "../../include/minishell.h"
 
-void export_error(char *str)
-{
-	print_error("minishell: export: ");
-	print_error(str);
-	print_error(": not a valid identifier\n");
-}
-int arg_check(char *arg)
-{
-	int i;
-
-	i = 0;
-	if (arg[0] == '=' || (!ft_isalpha(arg[0]) && arg[0] != '_'))
-	{
-		export_error(arg);
-		return (FAIL);
-	}
-	i++;
-	while(arg[i] != '=' && arg[i])
-	{
-		if (!ft_isalnum(arg[i]))
-		{
-			export_error(arg);
-			return (FAIL);
-		}
-		i++;
-	}
-	return(SUCCESS);
-}
 int	mini_export(t_minishell *minishell)
 {
 	int		key_len;
@@ -47,8 +19,6 @@ int	mini_export(t_minishell *minishell)
 
 	if (minishell->command_line->command[1] != NULL)
 	{
-		if (arg_check(minishell->command_line->command[1]) == FAIL)
-			return (FAIL);
 		equal_sign = strchr(minishell->command_line->command[1], '=');
 		key_len = equal_sign - minishell->command_line->command[1];
 		if (equal_sign != NULL)

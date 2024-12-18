@@ -16,10 +16,9 @@ int	mini_cd(t_minishell *minishell)
 {
 	char	cwd[10000];
 
-	if (ft_count_args(minishell->command_line->command) > 2
-		|| ft_count_args(minishell->command_line->command) == 1)
+	if (ft_count_args(minishell->command_line->command) > 2)
 	{
-		print_error("minishell: cd: only with one relative or absolute path\n");
+		print_error("minishell: cd: too many arguments\n");
 		return (FAIL);
 	}
 	else if (chdir(minishell->command_line->command[1]) == 0)

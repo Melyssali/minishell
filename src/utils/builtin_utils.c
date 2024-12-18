@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/07 17:29:42 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/11/05 19:54:18 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char *ft_getenv(char *key, t_minishell *minishell)
 	}
 	return (NULL);
 }
+
 
 int update_env_value(char *key, char *value, t_minishell *minishell)
 {

@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/24 14:40:36 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:16:28 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	mini_cd(t_minishell *minishell)
+int	mini_pwd(void)
 {
-	char	cwd[10000];
+	char	cwd[PATH_MAX];
 
-	if (ft_count_args(minishell->command_line->command) > 2
-		|| ft_count_args(minishell->command_line->command) == 1)
+	if (getcwd(cwd, PATH_MAX))
 	{
-		print_error("minishell: cd: only with one relative or absolute path\n");
+		printf("%s\n", cwd);
+		return (SUCCESS);
+	}
+	else
+	{
+		perror("pwd");
 		return (FAIL);
 	}
-	else if (chdir(minishell->command_line->command[1]) == 0)
-	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
-		{
-			update_env_value("PWD", cwd, minishell);
-			return (SUCCESS);
-		}
-		else
-			return (FAIL);
-	}
-	print_error("minishell: ");
-	print_error(minishell->command_line->command[1]);
-	print_error(":  No such file or directory\n");
-	return (FAIL);
 }

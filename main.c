@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/16 21:22:30 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 15:28:58 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		free(input);
 	}
-	free_all(minishell.command_line, data.table_op, data.table_builtins);
+	free_all_parsing(minishell.command_line, data.table_op, data.table_builtins);
 	return (0);
 }

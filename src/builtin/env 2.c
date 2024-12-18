@@ -1,39 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/24 14:40:36 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/10/24 13:50:48 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	mini_cd(t_minishell *minishell)
+int	mini_env(t_minishell *minishell)
 {
-	char	cwd[10000];
+	t_env_var	*ptr;
 
-	if (ft_count_args(minishell->command_line->command) > 2
-		|| ft_count_args(minishell->command_line->command) == 1)
-	{
-		print_error("minishell: cd: only with one relative or absolute path\n");
+	ptr = minishell->env;
+	if (ptr == NULL)
 		return (FAIL);
-	}
-	else if (chdir(minishell->command_line->command[1]) == 0)
+	while (ptr != NULL)
 	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
-		{
-			update_env_value("PWD", cwd, minishell);
-			return (SUCCESS);
-		}
-		else
-			return (FAIL);
+		printf("%s", ptr->key);
+		printf("=");
+		printf("%s\n", ptr->value);
+		ptr = ptr->next;
 	}
-	print_error("minishell: ");
-	print_error(minishell->command_line->command[1]);
-	print_error(":  No such file or directory\n");
-	return (FAIL);
+	return (SUCCESS);
 }

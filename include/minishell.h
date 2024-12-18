@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/17 12:51:02 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 15:28:27 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ void						free_nodes_parsing(t_command_line *head);
 void						free_builtins_table(t_hash_builtins *table_builtins[]);
 void						free_operators_table(t_hash_operators *table_op[]);
 void						free_arr_tokenization(char **arr);
-void						free_all(t_command_line *head,
+void						free_all_parsing(t_command_line *head,
 								t_hash_operators *table_op[],
 								t_hash_builtins *table_builtins[]);
 #endif

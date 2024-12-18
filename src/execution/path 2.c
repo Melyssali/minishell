@@ -12,28 +12,55 @@
 
 #include "../../include/minishell.h"
 
-int	mini_cd(t_minishell *minishell)
+static char	*cmd_not_found(char *cmd)
 {
-	char	cwd[10000];
+    write(2, "minishell : ", 11);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": No such file or directory\n", 21);
+	return (NULL);
+}
 
-	if (ft_count_args(minishell->command_line->command) > 2
-		|| ft_count_args(minishell->command_line->command) == 1)
+int	build_cmd(t_minishell *minishell)
+{
+	char	**path_tab;
+	char	*path;
+	char	*cmd_path;
+	int		i;
+
+	path = ft_getenv("PATH", minishell);
+	path_tab = ft_split(path, ':');
+	i = 0;
+	while (path_tab && path_tab[i])
 	{
-		print_error("minishell: cd: only with one relative or absolute path\n");
-		return (FAIL);
-	}
-	else if (chdir(minishell->command_line->command[1]) == 0)
-	{
-		if (getcwd(cwd, sizeof(cwd)) != NULL)
+		path_tab[i] = ft_strjoin(path_tab[i], "/");
+		cmd_path = ft_strjoin_no_free(path_tab[i], minishell->command_line->command[0]);
+		if (access(cmd_path, X_OK) == 0)
 		{
-			update_env_value("PWD", cwd, minishell);
+			free_table(path_tab);
+			minishell->command_line->cmd_path = cmd_path;
 			return (SUCCESS);
 		}
-		else
-			return (FAIL);
+		free(cmd_path);
+		i++;
 	}
-	print_error("minishell: ");
-	print_error(minishell->command_line->command[1]);
-	print_error(":  No such file or directory\n");
-	return (FAIL);
+	free_table(path_tab);
+	cmd_not_found(minishell->command_line->command[0]);
+    return (FAIL);
 }
+
+void	free_table(char **table)
+{
+	int	i;
+
+	i = 0;
+	if (table == NULL)
+        return;
+	while (table[i])
+	{
+		free(table[i]);
+		i++;
+	}
+	free(table);
+	table = NULL;
+}
+
