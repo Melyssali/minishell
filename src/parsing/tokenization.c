@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/17 12:54:39 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:09:54 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static char	*handle_string(char *s)
 		while (is_operator(*s))
 			s++;
 	}
-	
 	return (s);
 }
 

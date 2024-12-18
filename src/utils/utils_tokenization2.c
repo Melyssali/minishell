@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/17 13:58:03 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:46:57 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,15 @@ void	handle_arr(char *s, char **arr, int *count, char *start_string)
 int	is_operator(char c)
 {
 	return (c == '<' || c == '>' || c == '|');
+}
+
+void	if_not_value(char **value, t_data *data, int y, int x)
+{
+	if (!*value)
+	{
+		if (data->tokens[y][x] == '?')
+			*value = ft_itoa(data->return_value);
+		else
+			*value = "";
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/07 17:28:58 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:28:46 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 	return (arr);
 }
 
-// node->is_builtin = (node->builtin_type >= 0); means 
-// if node->builtin_type >= 0 is true 1 or false 0
 t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
 		int *index, t_hash_builtins *table_builtins[])
 {
@@ -63,10 +61,7 @@ t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
 
 	node = malloc(sizeof(t_command_line));
 	if (!node)
-	{
-		printf("Malloc failed.");
 		exit(EXIT_FAILURE);
-	}
 	node->command = duplicate_arr(table_op, tokens, index);
 	if (node->command == NULL)
 	{

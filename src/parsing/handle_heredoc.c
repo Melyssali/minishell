@@ -6,26 +6,17 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/07 17:17:41 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:38:24 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	handle_heredoc(char *delimiter, t_command_line *node)
+static void	write_heredoc(char *delimiter, int fd)
 {
-	int		fd;
-	char	*file_path;
 	char	*input;
 
 	input = NULL;
-	file_path = "/tmp/heredoc_tmp";
-	fd = open(file_path, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
-	if (fd == -1)
-	{
-		perror("Error:");
-		return ;
-	}
 	while (1)
 	{
 		input = readline("> ");
@@ -38,6 +29,21 @@ void	handle_heredoc(char *delimiter, t_command_line *node)
 		write(fd, "\n", 1);
 		free(input);
 	}
+}
+
+void	handle_heredoc(char *delimiter, t_command_line *node)
+{
+	int		fd;
+	char	*file_path;
+
+	file_path = "/tmp/heredoc_tmp";
+	fd = open(file_path, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+	if (fd == -1)
+	{
+		perror("Error:");
+		return ;
+	}
+	write_heredoc(delimiter, fd);
 	close(fd);
 	node->heredoc_file = ft_strdup(file_path);
 	if (!node->heredoc_file)

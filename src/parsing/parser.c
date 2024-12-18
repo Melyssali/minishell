@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/07 17:25:55 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:46:33 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@ int	is_builtin_command(char *cmd, t_hash_builtins *table_builtins[])
 {
 	return (search(table_builtins, cmd));
 }
-// gestion erreur : ls > touch "file.txt"
-// ne fonctionne pas car une redirection peut pas se faire
-// sur un executable
-
-// GERER   < ls | wc -l
-//  ls > test ok -- output ecrit que "test" et pas test ok
 
 t_command_line	*parsing(t_data *data)
 {

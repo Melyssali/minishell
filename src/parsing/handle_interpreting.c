@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/16 21:00:33 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:42:58 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,14 @@ static int	handle_dollar(t_data *data, t_minishell *minishell, int x, int y)
 		temp = copy_variable(&data->tokens[y][x], size);
 		value = ft_getenv(temp, minishell);
 		free(temp);
-		if (!value)
-		{
-			if (data->tokens[y][x] == '?')
-				value = ft_itoa(data->return_value);
-			else
-				value = "";
-		}
+		if_not_value(&value, data, y, x);
 		data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x],
 				value, size);
 	}
 	else
 	{
 		if (ft_strcmp(data->tokens[y], "$?") == 0)
-		{
-			return (ERROR);// il faut un code d'erreur passé par lolo donc printf("%d", last_code_error)
-		}
+			return (ERROR);
 	}
 	return (1);
 }
@@ -55,21 +47,21 @@ char	**handle_interpreting(t_data *data, t_minishell *minishell)
 	int	return_value;
 
 	y = 0;
-		while (data->tokens[y])
+	while (data->tokens[y])
+	{
+		x = 0;
+		while (data->tokens[y][x])
 		{
-			x = 0;
-			while (data->tokens[y][x])
+			if (data->tokens[y][x] == DOLLAR)
 			{
-				if (data->tokens[y][x] == DOLLAR)
-				{
-					return_value = handle_dollar(data, minishell, x, y);
-					if (return_value == ERROR)
-						return (NULL);
-				}
-				x++;
+				return_value = handle_dollar(data, minishell, x, y);
+				if (return_value == ERROR)
+					return (NULL);
 			}
-			y++;
+			x++;
 		}
+		y++;
+	}
 	return (data->tokens);
 }
 

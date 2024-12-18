@@ -6,15 +6,15 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/05 19:54:18 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:04:24 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int ft_count_args(char **cmd)
+int	ft_count_args(char **cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (cmd[i] != NULL)
@@ -22,9 +22,9 @@ int ft_count_args(char **cmd)
 	return (i);
 }
 
-char *ft_getenv(char *key, t_minishell *minishell)
+char	*ft_getenv(char *key, t_minishell *minishell)
 {
-	t_env_var *ptr;
+	t_env_var	*ptr;
 
 	ptr = minishell->env;
 	while (ptr != NULL)
@@ -36,10 +36,9 @@ char *ft_getenv(char *key, t_minishell *minishell)
 	return (NULL);
 }
 
-
-int update_env_value(char *key, char *value, t_minishell *minishell)
+int	update_env_value(char *key, char *value, t_minishell *minishell)
 {
-	t_env_var *ptr;
+	t_env_var	*ptr;
 
 	ptr = minishell->env;
 	while (ptr != NULL)
@@ -58,32 +57,32 @@ int update_env_value(char *key, char *value, t_minishell *minishell)
 	return (1);
 }
 
-void copy_env(t_minishell *minishell)
+void	copy_env(t_minishell *minishell)
 {
-	int i;
-	int j;
-	t_env_var *node;
-	t_env_var *tmp;
+	int			i;
+	int			j;
+	t_env_var	*node;
+	t_env_var	*tmp;
 
 	i = -1;
-	while(minishell->envp[++i])
+	while (minishell->envp[++i])
 	{
 		node = (t_env_var *)malloc(sizeof(t_env_var));
 		if (!node)
-			return;
+			return ;
 		j = 0;
-		while(minishell->envp[i][j] != '=')
+		while (minishell->envp[i][j] != '=')
 			j++;
 		node->key = strndup(minishell->envp[i], j);
 		node->value = strdup(minishell->envp[i] + j + 1);
 		if (node->value == NULL)
-			return;
+			return ;
 		if (i == 0)
 		{
 			tmp = node;
 			minishell->env = node;
 		}
-		else 
+		else
 		{
 			tmp->next = node;
 			tmp = node;
@@ -92,16 +91,16 @@ void copy_env(t_minishell *minishell)
 	node->next = NULL;
 }
 
-int add_node(char *str, t_minishell *minishell)
+int	add_node(char *str, t_minishell *minishell)
 {
-	t_env_var *node;
-	t_env_var *last;
-	int i;
+	t_env_var	*node;
+	t_env_var	*last;
+	int			i;
 
 	i = 0;
 	node = (t_env_var *)malloc(sizeof(t_env_var));
 	if (!node)
-		return(0);
+		return (0);
 	while (str[i] && str[i] != '=')
 		i++;
 	node->key = strndup(str, i);
@@ -109,7 +108,7 @@ int add_node(char *str, t_minishell *minishell)
 	{
 		node->value = strdup(str + i + 1);
 		if (!node->value)
-			return(0);
+			return (0);
 	}
 	else
 		node->value = NULL;
@@ -118,7 +117,7 @@ int add_node(char *str, t_minishell *minishell)
 	while (last->next)
 		last = last->next;
 	last->next = node;
-	return 0;
+	return (0);
 }
 
 int	execute_builtin(t_minishell *minishell)
@@ -137,5 +136,5 @@ int	execute_builtin(t_minishell *minishell)
 		minishell->data->return_value = mini_unset(minishell);
 	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
 		minishell->data->return_value = mini_exit(minishell);
-	return(0);
+	return (0);
 }

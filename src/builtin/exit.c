@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/22 10:54:30 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:09:28 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void free_all(t_minishell *minishell, int exit_code)
+void	free_all(t_minishell *minishell, int exit_code)
 {
 	free(minishell->data->variable_value);
-    if (exit_code != -1)
+	if (exit_code != -1)
 		exit(exit_code);
 }
 
@@ -63,7 +63,8 @@ int	mini_exit(t_minishell *minishell)
 			free_all(minishell, 2);
 		}
 	}
-	if (minishell->command_line->command[1] && minishell->command_line->command[1])
+	if (minishell->command_line->command[1]
+		&& minishell->command_line->command[1])
 	{
 		print_error("exit: too many arguments\n");
 		return (1);

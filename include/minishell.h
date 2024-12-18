@@ -6,10 +6,9 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 16:22:17 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 17:45:57 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -148,54 +147,57 @@ void						handle_arr(char *s, char **arr, int *count,
 void						free_arr_tokenization(char **arr);
 int 						is_operator(char c);
 
+
+
 // -- BUILTINS -- 
-int 	mini_cd(t_minishell *minishell);
-int 	mini_echo(t_minishell *minishell);
-int		mini_env(t_minishell *minishell);
-int		mini_exit(t_minishell *minishell);
-int		mini_export(t_minishell *minishell);
-int		mini_pwd(void);
-int		mini_unset(t_minishell *minishell);
+int 						mini_cd(t_minishell *minishell);
+int 						mini_echo(t_minishell *minishell);
+int							mini_env(t_minishell *minishell);
+int							mini_exit(t_minishell *minishell);
+int							mini_export(t_minishell *minishell);
+int							mini_pwd(void);
+int							mini_unset(t_minishell *minishell);
 
 // -- BUILTINS UTILS -- 
-int 	ft_count_args(char **cmd);
-char 	*ft_getenv(char *key, t_minishell *minishell);
-int 	update_env_value(char *key, char *value, t_minishell *minishell);
-void 	copy_env(t_minishell *minishell);
-void	declare(t_minishell *minishell);
-int 	add_node(char *str, t_minishell *minishell);
-int		change_value(t_minishell *minishell, char *equal_sign, int key_len);
+int 						ft_count_args(char **cmd);
+char 						*ft_getenv(char *key, t_minishell *minishell);
+int 						update_env_value(char *key, char *value, t_minishell *minishell);
+void 						copy_env(t_minishell *minishell);
+void						declare(t_minishell *minishell);
+int 						add_node(char *str, t_minishell *minishell);
+int							change_value(t_minishell *minishell, char *equal_sign, int key_len);
+
 // -- EXECUTION -- 
-int		execution(t_minishell *minishell);
-int		execute_builtin(t_minishell *minishell);
-void	parent_process(t_minishell *minishell, int *pipe);
-void	child_process(t_minishell *minishell, int *pipe);
-int		build_cmd(t_minishell *minishell);
-int		exec_cmd(t_minishell *minishell, int *pipe);
-int 	exec_loop(t_minishell *minishell);
-int 	len_list(t_env_var *list);
-char 	**lst_to_arr(t_env_var *env);
+int							execution(t_minishell *minishell);
+int							execute_builtin(t_minishell *minishell);
+void						parent_process(t_minishell *minishell, int *pipe);
+void						child_process(t_minishell *minishell, int *pipe);
+int							build_cmd(t_minishell *minishell);
+int							exec_cmd(t_minishell *minishell, int *pipe);
+int 						exec_loop(t_minishell *minishell);
+int 						len_list(t_env_var *list);
+char 						**lst_to_arr(t_env_var *env);
 
 // -- FILE_UTILS -- 
-int		setup_redirections(t_command_line *command_line, int *pipe);
-int		handle_infile(t_command_line *command_line);
-int 	handle_outfile(t_command_line *command_line);
+int							setup_redirections(t_command_line *command_line, int *pipe);
+int							handle_infile(t_command_line *command_line);
+int 						handle_outfile(t_command_line *command_line);
 
 // -- EXECUTION UTILS --
-int		execute_builtin(t_minishell *minishell);
-void    clean_up_node(t_command_line *command_line);
-void	skip_and_free(t_minishell *minishell);
-int		redirect_input(t_command_line *command_line);
-int		redirect_output(t_command_line *command_line);
-void	free_table(char **table);
-void	init_struct(t_minishell *minishell, char **envp);
-void	save_or_restore_fds(t_minishell *minishell, int order);
-int		print_error(char *str);
+int							execute_builtin(t_minishell *minishell);
+void    					clean_up_node(t_command_line *command_line);
+void						skip_and_free(t_minishell *minishell);
+int							redirect_input(t_command_line *command_line);
+int							redirect_output(t_command_line *command_line);
+void						free_table(char **table);
+void						init_struct(t_minishell *minishell, char **envp);
+void						save_or_restore_fds(t_minishell *minishell, int order);
+int							print_error(char *str);
 
 // -- PARSING -- 
 t_command_line				*parsing(t_data *data);
-void		handle_pipe(t_command_line **new_node, t_command_line **current, t_data *data, int *i);
-void	handle_redirections(t_command_line **new_node, t_data *data, int *i);
+void						handle_pipe(t_command_line **new_node, t_command_line **current, t_data *data, int *i);
+void						handle_redirections(t_command_line **new_node, t_data *data, int *i);
 t_command_line				*create_node(t_hash_operators *table_op[],
 								char *tokens[], int *index,
 								t_hash_builtins *table_builtins[]);
@@ -205,11 +207,11 @@ int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
 
 // -- INTERPRETING --
-
-char	**handle_interpreting(t_data *data, t_minishell *minishell);
-int		count_variable(char *s);
-char	*copy_variable(char *s, int size);
-char 	*copy_value(char *token, char *start, char *value, int size);
+char						**handle_interpreting(t_data *data, t_minishell *minishell);
+void						if_not_value(char **value, t_data *data, int y, int x);
+int							count_variable(char *s);
+char						*copy_variable(char *s, int size);
+char 						*copy_value(char *token, char *start, char *value, int size);
 
 // -- TOKENISATION - quote verifications --
 int							find_last_quote(char *s, char quote);

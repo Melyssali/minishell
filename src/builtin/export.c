@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/10/23 13:35:06 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:08:12 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void export_error(char *str)
+void	export_error(char *str)
 {
 	print_error("minishell: export: ");
 	print_error(str);
 	print_error(": not a valid identifier\n");
 }
-int arg_check(char *arg)
+
+int	arg_check(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (arg[0] == '=' || (!ft_isalpha(arg[0]) && arg[0] != '_'))
@@ -29,7 +30,7 @@ int arg_check(char *arg)
 		return (FAIL);
 	}
 	i++;
-	while(arg[i] != '=' && arg[i])
+	while (arg[i] != '=' && arg[i])
 	{
 		if (!ft_isalnum(arg[i]))
 		{
@@ -38,8 +39,9 @@ int arg_check(char *arg)
 		}
 		i++;
 	}
-	return(SUCCESS);
+	return (SUCCESS);
 }
+
 int	mini_export(t_minishell *minishell)
 {
 	int		key_len;
