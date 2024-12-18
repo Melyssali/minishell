@@ -1,0 +1,10 @@
+Makefile
+include
+infile
+libs
+main.c
+main.o
+minishell
+outfile
+readline
+src
