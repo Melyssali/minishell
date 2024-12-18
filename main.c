@@ -13,7 +13,7 @@
 #include "./include/minishell.h"
 
 void	handler_signal(int signum)
-{
+	{
 	if (signum == SIGINT)
 	{
 		printf("\n");

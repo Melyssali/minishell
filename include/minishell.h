@@ -163,6 +163,9 @@ void 	copy_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
 int 	add_node(char *str, t_minishell *minishell);
 int		change_value(t_minishell *minishell, char *equal_sign, int key_len);
+int 	arg_check(char *arg);
+void	export_error(char *cmd);
+
 // -- EXECUTION -- 
 int		execution(t_minishell *minishell);
 int		execute_builtin(t_minishell *minishell);
@@ -180,7 +183,6 @@ int		handle_infile(t_command_line *command_line);
 int 	handle_outfile(t_command_line *command_line);
 
 // -- EXECUTION UTILS --
-int		execute_builtin(t_minishell *minishell);
 void    clean_up_node(t_command_line *command_line);
 void	skip_and_free(t_minishell *minishell);
 int		redirect_input(t_command_line *command_line);

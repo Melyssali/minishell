@@ -12,10 +12,12 @@
 
 #include "../../include/minishell.h"
 
-// void free_all(t_minishell *minishell)
-// {
-    
-// }
+void free_all(t_minishell *minishell, int exit_code)
+{
+	free(minishell->data->variable_value);
+    if (exit_code != -1)
+		exit(exit_code);
+}
 
 static int	mini_atoi(char *str, int *err)
 {
@@ -52,23 +54,22 @@ int	mini_exit(t_minishell *minishell)
 	err = 0;
 	if (minishell->command_line->command[1])
 	{
-		ret = almost_atoi(minishell->command_line->command[1], &err);
+		ret = mini_atoi(minishell->command_line->command[1], &err);
 		if (err)
 		{
 			print_error("exit: ");
 			print_error(minishell->command_line->command[1]);
 			print_error(": numeric argument required\n");
-			// free_all(minishell, NULL, 2);
+			free_all(minishell, 2);
 		}
 	}
 	if (minishell->command_line->command[1] && minishell->command_line->command[1])
 	{
 		print_error("exit: too many arguments\n");
-		minishell->data->return_value = 1;
-		return ;
+		return (1);
 	}
-	// if (!minishell->command_line->command[1])
-	// 	free_all(minishell, NULL, minishell->data->return_value);
-	// free_all(minishell, NULL, ret);
+	if (!minishell->command_line->command[1])
+		free_all(minishell, minishell->data->return_value);
+	free_all(minishell, ret);
+	return (ret);
 }
-
