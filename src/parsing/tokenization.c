@@ -6,57 +6,61 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/19 16:43:48 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 12:54:39 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // this file tokenize an input into array
 #include "../../include/minishell.h"
-// delete me ---------------------------------------------------------
-// [] echo "test"123 fonctionne et affiche test123
-// delete me ---------------------------------------------------------
 
-char	**split_into_tokens(char *s);
-static int	count_tokens(char *s);
-static char	**fill_arr(char **arr, char *s, int how_many_tokens);
+static char	*handle_string(char *s)
+{
+	s = skip_space(s);
+	s = iterate_word(s);
+	if (*s && (*s == SPACE || *s == TAB || *s == NEWLINE) && *(s + 1) != '\0')
+		s = skip_space(s);
+	else if (*s && (*s == DQUOTE || *s == SQUOTE) && *(s + 1) != '\0')
+	{
+		if (find_last_quote(s, *s) == ERROR)
+			return (NULL);
+		else
+		{
+			s = handle_quote(s, *s);
+			if (s == NULL)
+			{
+				printf("Need space before first quote\n");
+				return (NULL);
+			}
+		}
+	}
+	else if (is_operator(*s))
+	{
+		while (is_operator(*s))
+			s++;
+	}
+	
+	return (s);
+}
 
 static int	count_tokens(char *s)
 {
 	int	count;
-	char	quote;
 
 	count = 0;
 	while (*s)
 	{
-		s = skip_space(s);
-		s = iterate_word(s);
-		if (*s && (*s == SPACE || *s == TAB || *s == NEWLINE) && *(s + 1) != '\0')
-			s = skip_space(s);
-		else if (*s && (*s == DQUOTE || *s == SQUOTE) && *(s + 1) != '\0')
-		{
-			quote = *s;
-			if (find_last_quote(s, quote) == ERROR)
-				return (ERROR);
-			else
-			{
-				s = handle_quote(s, quote);
-				if (s == NULL)
-				{
-					printf("Need space before first quote\n");
-					return (ERROR);
-				}
-			}
-		}
+		s = handle_string(s);
+		if (!s)
+			return (ERROR);
 		count++;
 	}
 	return (count);
 }
 
-static char	**fill_arr(char **arr, char *s, int how_many_tokens)
+static char	**fill_arr(char **arr, char *s, int how_many_tokens, t_data *data)
 {
-	int	count;
-	char *start_string;
-	char	quote;
+	int		count;
+	char	*start_string;
 
 	count = 0;
 	while (count < how_many_tokens)
@@ -66,15 +70,18 @@ static char	**fill_arr(char **arr, char *s, int how_many_tokens)
 		s = iterate_word(s);
 		if (*s == DQUOTE || *s == SQUOTE)
 		{
-			quote = *s;
-			s = handle_quote(s, quote);
+			if (data->is_double_quotes && *s == SQUOTE)
+				data->is_double_quotes = 0;
+			s = handle_quote(s, *s);
 		}
+		while (is_operator(*s))
+			s++;
 		handle_arr(s, arr, &count, start_string);
-	}	
+	}
 	return (arr);
 }
 
-char	**split_into_tokens(char *s)
+char	**split_into_tokens(char *s, t_data *data)
 {
 	char	**arr;
 	int		how_many_tokens;
@@ -93,5 +100,5 @@ char	**split_into_tokens(char *s)
 		perror("Malloc failed. ");
 		exit(EXIT_FAILURE);
 	}
-	return (fill_arr(arr, s, how_many_tokens));
+	return (fill_arr(arr, s, how_many_tokens, data));
 }

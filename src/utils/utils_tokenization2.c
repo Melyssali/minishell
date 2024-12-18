@@ -6,60 +6,74 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 14:23:24 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/17 13:58:03 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+static void	copy_array(char *dst, char *src, size_t dstsize)
+{
+	char	quote;
 
-// echo"test" will not work, shell makes one token 
-// who is echo"test", and its not a working command
+	quote = '\0';
+	if (dst == NULL || src == NULL)
+		return ;
+	while (*src && dstsize > 1)
+	{
+		if (!is_operator(*src))
+		{
+			if (!quote && (*src == SQUOTE || *src == DQUOTE))
+				quote = *src;
+		}
+		if (*src != quote)
+		{
+			*dst = *src;
+			dst++;
+		}
+		src++;
+		dstsize--;
+	}
+	*dst = '\0';
+}
 
 char	*handle_quote(char *s, char quote)
 {
-	if (is_space_before_quote(s) == ERROR)
-	{
-		return (NULL);
-	}
-	else
-	{
-			s = skip_quotes(s, quote);
-			s = iterate_inside_quotes(s, quote);
-			s = skip_quotes(s, quote);
-	}
+	s = skip_quotes(s, quote);
+	s = iterate_inside_quotes(s, quote);
+	s = skip_quotes(s, quote);
 	return (s);
 }
 
 void	handle_arr(char *s, char **arr, int *count, char *start_string)
 {
-	arr[*count] = malloc(s - start_string + 1);
+	int	length;
+	int	i;
+
+	length = 0;
+	i = 0;
+	while (is_operator(start_string[i]) && (start_string[i] != DQUOTE
+			|| start_string[i] != SQUOTE))
+	{
+		i++;
+		length++;
+	}
+	if (!length)
+		length = s - start_string;
+	arr[*count] = malloc(length + 1);
 	if (!arr[*count])
 	{
 		perror("Malloc array failed.");
 		free_arr_tokenization(arr);
 		return ;
 	}
-	if (*start_string == DQUOTE || *s == SQUOTE)
-	{
-		start_string++;
-		s--;
-	}
-	ft_strlcpy(arr[*count], start_string, s - start_string + 1);
-	arr[*count][s - start_string] = '\0';
+	copy_array(arr[*count], start_string, length + 1);
+	arr[*count][length] = '\0';
 	(*count)++;
 	arr[*count] = NULL;
 }
 
-void	free_arr_tokenization(char **arr)
+int	is_operator(char c)
 {
-	int	y;
-
-	y = 0;
-	while (arr[y] != NULL)
-	{
-		free(arr[y]);
-		y++;
-	}
-	free(arr);
+	return (c == '<' || c == '>' || c == '|');
 }

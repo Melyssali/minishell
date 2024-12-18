@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "__locale": "c",
+        "__node_handle": "c",
+        "queue": "c",
+        "stack": "c",
+        "minishell.h": "c",
+        "history.h": "c"
+    }
+}

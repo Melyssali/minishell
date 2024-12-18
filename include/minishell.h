@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/11/20 22:08:49 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 16:22:17 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ typedef struct s_data
 	int						return_value;
 	int						save_stdin;
 	int						save_stdout;
+	int						is_double_quotes;
 }							t_data;
 
 typedef struct s_minishell {
@@ -136,7 +137,7 @@ typedef struct s_minishell {
 }	t_minishell;
 
 // tokenization
-char						**split_into_tokens(char *s);
+char						**split_into_tokens(char *s, t_data *data);
 char						*skip_space(char *s);
 char						*iterate_word(char *s);
 char						*skip_quotes(char *s, char quote);
@@ -145,6 +146,7 @@ char						*handle_quote(char *s, char quote);
 void						handle_arr(char *s, char **arr, int *count,
 								char *start_string);
 void						free_arr_tokenization(char **arr);
+int 						is_operator(char c);
 
 // -- BUILTINS -- 
 int 	mini_cd(t_minishell *minishell);
@@ -163,9 +165,6 @@ void 	copy_env(t_minishell *minishell);
 void	declare(t_minishell *minishell);
 int 	add_node(char *str, t_minishell *minishell);
 int		change_value(t_minishell *minishell, char *equal_sign, int key_len);
-int 	arg_check(char *arg);
-void	export_error(char *cmd);
-
 // -- EXECUTION -- 
 int		execution(t_minishell *minishell);
 int		execute_builtin(t_minishell *minishell);
@@ -183,6 +182,7 @@ int		handle_infile(t_command_line *command_line);
 int 	handle_outfile(t_command_line *command_line);
 
 // -- EXECUTION UTILS --
+int		execute_builtin(t_minishell *minishell);
 void    clean_up_node(t_command_line *command_line);
 void	skip_and_free(t_minishell *minishell);
 int		redirect_input(t_command_line *command_line);
@@ -234,4 +234,13 @@ int							classify_tokens(t_data *data);
 // -- HERE DOC -- 
 void						handle_heredoc(char *delimiter, t_command_line *node);
 void						fill_lines(char *input, t_command_line *node, int index);
+
+// FREE
+void						free_nodes_parsing(t_command_line *head);
+void						free_builtins_table(t_hash_builtins *table_builtins[]);
+void						free_operators_table(t_hash_operators *table_op[]);
+void						free_arr_tokenization(char **arr);
+void						free_all_parsing(t_command_line *head,
+								t_hash_operators *table_op[],
+								t_hash_builtins *table_builtins[]);
 #endif
