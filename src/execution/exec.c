@@ -67,7 +67,8 @@ void child_process(t_minishell *minishell, int *pipe)
     char **envp;
 
     envp = lst_to_arr(minishell->env);
-    if (envp == NULL) 
+    if (envp == NULL)
+        return;
     if (minishell->command_line->next != NULL)
     {
         close(pipe[0]);
