@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 19:15:43 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 19:20:20 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	is_builtin_command(char *cmd, t_hash_builtins *table_builtins[])
 {
 	return (search(table_builtins, cmd));
 }
+
 static void	handle_operators(int *i, t_command_line **new_node, t_data *data,
 							t_command_line **current)
 {
