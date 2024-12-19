@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 16:20:16 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 18:51:45 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handle_input(t_data *data, t_minishell *minishell, char *input)
 			free_arr_tokenization(data->tokens);
 		}
 		execution(minishell);
-		free_nodes_parsing(minishell->command_line);
+		// free_nodes_parsing(minishell->command_line);
 	}
 }
 

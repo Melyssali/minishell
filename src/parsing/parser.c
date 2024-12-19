@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 17:46:33 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 19:15:43 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@
 int	is_builtin_command(char *cmd, t_hash_builtins *table_builtins[])
 {
 	return (search(table_builtins, cmd));
+}
+static void	handle_operators(int *i, t_command_line **new_node, t_data *data,
+							t_command_line **current)
+{
+	while (data->tokens[*i])
+	{
+		data->operator_type = get_operator_type(data->table_op,
+				data->tokens[*i]);
+		if (data->operator_type >= REDIR_OUTPUT
+			&& data->operator_type <= HEREDOC)
+			handle_redirections(new_node, data, i);
+		else if (data->operator_type == PIPE)
+			handle_pipe(current, new_node, data, i);
+		(*i)++;
+	}
 }
 
 t_command_line	*parsing(t_data *data)
@@ -36,17 +51,7 @@ t_command_line	*parsing(t_data *data)
 	if (!head)
 		head = new_node;
 	current = new_node;
-	while (data->tokens[i])
-	{
-		data->operator_type = get_operator_type(data->table_op,
-				data->tokens[i]);
-		if (data->operator_type >= REDIR_OUTPUT
-			&& data->operator_type <= HEREDOC)
-			handle_redirections(&new_node, data, &i);
-		else if (data->operator_type == PIPE)
-			handle_pipe(&current, &new_node, data, &i);
-		i++;
-	}
+	handle_operators(&i, &new_node, data, &current);
 	return (head);
 }
 

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 17:09:28 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/18 18:37:58 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	free_all(t_minishell *minishell, int exit_code)
 {
 	free(minishell->data->variable_value);
+	free_all_parsing(minishell->command_line, minishell->data->table_op, minishell->data->table_builtins);
 	if (exit_code != -1)
 		exit(exit_code);
 }
