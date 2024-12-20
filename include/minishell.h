@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 18:43:30 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/20 11:41:20 by lscarcel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ char						*skip_quotes(char *s, char quote);
 char						*iterate_inside_quotes(char *s, char quote);
 char						*handle_quote(char *s, char quote);
 void						handle_arr(char *s, char **arr, int *count,
-								char *start_string);
+char *start_string);
 void						free_arr_tokenization(char **arr);
 int 						is_operator(char c);
 
@@ -205,6 +205,7 @@ int							calculate_width(t_hash_operators *table_op[],
 								char *tokens[], int *index);
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
+int 						rl_replace_line(const char *text, int clear_undo);
 
 // -- INTERPRETING --
 char						**handle_interpreting(t_data *data, t_minishell *minishell);

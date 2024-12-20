@@ -14,7 +14,7 @@ WHITE=\033[0m# WHITE
 # ---------- VARIABLES  ----------
 NAME = minishell
 CFLAGS = -Werror -Wextra -Wall
-RLFLAGS = -L./readline-master -lreadline -lncurses
+RLFLAGS = -L./libs/readline -lreadline -lncurses
 DEPS = ./include/minishell.h
 RM = rm -rf
 # ---------- PATH  ----------
@@ -36,7 +36,7 @@ SRCS = 	main.c $(UTILS_PATH)builtin_utils.c $(UTILS_PATH)utils_tokenization.c\
 		$(EXEC_PATH)exec.c $(EXEC_PATH)path.c $(EXEC_PATH)redirections.c $(UTILS_PATH)free_parsing.c
 
 # ---------- REGLES MAKEFILE  ----------
-all : readline_script $(NAME)
+all : $(RL) $(NAME)
 
 $(NAME): $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR)
@@ -49,75 +49,12 @@ $(NAME): $(OBJS)
 debug: CFLAGS += -g
 debug: re
 
-# ---------- BASH SCRIPT  ----------
-# guide to configure https://tiswww.case.edu/php/chet/readline/INSTALL
-# creating a little script to install readline
-# grep -q is quiet mode, don't show result in shell
+$(RL):
+	@echo "$(YELLOW)Compiling readline...$(WHITE)"
+	@cd libs/readline && ./configure
+	@cd  libs/readline&& make
+	@echo "$(GREEN)Readline compiled successfully$(WHITE)"
 
-readline_script:
-	@OS=$$(uname -s); \
-	echo "OS detected: $$OS"; \
-	case "$$OS" in \
-	    Linux) \
-	        if command -v apt-get &> /dev/null; then \
-	            sudo apt-get update; \
-	            sudo apt-get install -y build-essential libncurses5-dev libncursesw5-dev; \
-	        elif command -v yum &> /dev/null; then \
-	            sudo yum groupinstall -y "Development Tools"; \
-	            sudo yum install -y ncurses-devel; \
-	        elif command -v pacman &> /dev/null; then \
-	            sudo pacman -S --needed base-devel ncurses; \
-	        else \
-	            echo "Unsupported Linux distribution. Please install build tools and ncurses manually."; \
-	            exit 1; \
-	        fi; \
-	        ;; \
-	    Darwin*) \
-	        if command -v brew &> /dev/null; then \
-	            brew install ncurses; \
-	        else \
-	            echo "Homebrew not found. Please install Homebrew and rerun the script."; \
-	            exit 1; \
-	        fi; \
-	        ;; \
-	    *) \
-	        echo "Unsupported operating system: $$OS"; \
-	        exit 1; \
-	        ;; \
-	esac
-
-# readline_script:
-# 	@if ls /usr/local/include | grep -q readline; then \
-#     	echo "$(GREEN)readline est déjà installé"; \
-# 	else \
-#     	echo "Installation de readline et vérification des dépendances..."; \
-#     	cd readline-master && ./configure --with-curses && make && sudo make install; \
-#     	echo "$(GREEN)readline a été installé"; \
-# 	fi
-# 	@if ldconfig -p | grep -q libncurses; then \
-#     	echo "$(GREEN)ncurses est déjà installé"; \
-# 	else \
-#     	echo "$(RED)ncurses manquant, installation en cours..."; \
-#     	sudo apt-get install -y libncurses5-dev libncursesw5-dev; \
-#     	echo "$(GREEN)ncurses a été installé"; \
-# 	fi
-
-# readline_script:
-# 	@if ls /usr/lib/x86_64-linux-gnu | grep -q readline; then \
-#     	echo "$(GREEN)readline est déjà installé$(NC)"; \
-# 	else \
-#     	echo "$(RED)readline n'est pas installé ou en conflit avec une autre version$(NC)"; \
-#     	echo "Suppression des anciennes versions dans /usr/local/lib..."; \
-#     	sudo rm -f /usr/local/lib/libreadline.so*; \
-#     	sudo rm -rf /usr/local/include/readline; \
-#     	echo "Installation de readline et ncurses depuis les paquets système..."; \
-#     	sudo apt-get update && sudo apt-get install -y libreadline-dev libncurses5-dev libncursesw5-dev; \
-#     	echo "$(GREEN)Installation de readline et ncurses terminée$(NC)"; \
-# 	fi
-# 	@echo "Compilation du projet avec readline et ncurses..."
-# 	gcc -o minishell main.c -lreadline -lncurses
-
-	
 clean:
 	@$(RM) $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR) clean
