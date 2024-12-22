@@ -21,27 +21,28 @@
 // WTERMSIG returns the number of the signal that caused the child process to terminate.
 // WEXITSTATUS returns the exit status of the child process.
 
-int wait_for_all(pid_t pid)
+int wait_for_all(t_minishell *minishell, int pid_nbr)
 {
-    pid_t wait_pid;
+    int index;
     int status;
-    int last_status;
+    int last_status = 0;
+    pid_t wait_pid;
 
-    wait_pid = 0;
-	last_status = 0;
-    while (wait_pid != -1 || errno != ECHILD)
-        {
-            wait_pid = waitpid(-1, &status, 0);
-            if (wait_pid == pid)
-                last_status = status;
-        }
-    if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGPIPE)
-		return (0);
-	else if (WIFSIGNALED(last_status))
-		return (128 + WTERMSIG(last_status));
-	else if (WIFEXITED(last_status) && !WIFSIGNALED(last_status))
-		return (WEXITSTATUS(last_status));
-	return (last_status);
+    index = pid_nbr - 1;
+    while (index >= 0)
+    {
+        wait_pid = waitpid(minishell->data->pid_table[index], &status, 0);
+        if (wait_pid == minishell->data->pid)
+            last_status = status;
+        index--;
+    }
+    if (WIFSIGNALED(last_status))
+    {
+        if (WTERMSIG(last_status) == SIGPIPE)
+            return (0);
+        return (128 + WTERMSIG(last_status));
+    }
+    if (WIFEXITED(last_status))
+        return (WEXITSTATUS(last_status));
+    return (last_status);
 }
-
-

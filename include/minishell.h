@@ -126,6 +126,8 @@ typedef struct s_data
 	int						save_stdin;
 	int						save_stdout;
 	int						is_double_quotes;
+	pid_t					pid;
+	pid_t					*pid_table;
 }							t_data;
 
 typedef struct s_minishell {
@@ -170,15 +172,14 @@ int							change_value(t_minishell *minishell, char *equal_sign, int key_len);
 // -- EXECUTION -- 
 int							execution(t_minishell *minishell);
 int							execute_builtin(t_minishell *minishell);
-void						parent_process(t_minishell *minishell, int *pipe);
-void						child_process(t_minishell *minishell, int *pipe);
+void						parent_process(int *pipe);
+void						child_process(t_minishell *minishell);
 int							build_cmd(t_minishell *minishell);
-int							exec_cmd(t_minishell *minishell, int *pipe);
-int 						exec_loop(t_minishell *minishell);
+int							exec_cmd(t_minishell *minishell, int pid_nbr);
+int 						exec_loop(t_minishell *minishell, int pid_nbr);
 int 						len_list(t_env_var *list);
 char 						**lst_to_arr(t_env_var *env);
-int							wait_for_all(pid_t pid);
-
+int 						wait_for_all(t_minishell *minishell, int pid_nbr);
 
 // -- FILE_UTILS -- 
 int							setup_redirections(t_command_line *command_line, int *pipe);

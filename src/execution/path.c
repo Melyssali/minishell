@@ -16,7 +16,7 @@ static char	*cmd_not_found(char *cmd)
 {
 	write(2, "minishell : ", 11);
 	write(2, cmd, ft_strlen(cmd));
-	write(2, ": No such file or directory\n", 21);
+	write(2, ": No such file or directory\n", 29);
 	return (NULL);
 }
 

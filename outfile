@@ -1,13 +1,9 @@
 Makefile
 include
-<<<<<<< HEAD
 infile
-=======
->>>>>>> origin/test-tokenization
 libs
 main.c
 main.o
 minishell
 outfile
-readline
 src
