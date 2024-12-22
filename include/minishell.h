@@ -177,6 +177,8 @@ int							exec_cmd(t_minishell *minishell, int *pipe);
 int 						exec_loop(t_minishell *minishell);
 int 						len_list(t_env_var *list);
 char 						**lst_to_arr(t_env_var *env);
+int							wait_for_all(pid_t pid);
+
 
 // -- FILE_UTILS -- 
 int							setup_redirections(t_command_line *command_line, int *pipe);
@@ -205,7 +207,7 @@ int							calculate_width(t_hash_operators *table_op[],
 								char *tokens[], int *index);
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
-int 						rl_replace_line(const char *text, int clear_undo);
+extern void 				rl_replace_line (const char *, int);
 
 // -- INTERPRETING --
 char						**handle_interpreting(t_data *data, t_minishell *minishell);

@@ -33,7 +33,7 @@ SRCS = 	main.c $(UTILS_PATH)builtin_utils.c $(UTILS_PATH)utils_tokenization.c\
 		$(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
 		$(BUILTIN_PATH)exit.c $(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c  \
 		$(UTILS_PATH)utils_handle_error.c $(PARSING_PATH)handle_error.c $(PARSING_PATH)handle_heredoc.c \
-		$(EXEC_PATH)exec.c $(EXEC_PATH)path.c $(EXEC_PATH)redirections.c $(UTILS_PATH)free_parsing.c
+		$(EXEC_PATH)exec.c $(EXEC_PATH)exec_2.c $(EXEC_PATH)path.c $(EXEC_PATH)redirections.c $(UTILS_PATH)free_parsing.c
 
 # ---------- REGLES MAKEFILE  ----------
 all : $(RL) $(NAME)

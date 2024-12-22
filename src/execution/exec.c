@@ -57,8 +57,8 @@ int	exec_cmd(t_minishell *minishell, int *pipe)
 	}
 	if (pid == 0)
 		child_process(minishell, pipe);
-	else
-		parent_process(minishell, pipe);
+	minishell->data->return_value = wait_for_all(pid);
+	parent_process(minishell, pipe);
 	return (SUCCESS);
 }
 
@@ -88,5 +88,4 @@ void	parent_process(t_minishell *minishell, int *pipe)
 		dup2(pipe[0], STDIN_FILENO);
 		close(pipe[0]);
 	}
-	waitpid(-1, &minishell->data->return_value, 0);
 }
