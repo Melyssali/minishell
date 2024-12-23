@@ -133,6 +133,7 @@ typedef struct s_data
 typedef struct s_minishell {
 	char			**envp;
 	t_env_var		*env;
+	t_command_line	*command_line_head;
 	t_command_line	*command_line;
 	t_data			*data;
 }	t_minishell;
@@ -189,7 +190,6 @@ int 						handle_outfile(t_command_line *command_line);
 // -- EXECUTION UTILS --
 int							execute_builtin(t_minishell *minishell);
 void    					clean_up_node(t_command_line *command_line);
-void						skip_and_free(t_minishell *minishell);
 int							redirect_input(t_command_line *command_line);
 int							redirect_output(t_command_line *command_line);
 void						free_table(char **table);

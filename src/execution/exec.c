@@ -15,6 +15,7 @@
 int	execution(t_minishell *minishell)
 {
 	int pid_nbr;
+	minishell->command_line = minishell->command_line_head;
 
 	pid_nbr = 0;
 	minishell->data->pid_table = malloc(sizeof(pid_t) * minishell->data->pipe_count + 1);
@@ -22,9 +23,9 @@ int	execution(t_minishell *minishell)
 	while (minishell->command_line != NULL)
 	{
 		exec_loop(minishell, pid_nbr);
-		skip_and_free(minishell);
 		save_or_restore_fds(minishell, RESTORE);
 		pid_nbr++;
+		minishell->command_line = minishell->command_line->next;
 	}
 	minishell->data->return_value = wait_for_all(minishell, pid_nbr);
 	free(minishell->data->pid_table);

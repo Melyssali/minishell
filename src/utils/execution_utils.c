@@ -12,19 +12,6 @@
 
 #include "../../include/minishell.h"
 
-void	skip_and_free(t_minishell *minishell)
-{
-	t_command_line	*tmp;
-
-	tmp = minishell->command_line;
-	minishell->command_line = minishell->command_line->next;
-	if (tmp->input_file)
-		free(tmp->input_file);
-	if (tmp->output_file)
-		free(tmp->output_file);
-	free(tmp);
-}
-
 char	**lst_to_arr(t_env_var *env)
 {
 	t_env_var	*lst;

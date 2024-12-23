@@ -71,5 +71,5 @@ re: fclean all
 leaks: all
 	leaks --atExit -- ./$(NAME)
 val: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline.supp -s ./$(NAME)
 .PHONY: all clean fclean re

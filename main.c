@@ -38,8 +38,8 @@ void	handle_input(t_data *data, t_minishell *minishell, char *input)
 		if (classify_tokens(data))
 		{
 			free(data->token_types);
-			minishell->command_line = parsing(data);
-			if (minishell->command_line == NULL)
+			minishell->command_line_head = parsing(data);
+			if (minishell->command_line_head == NULL)
 			{
 				printf("Error: ptr is NULL, linked list is empty.\n");
 				return ;

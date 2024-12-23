@@ -15,7 +15,7 @@
 void	free_all(t_minishell *minishell, int exit_code)
 {
 	free(minishell->data->variable_value);
-	free_all_parsing(minishell->command_line, minishell->data->table_op, minishell->data->table_builtins);
+	free_all_parsing(minishell->command_line_head, minishell->data->table_op, minishell->data->table_builtins);
 	if (exit_code != -1)
 		exit(exit_code);
 }
