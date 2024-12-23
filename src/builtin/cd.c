@@ -16,8 +16,12 @@ int	mini_cd(t_minishell *minishell)
 {
 	char	cwd[10000];
 
-	if (ft_count_args(minishell->command_line->command) > 2
-		|| ft_count_args(minishell->command_line->command) == 1)
+	if (ft_count_args(minishell->command_line->command) > 2)
+	{
+		print_error("minishell: cd: too many arguments\n");
+		return (FAIL);
+	}
+	else if (ft_count_args(minishell->command_line->command) == 1)
 	{
 		print_error("minishell: cd: only with one relative or absolute path\n");
 		return (FAIL);
@@ -29,11 +33,10 @@ int	mini_cd(t_minishell *minishell)
 			update_env_value("PWD", cwd, minishell);
 			return (SUCCESS);
 		}
-		else
-			return (FAIL);
+		return (FAIL);
 	}
-	print_error("minishell: ");
+	print_error("minishell: cd: ");
 	print_error(minishell->command_line->command[1]);
-	print_error(":  No such file or directory\n");
+	print_error(": No such file or directory\n");
 	return (FAIL);
 }

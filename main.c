@@ -32,7 +32,7 @@ void	handle_input(t_data *data, t_minishell *minishell, char *input)
 	if (data->is_double_quotes)
 		data->tokens = handle_interpreting(data, minishell);
 	if (data->tokens == NULL)
-		printf("bash: %d: command not found\n", data->return_value);
+		printf("%d: command not found\n", minishell->data->return_value);
 	else
 	{
 		if (classify_tokens(data))
@@ -85,6 +85,7 @@ int	main(int argc, char **argv, char **envp)
 			handle_input(&data, &minishell, input);
 		}
 		free(input);
+		return(minishell.data->return_value);
 	}
 	free_all_parsing(minishell.command_line, data.table_op, data.table_builtins);
 	return (0);

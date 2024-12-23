@@ -65,7 +65,7 @@ int	mini_exit(t_minishell *minishell)
 		}
 	}
 	if (minishell->command_line->command[1]
-		&& minishell->command_line->command[1])
+		&& minishell->command_line->command[2])
 	{
 		print_error("exit: too many arguments\n");
 		return (1);

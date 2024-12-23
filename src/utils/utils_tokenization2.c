@@ -37,12 +37,15 @@ static void	copy_array(char *dst, char *src, size_t dstsize)
 	*dst = '\0';
 }
 
-char	*handle_quote(char *s, char quote)
+char    *handle_quote(char *s, char quote)
 {
-	s = skip_quotes(s, quote);
-	s = iterate_inside_quotes(s, quote);
-	s = skip_quotes(s, quote);
-	return (s);
+    while (*s == quote)
+    {
+        s = skip_quotes(s, quote);
+        s = iterate_inside_quotes(s, quote);
+        s = skip_quotes(s, quote);
+    }
+    return (s);
 }
 
 void	handle_arr(char *s, char **arr, int *count, char *start_string)

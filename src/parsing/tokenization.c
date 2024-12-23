@@ -26,6 +26,7 @@ static char	*handle_string(char *s)
 		else
 		{
 			s = handle_quote(s, *s);
+			s = iterate_word(s);
 			if (s == NULL)
 			{
 				printf("Need space before first quote\n");
@@ -72,6 +73,7 @@ static char	**fill_arr(char **arr, char *s, int how_many_tokens, t_data *data)
 			if (data->is_double_quotes && *s == SQUOTE)
 				data->is_double_quotes = 0;
 			s = handle_quote(s, *s);
+			s = iterate_word(s);
 		}
 		while (is_operator(*s))
 			s++;

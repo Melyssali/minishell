@@ -120,7 +120,7 @@ int	add_node(char *str, t_minishell *minishell)
 	return (0);
 }
 
-int	execute_builtin(t_minishell *minishell)
+void	execute_builtin(t_minishell *minishell)
 {
 	if (ft_strncmp(minishell->command_line->command[0], "cd", 3) == 0)
 		minishell->data->return_value = mini_cd(minishell);
@@ -136,5 +136,4 @@ int	execute_builtin(t_minishell *minishell)
 		minishell->data->return_value = mini_unset(minishell);
 	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
 		minishell->data->return_value = mini_exit(minishell);
-	return (0);
 }

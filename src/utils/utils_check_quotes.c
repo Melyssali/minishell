@@ -12,17 +12,32 @@
 
 #include "../../include/minishell.h"
 
-int	find_last_quote(char *s, char quote)
+int find_last_quote(char *s, char quote)
 {
-	if (*s == quote)
-		s++;
-	while (*s)
-	{
-		if (*s == quote)
-			return (0);
-		s++;
-	}
-	return (ERROR);
+    int count_quote;
+    int i;
+    count_quote = 0;
+    i = 0;
+    while (s[i])
+    {
+        if (s[i] == quote)
+            count_quote++;
+        i++;
+    }
+    if (count_quote % 2 == 1)
+    {
+        return (ERROR);
+    }
+    return (1);
+    // if (*s == quote)
+    //  s++;
+    // while (*s)
+    // {
+    //  if (*s == quote)
+    //      return (0);
+    //  s++;
+    // }
+    // return (ERROR);
 }
 
 int	is_space_before_quote(char *s)

@@ -19,6 +19,8 @@ static int	handle_dollar(t_data *data, t_minishell *minishell, int x, int y)
 	char	*temp;
 	int		size;
 
+	if (ft_strcmp(data->tokens[0], "$?") == 0)
+			return (ERROR);
 	while (data->tokens[y][x] == DOLLAR)
 		x++;
 	if (ft_isalpha(data->tokens[y][x]) || data->tokens[y][x] == '_'
@@ -31,11 +33,6 @@ static int	handle_dollar(t_data *data, t_minishell *minishell, int x, int y)
 		if_not_value(&value, data, y, x);
 		data->tokens[y] = copy_value(data->tokens[y], &data->tokens[y][x],
 				value, size);
-	}
-	else
-	{
-		if (ft_strcmp(data->tokens[y], "$?") == 0)
-			return (ERROR);
 	}
 	return (1);
 }

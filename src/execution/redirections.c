@@ -42,7 +42,7 @@ int	handle_infile(t_command_line *command_line)
 	return_value = SUCCESS;
 	if (access(command_line->input_file, F_OK) != 0)
 	{
-		printf("error while accessing file\n");
+		print_error("No such file or directory\n");
 		return (FAIL);
 	}
 	if (access(command_line->input_file, R_OK) != 0)

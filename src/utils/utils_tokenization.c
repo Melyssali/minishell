@@ -27,11 +27,11 @@ char	*iterate_word(char *s)
 	return (s);
 }
 
-char	*skip_quotes(char *s, char quote)
+char    *skip_quotes(char *s, char quote)
 {
-	while (*s && *s == quote)
-		s++;
-	return (s);
+    if (*s && *s == quote)
+        s++;
+    return (s);
 }
 
 char	*iterate_inside_quotes(char *s, char quote)

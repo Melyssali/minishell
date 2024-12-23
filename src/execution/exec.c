@@ -24,32 +24,38 @@ int	execution(t_minishell *minishell)
 	{
 		exec_loop(minishell, pid_nbr);
 		save_or_restore_fds(minishell, RESTORE);
-		pid_nbr++;
 		minishell->command_line = minishell->command_line->next;
 	}
-	minishell->data->return_value = wait_for_all(minishell, pid_nbr);
+	if(pid_nbr > 0)
+		minishell->data->return_value = wait_for_all(minishell, pid_nbr);
 	free(minishell->data->pid_table);
 	minishell->data->pid_table = NULL;
+	minishell->command_line = NULL;
 	return (SUCCESS);
 }
 
-int	exec_loop(t_minishell *minishell, int pid_nbr)
+void	exec_loop(t_minishell *minishell, int pid_nbr)
 {
 	int	fd_tab[2];
 
 	if (pipe(fd_tab) == -1)
 	{
 		perror("pipe");
-		return (FAIL);
+		return ;
 	}
 	if (setup_redirections(minishell->command_line, fd_tab) == FAIL)
-		return (FAIL);
+	{
+		minishell->data->return_value = FAIL;
+		return ;
+	}
 	if (minishell->command_line->is_builtin == TRUE)
-			return (execute_builtin(minishell));
+			execute_builtin(minishell);
 	else
+	{
+		pid_nbr++;
 		if (exec_cmd(minishell, pid_nbr) == FAIL)
-			return (FAIL);
-	return (SUCCESS);
+			return ;
+	}
 }
 
 int	exec_cmd(t_minishell *minishell, int pid_nbr)

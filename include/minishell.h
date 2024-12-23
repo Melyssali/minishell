@@ -172,12 +172,11 @@ int							change_value(t_minishell *minishell, char *equal_sign, int key_len);
 
 // -- EXECUTION -- 
 int							execution(t_minishell *minishell);
-int							execute_builtin(t_minishell *minishell);
 void						parent_process(int *pipe);
 void						child_process(t_minishell *minishell);
 int							build_cmd(t_minishell *minishell);
 int							exec_cmd(t_minishell *minishell, int pid_nbr);
-int 						exec_loop(t_minishell *minishell, int pid_nbr);
+void 						exec_loop(t_minishell *minishell, int pid_nbr);
 int 						len_list(t_env_var *list);
 char 						**lst_to_arr(t_env_var *env);
 int 						wait_for_all(t_minishell *minishell, int pid_nbr);
@@ -188,7 +187,7 @@ int							handle_infile(t_command_line *command_line);
 int 						handle_outfile(t_command_line *command_line);
 
 // -- EXECUTION UTILS --
-int							execute_builtin(t_minishell *minishell);
+void						execute_builtin(t_minishell *minishell);
 void    					clean_up_node(t_command_line *command_line);
 int							redirect_input(t_command_line *command_line);
 int							redirect_output(t_command_line *command_line);
