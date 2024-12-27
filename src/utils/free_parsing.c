@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 18:46:23 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/26 20:25:27 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ void	free_nodes_parsing(t_command_line *head)
 		if (current->cmd_path)
 			free(current->cmd_path);
 		if (current->input_file)
-			free(current->input_file);
+			free_arr_tokenization(current->input_file);
 		if (current->output_file)
-			free(current->output_file);
+			free_arr_tokenization(current->output_file);
 		if (current->heredoc_delimiter)
 			free(current->heredoc_delimiter);
 		if (current->heredoc_file)

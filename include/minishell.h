@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/20 11:41:20 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/12/26 21:26:21 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,10 @@ typedef struct s_command_line
 	char					*cmd_path;
 	int						is_builtin;
 	int						builtin_type;
-	char					*input_file;
-	char					*output_file;
+	// char					*input_file;
+	// char					*output_file;
+	char					**input_file;
+	char					**output_file;
 	int						append_output;
 	char					*heredoc_delimiter;
 	char 					*heredoc_file;
@@ -118,6 +120,9 @@ typedef struct s_data
 	char					**tokens;
 	char					*variable_value;
 	int						*token_types;
+	int						arr_redir_size;
+	int						output_i;
+	int						input_i;
 	int						pipe_count;
 	int						previous_state;
 	int						previous_op_state;
@@ -200,13 +205,14 @@ int							print_error(char *str);
 t_command_line				*parsing(t_data *data);
 void						handle_pipe(t_command_line **new_node, t_command_line **current, t_data *data, int *i);
 void						handle_redirections(t_command_line **new_node, t_data *data, int *i);
-t_command_line				*create_node(t_hash_operators *table_op[],
-								char *tokens[], int *index,
-								t_hash_builtins *table_builtins[]);
+t_command_line				*create_node(t_data *data, int *index);
 int							calculate_width(t_hash_operators *table_op[],
 								char *tokens[], int *index);
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
+// -- REDIRECTION UTILS -- 
+char						**malloc_array(t_data *data, char **cpy_arr, char redir_sign);
+
 extern void 				rl_replace_line (const char *, int);
 
 // -- INTERPRETING --

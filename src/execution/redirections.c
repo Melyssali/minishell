@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 17:26:22 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/26 20:35:40 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,17 @@ int	handle_infile(t_command_line *command_line)
 	int	fd_in;
 
 	return_value = SUCCESS;
-	if (access(command_line->input_file, F_OK) != 0)
+	if (access(command_line->input_file[0], F_OK) != 0)
 	{
 		print_error("No such file or directory\n");
 		return (FAIL);
 	}
-	if (access(command_line->input_file, R_OK) != 0)
+	if (access(command_line->input_file[0], R_OK) != 0)
 	{
 		printf("error while reading file\n");
 		return (FAIL);
 	}
-	fd_in = open(command_line->input_file, O_RDONLY);
+	fd_in = open(command_line->input_file[0], O_RDONLY);
 	if (fd_in == -1)
 	{
 		printf("error while opening file\n");
@@ -66,16 +66,16 @@ int	handle_outfile(t_command_line *command_line)
 	int	fd_out;
 
 	if (command_line->append_output > 0)
-		fd_out = open(command_line->output_file,
+		fd_out = open(command_line->output_file[0],
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
-		fd_out = open(command_line->output_file,
+		fd_out = open(command_line->output_file[0],
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out == -1)
 	{
 		if (errno == EACCES)
 			printf("minishell: %s: Permission denied\n",
-				command_line->output_file);
+				command_line->output_file[0]);
 		else
 			perror("minishell: open failed");
 		return (FAIL);

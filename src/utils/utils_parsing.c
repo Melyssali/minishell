@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 18:16:44 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/26 19:55:47 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,14 @@ char	**duplicate_arr(t_hash_operators *table_op[], char *tokens[],
 	return (arr);
 }
 
-t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
-		int *index, t_hash_builtins *table_builtins[])
+t_command_line	*create_node(t_data *data, int *index)
 {
 	t_command_line	*node;
 
 	node = malloc(sizeof(t_command_line));
 	if (!node)
 		exit(EXIT_FAILURE);
-	node->command = duplicate_arr(table_op, tokens, index);
+	node->command = duplicate_arr(data->table_op, data->tokens, index);
 	if (node->command == NULL)
 	{
 		node->builtin_type = 0;
@@ -71,7 +70,7 @@ t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
 	else
 	{
 		node->builtin_type = is_builtin_command(node->command[0],
-				table_builtins);
+				data->table_builtins);
 		node->is_builtin = (node->builtin_type != -1);
 	}
 	node->input_file = NULL;
