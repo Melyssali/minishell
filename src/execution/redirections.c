@@ -42,7 +42,7 @@ int	handle_infile(t_command_line *command_line)
 	return_value = SUCCESS;
 	if (access(command_line->input_file, F_OK) != 0)
 	{
-		print_error("No such file or directory\n");
+		print_error(" No such file or directory\n");
 		return (FAIL);
 	}
 	if (access(command_line->input_file, R_OK) != 0)
@@ -74,8 +74,11 @@ int	handle_outfile(t_command_line *command_line)
 	if (fd_out == -1)
 	{
 		if (errno == EACCES)
-			printf("minishell: %s: Permission denied\n",
-				command_line->output_file);
+		{
+			print_error("minishell:");
+			print_error(command_line->output_file);
+			print_error(": Permission denied\n");
+		}
 		else
 			perror("minishell: open failed");
 		return (FAIL);

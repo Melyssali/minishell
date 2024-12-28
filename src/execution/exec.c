@@ -61,7 +61,10 @@ void	exec_loop(t_minishell *minishell, int pid_nbr)
 int	exec_cmd(t_minishell *minishell, int pid_nbr)
 {
 	if (build_cmd(minishell) == FAIL)
+	{
+		minishell->data->return_value = 127;
 		return (FAIL);
+	}
 	minishell->data->pid_table[pid_nbr] = fork();
 	if (minishell->data->pid_table[pid_nbr] == -1)
 	{

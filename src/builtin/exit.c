@@ -15,7 +15,7 @@
 void	free_all(t_minishell *minishell, int exit_code)
 {
 	free(minishell->data->variable_value);
-	free_all_parsing(minishell->command_line_head, minishell->data->table_op, minishell->data->table_builtins);
+	// free_all_parsing(minishell->command_line_head, minishell->data->table_op, minishell->data->table_builtins);
 	if (exit_code != -1)
 		exit(exit_code);
 }
@@ -64,8 +64,7 @@ int	mini_exit(t_minishell *minishell)
 			free_all(minishell, 2);
 		}
 	}
-	if (minishell->command_line->command[1]
-		&& minishell->command_line->command[2])
+	if (minishell->command_line->command[2])
 	{
 		print_error("exit: too many arguments\n");
 		return (1);

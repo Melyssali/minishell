@@ -1,13 +1,12 @@
 Makefile
-file2
 include
-infile
-intfile
 libs
 main.c
 main.o
 minishell
 minishell_tester
 outfile
+outfile1
+outfile2
 readline.supp
 src
