@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 17:26:22 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/27 21:18:12 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ int	setup_redirections(t_command_line *command_line, int *pipe)
 
 	return_value = SUCCESS;
 	close(pipe[0]);
-	if (command_line->input_file != NULL)
+	if (command_line->redirection->input_file != NULL)
 	{
 		if (handle_infile(command_line) == FAIL)
 			return_value = FAIL;
 	}
-	if (command_line->output_file != NULL)
+	if (command_line->redirection->output_file != NULL)
 	{
 		if (handle_outfile(command_line) == FAIL)
 			return_value = FAIL;
@@ -40,17 +40,17 @@ int	handle_infile(t_command_line *command_line)
 	int	fd_in;
 
 	return_value = SUCCESS;
-	if (access(command_line->input_file, F_OK) != 0)
+	if (access(command_line->redirection->input_file, F_OK) != 0)
 	{
 		print_error(" No such file or directory\n");
 		return (FAIL);
 	}
-	if (access(command_line->input_file, R_OK) != 0)
+	if (access(command_line->redirection->input_file, R_OK) != 0)
 	{
 		printf("error while reading file\n");
 		return (FAIL);
 	}
-	fd_in = open(command_line->input_file, O_RDONLY);
+	fd_in = open(command_line->redirection->input_file, O_RDONLY);
 	if (fd_in == -1)
 	{
 		printf("error while opening file\n");
@@ -65,18 +65,18 @@ int	handle_outfile(t_command_line *command_line)
 {
 	int	fd_out;
 
-	if (command_line->append_output > 0)
-		fd_out = open(command_line->output_file,
+	if (command_line->redirection->append_output > 0)
+		fd_out = open(command_line->redirection->output_file,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
-		fd_out = open(command_line->output_file,
+		fd_out = open(command_line->redirection->output_file,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out == -1)
 	{
 		if (errno == EACCES)
 		{
 			print_error("minishell:");
-			print_error(command_line->output_file);
+			print_error(command_line->redirection->output_file);
 			print_error(": Permission denied\n");
 		}
 		else

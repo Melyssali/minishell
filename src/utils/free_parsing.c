@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 18:46:23 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/27 21:22:54 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,22 @@ void	free_nodes_parsing(t_command_line *head)
 			free_arr_tokenization(current->command);
 		if (current->cmd_path)
 			free(current->cmd_path);
+		if (current->redirection)
+			free_nodes_redirection(current);
+		free(current);
+		current = next;
+	}
+}
+
+void	free_nodes_redirection(t_command_line *head)
+{
+	t_redirection	*current;
+	t_redirection	*next;
+
+	current = head->redirection;
+	while (current)
+	{
+		next = current->next;
 		if (current->input_file)
 			free(current->input_file);
 		if (current->output_file)

@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 18:16:44 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/27 21:16:14 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,24 @@ t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
 				table_builtins);
 		node->is_builtin = (node->builtin_type != -1);
 	}
-	node->input_file = NULL;
-	node->output_file = NULL;
-	node->append_output = 0;
-	node->heredoc_delimiter = NULL;
+	node->redirection = NULL;
 	node->next = NULL;
 	return (node);
 }
+
+t_redirection	*create_node_redir(void)
+{
+	t_redirection	*node_redir;
+
+	node_redir = malloc(sizeof(t_redirection));
+	if (!node_redir)
+		exit(EXIT_FAILURE);
+	node_redir->append_output = 0;
+	node_redir->input_file = NULL;
+	node_redir->output_file = NULL;
+	node_redir->heredoc_delimiter = NULL;
+	node_redir->heredoc_file = NULL;
+	node_redir->next = NULL;
+	return (node_redir);
+}
+

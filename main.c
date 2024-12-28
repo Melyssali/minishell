@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/20 15:31:18 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/12/27 19:47:20 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,6 @@ static void	initialize_data(t_data *data, t_minishell *minishell, char **envp)
 	initialize_builtins(data->table_builtins);
 	init_struct(minishell, envp);
 }
-// REGLER 
-// ls >./outfiles/outfile01 >./outfiles/outfile02 
-// s >./outfiles/outfile01 
-// mais faire attention a >> Il faut que un operateur separe les tokens aussi
 
 int	main(int argc, char **argv, char **envp)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscarcel <lscarcel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/20 11:41:20 by lscarcel         ###   ########.fr       */
+/*   Updated: 2024/12/27 23:03:49 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,24 +97,33 @@ typedef struct s_hash_operators
 	struct s_hash_operators	*next;
 }							t_hash_operators;
 
-typedef struct s_command_line
+typedef struct s_redirection
 {
-	char					**command;
-	char					*cmd_path;
-	int						is_builtin;
-	int						builtin_type;
 	char					*input_file;
 	char					*output_file;
 	int						append_output;
 	char					*heredoc_delimiter;
 	char 					*heredoc_file;
-	struct s_command_line	*next;
-}							t_command_line;
+    struct s_redirection    *next;
+}                           t_redirection;
+
+typedef struct s_command_line
+{
+    char                    **command;
+    char                    *cmd_path;
+    int                     is_builtin;
+    int                     builtin_type;
+    t_redirection           *redirection;
+    struct s_command_line   *next;
+}                           t_command_line;
+
 
 typedef struct s_data
 {
 	t_hash_builtins			*table_builtins[TABLE_BUILTINS_SIZE];
 	t_hash_operators		*table_op[TABLE_OP_SIZE];
+	t_redirection			*node_redir;
+	t_redirection			*current_redir;
 	char					**tokens;
 	char					*variable_value;
 	int						*token_types;
@@ -149,8 +158,6 @@ void						handle_arr(char *s, char **arr, int *count,
 char *start_string);
 void						free_arr_tokenization(char **arr);
 int 						is_operator(char c);
-
-
 
 // -- BUILTINS -- 
 int 						mini_cd(t_minishell *minishell);
@@ -207,6 +214,9 @@ int							calculate_width(t_hash_operators *table_op[],
 								char *tokens[], int *index);
 int							is_builtin_command(char *cmd,
 								t_hash_builtins *table_builtins[]);
+t_redirection				*create_node_redir(void);
+
+
 extern void 				rl_replace_line (const char *, int);
 
 // -- INTERPRETING --
@@ -242,6 +252,7 @@ void						fill_lines(char *input, t_command_line *node, int index);
 
 // FREE
 void						free_nodes_parsing(t_command_line *head);
+void						free_nodes_redirection(t_command_line *head);
 void						free_builtins_table(t_hash_builtins *table_builtins[]);
 void						free_operators_table(t_hash_operators *table_op[]);
 void						free_arr_tokenization(char **arr);

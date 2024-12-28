@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2024/12/18 17:38:24 by melyssa          ###   ########.fr       */
+/*   Updated: 2024/12/27 21:17:26 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_heredoc(char *delimiter, t_command_line *node)
 	}
 	write_heredoc(delimiter, fd);
 	close(fd);
-	node->heredoc_file = ft_strdup(file_path);
-	if (!node->heredoc_file)
+	node->redirection->heredoc_file = ft_strdup(file_path);
+	if (!node->redirection->heredoc_file)
 		perror("Error:");
 }
