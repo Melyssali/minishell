@@ -75,7 +75,7 @@ int	handle_outfile(t_command_line *command_line)
 	{
 		if (errno == EACCES)
 		{
-			print_error("minishell:");
+			print_error("minishell: ");
 			print_error(command_line->redirection->output_file);
 			print_error(": Permission denied\n");
 		}

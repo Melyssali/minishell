@@ -34,6 +34,8 @@ int	execution(t_minishell *minishell)
 	return (SUCCESS);
 }
 
+// Soucis dans exec_loop
+// Quand c'est un builtin il faut quand même vérifier si il y a une redirection
 void	exec_loop(t_minishell *minishell, int pid_nbr)
 {
 	int	fd_tab[2];
@@ -43,10 +45,14 @@ void	exec_loop(t_minishell *minishell, int pid_nbr)
 		perror("pipe");
 		return ;
 	}
-	if (setup_redirections(minishell->command_line, fd_tab) == FAIL)
+	while(minishell->command_line->redirection != NULL)
 	{
-		minishell->data->return_value = FAIL;
-		return ;
+		if (setup_redirections(minishell->command_line, fd_tab) == FAIL)
+		{
+			minishell->data->return_value = FAIL;
+			return ;
+		}
+		minishell->command_line->redirection = minishell->command_line->redirection->next;
 	}
 	if (minishell->command_line->is_builtin == TRUE)
 			execute_builtin(minishell);
