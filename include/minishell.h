@@ -115,6 +115,7 @@ typedef struct s_command_line
     int                     builtin_type;
     t_redirection           *redirection;
     struct s_command_line   *next;
+	struct s_command_line	*prev;
 }                           t_command_line;
 
 

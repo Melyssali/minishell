@@ -89,6 +89,7 @@ void	handle_pipe(t_command_line **new_node, t_command_line **current,
 	(*i)++;
 	*new_node = create_node(data->table_op, data->tokens, i,
 			data->table_builtins);
+	(*new_node)->prev = *current;
 	(*current)->next = *new_node;
 	(*current) = *new_node;
 	data->pipe_count++;
