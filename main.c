@@ -81,8 +81,8 @@ int	main(int argc, char **argv, char **envp)
 			handle_input(&data, &minishell, input);
 		}
 		free(input);
-		return(minishell.data->return_value);
 	}
+	return(minishell.data->return_value);
 	free_all_parsing(minishell.command_line, data.table_op, data.table_builtins);
 	return (0);
 }

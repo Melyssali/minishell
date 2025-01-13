@@ -12,92 +12,104 @@
 
 #include "../../include/minishell.h"
 
-int	setup_redirections(t_command_line *command_line, int *pipe)
+
+static int	handle_infile(t_redirection *redirection)
 {
-	int	return_value;
-
-	return_value = SUCCESS;
-	close(pipe[0]);
-	if (command_line->redirection->input_file != NULL)
-	{
-		if (handle_infile(command_line) == FAIL)
-			return_value = FAIL;
-	}
-	if (command_line->redirection->output_file != NULL)
-	{
-		if (handle_outfile(command_line) == FAIL)
-			return_value = FAIL;
-	}
-	else if (command_line->next != NULL)
-		dup2(pipe[1], STDOUT_FILENO);
-	close(pipe[1]);
-	return (return_value);
-}
-
-int	handle_infile(t_command_line *command_line)
-{
-	int	return_value;
-	int	fd_in;
-
-	return_value = SUCCESS;
-	if (access(command_line->redirection->input_file, F_OK) != 0)
+	if (access(redirection->input_file, F_OK) != 0)
 	{
 		print_error(" No such file or directory\n");
 		return (FAIL);
 	}
-	if (access(command_line->redirection->input_file, R_OK) != 0)
+	if (access(redirection->input_file, R_OK) != 0)
 	{
 		printf("error while reading file\n");
 		return (FAIL);
 	}
-	fd_in = open(command_line->redirection->input_file, O_RDONLY);
-	if (fd_in == -1)
+	redirection->file_in = open(redirection->input_file, O_RDONLY);
+	if (redirection->file_in == -1)
 	{
 		printf("error while opening file\n");
-		return_value = FAIL;
+		return (FAIL);
 	}
-	dup2(fd_in, STDIN_FILENO);
-	close(fd_in);
-	return (return_value);
+	dup2(redirection->file_in, STDIN_FILENO);
+	close(redirection->file_in);
+	return (SUCCESS);
 }
 
-int	handle_outfile(t_command_line *command_line)
+static int	handle_outfile(t_redirection *redirection)
 {
-	int	fd_out;
-
-	if (command_line->redirection->append_output > 0)
-		fd_out = open(command_line->redirection->output_file,
+	if (redirection->append_output > 0)
+		redirection->file_out = open(redirection->output_file,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
-		fd_out = open(command_line->redirection->output_file,
+		redirection->file_out = open(redirection->output_file,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_out == -1)
+	if (redirection->file_out == -1)
 	{
 		if (errno == EACCES)
 		{
 			print_error("minishell: ");
-			print_error(command_line->redirection->output_file);
+			print_error(redirection->output_file);
 			print_error(": Permission denied\n");
 		}
 		else
 			perror("minishell: open failed");
 		return (FAIL);
 	}
-	dup2(fd_out, STDOUT_FILENO);
-	close(fd_out);
+	dup2(redirection->file_out, STDOUT_FILENO);
+	close(redirection->file_out);
 	return (SUCCESS);
 }
 
-void	save_or_restore_fds(t_minishell *minishell, int order)
+int	file_redir(t_command_line *command_line)
 {
-	if (order == SAVE)
+	t_command_line	*tmp;
+
+	tmp = command_line;
+	while(tmp != NULL)
 	{
-		minishell->data->save_stdin = dup(STDIN_FILENO);
-		minishell->data->save_stdout = dup(STDOUT_FILENO);
+		if (tmp->redirection->input_file != NULL)
+		{
+			if (handle_infile(tmp->redirection) == FAIL)
+				return(FAIL);
+		}
+		if (tmp->redirection->output_file != NULL)
+		{
+			if (handle_outfile(tmp->redirection) == FAIL)
+				return(FAIL);
+		}
+		if(tmp->redirection->next != NULL)
+			tmp->redirection = tmp->redirection->next;
+		else if (tmp->redirection->next == NULL)
+			return(SUCCESS);
 	}
-	else if (order == RESTORE)
-	{
-		dup2(minishell->data->save_stdin, STDIN_FILENO);
-		dup2(minishell->data->save_stdout, STDOUT_FILENO);
-	}
+	return (SUCCESS);
+}
+ 
+void pipe_redir(t_minishell *minishell)
+{
+    // Redirection de l'entrée si on a une commande précédente et pas de redirection de fichier
+    if (minishell->command_line->prev && 
+        minishell->command_line->redirection->input_file == NULL)
+    {
+        dup2(minishell->command_line->prev->redirection->pipe[0], STDIN_FILENO);
+    }
+    // Redirection de la sortie si on a une commande suivante et pas de redirection de fichier
+    if (minishell->command_line->next && 
+        minishell->command_line->redirection->output_file == NULL)
+    {
+        dup2(minishell->command_line->redirection->pipe[1], STDOUT_FILENO);
+    }
+    // Fermeture des pipes de la commande précédente
+    if (minishell->command_line->prev)
+    {
+        close(minishell->command_line->prev->redirection->pipe[0]);
+        close(minishell->command_line->prev->redirection->pipe[1]);
+    }
+    // Fermeture des pipes de la commande actuelle
+    if (minishell->command_line->next)
+    {
+        close(minishell->command_line->redirection->pipe[0]);
+        close(minishell->command_line->redirection->pipe[1]);
+    }
 }

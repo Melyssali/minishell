@@ -23,9 +23,11 @@
 # define SUCCESS 0
 # define TRUE 1
 # define FALSE 0
+# define IN 0
+# define OUT 1
 # define SAVE 0
 # define RESTORE 1
-#define INITIAL_SIZE 10
+# define INITIAL_SIZE 10
 
 # define TABLE_BUILTINS_SIZE 11
 # define TABLE_OP_SIZE 11
@@ -104,6 +106,9 @@ typedef struct s_redirection
 	int						append_output;
 	char					*heredoc_delimiter;
 	char 					*heredoc_file;
+	int                     pipe[2];
+	int						file_in;
+	int						file_out;
     struct s_redirection    *next;
 }                           t_redirection;
 
@@ -125,8 +130,11 @@ typedef struct s_data
 	t_hash_operators		*table_op[TABLE_OP_SIZE];
 	t_redirection			*node_redir;
 	t_redirection			*current_redir;
+	t_redirection 			*ptr_head_redir;
+	t_redirection 			*ptr_current_redir;
 	char					**tokens;
 	char					*variable_value;
+	int						pid_nbr;
 	int						*token_types;
 	int						pipe_count;
 	int						previous_state;
@@ -170,38 +178,30 @@ int							mini_pwd(void);
 int							mini_unset(t_minishell *minishell);
 
 // -- BUILTINS UTILS -- 
+void						execute_builtin(t_minishell *minishell);
 int 						ft_count_args(char **cmd);
 char 						*ft_getenv(char *key, t_minishell *minishell);
 int 						update_env_value(char *key, char *value, t_minishell *minishell);
 void 						copy_env(t_minishell *minishell);
-void						declare(t_minishell *minishell);
-int 						add_node(char *str, t_minishell *minishell);
-int							change_value(t_minishell *minishell, char *equal_sign, int key_len);
+int							add_node(char *str, t_minishell *minishell);
 
 // -- EXECUTION -- 
-int							execution(t_minishell *minishell);
-void						parent_process(int *pipe);
+void							execution(t_minishell *minishell);
 void						child_process(t_minishell *minishell);
 int							build_cmd(t_minishell *minishell);
 int							exec_cmd(t_minishell *minishell, int pid_nbr);
 void 						exec_loop(t_minishell *minishell, int pid_nbr);
 int 						len_list(t_env_var *list);
 char 						**lst_to_arr(t_env_var *env);
-int 						wait_for_all(t_minishell *minishell, int pid_nbr);
+int							wait_for_all(t_minishell *minishell);
 
 // -- FILE_UTILS -- 
-int							setup_redirections(t_command_line *command_line, int *pipe);
-int							handle_infile(t_command_line *command_line);
-int 						handle_outfile(t_command_line *command_line);
+int 						file_redir(t_command_line *command_line);
+void 						pipe_redir(t_minishell *minishell);
 
 // -- EXECUTION UTILS --
-void						execute_builtin(t_minishell *minishell);
-void    					clean_up_node(t_command_line *command_line);
-int							redirect_input(t_command_line *command_line);
-int							redirect_output(t_command_line *command_line);
 void						free_table(char **table);
 void						init_struct(t_minishell *minishell, char **envp);
-void						save_or_restore_fds(t_minishell *minishell, int order);
 int							print_error(char *str);
 
 // -- PARSING -- 

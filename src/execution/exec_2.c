@@ -21,14 +21,14 @@
 // WTERMSIG returns the number of the signal that caused the child process to terminate.
 // WEXITSTATUS returns the exit status of the child process.
 
-int wait_for_all(t_minishell *minishell, int pid_nbr)
+int wait_for_all(t_minishell *minishell)
 {
     int index;
     int status;
     int last_status = 0;
     pid_t wait_pid;
 
-    index = pid_nbr - 1;
+    index = minishell->data->pid_nbr - 1;
     while (index >= 0)
     {
         wait_pid = waitpid(minishell->data->pid_table[index], &status, 0);

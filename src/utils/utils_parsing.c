@@ -6,7 +6,7 @@
 /*   By: melyssa <melyssa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 13:44:13 by mlesein           #+#    #+#             */
-/*   Updated: 2025/01/02 14:23:39 by melyssa          ###   ########.fr       */
+/*   Updated: 2025/01/04 16:36:27 by melyssa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_command_line	*create_node(t_hash_operators *table_op[], char *tokens[],
 				table_builtins);
 		node->is_builtin = (node->builtin_type != -1);
 	}
-	node->redirection = NULL;
+	node->redirection = create_node_redir();
 	node->prev = NULL;
 	node->next = NULL;
 	return (node);

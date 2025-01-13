@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-int cmd_not_found(char *cmd)
+static int cmd_not_found(char *cmd)
 {
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": command not found\n", 21);

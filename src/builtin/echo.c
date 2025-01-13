@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-int	skip_n_option(char **cmd, int i)
+static int	skip_n_option(char **cmd, int i)
 {
 	while (strcmp (cmd[i], "-n") == 0)
 	{
@@ -23,7 +23,7 @@ int	skip_n_option(char **cmd, int i)
 	return (i);
 }
 
-void	print_echo(char **cmd, int i)
+static void	print_echo(char **cmd, int i)
 {
 	while (cmd[i] != NULL)
 	{
