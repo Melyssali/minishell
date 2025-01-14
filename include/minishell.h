@@ -186,14 +186,13 @@ void 						copy_env(t_minishell *minishell);
 int							add_node(char *str, t_minishell *minishell);
 
 // -- EXECUTION -- 
-void							execution(t_minishell *minishell);
-void						child_process(t_minishell *minishell);
-int							build_cmd(t_minishell *minishell);
-int							exec_cmd(t_minishell *minishell, int pid_nbr);
-void 						exec_loop(t_minishell *minishell, int pid_nbr);
+void						execution(t_minishell *minishell);
+void						single_cmd(t_minishell *minishell);
+int							pipeline_cmd(t_minishell *minishell, int count);
+void						extern_cmd_child(t_minishell *minishell);
+int							build_path(t_minishell *minishell);
 int 						len_list(t_env_var *list);
 char 						**lst_to_arr(t_env_var *env);
-int							wait_for_all(t_minishell *minishell);
 
 // -- FILE_UTILS -- 
 int 						file_redir(t_command_line *command_line);

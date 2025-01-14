@@ -25,17 +25,21 @@ UTILS_PATH = ./src/utils/
 EXEC_PATH = ./src/execution/
 
 
-# ---------- SOURCES  ----------
 OBJS = $(SRCS:.c=.o)
-SRCS = 	main.c $(UTILS_PATH)builtin_utils.c $(UTILS_PATH)utils_tokenization.c\
-		$(PARSING_PATH)tokenization.c $(PARSING_PATH)handle_interpreting.c $(UTILS_PATH)utils_tokenization2.c $(UTILS_PATH)utils_check_quotes.c $(PARSING_PATH)parser.c \
-		$(UTILS_PATH)utils_parsing.c $(UTILS_PATH)execution_utils.c $(PARSING_PATH)hashtable_builtins.c $(PARSING_PATH)hashtable_operators.c \
-		$(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c   \
-		$(BUILTIN_PATH)exit.c $(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c  \
-		$(UTILS_PATH)utils_handle_error.c $(PARSING_PATH)handle_error.c $(PARSING_PATH)handle_heredoc.c \
-		$(EXEC_PATH)exec.c $(EXEC_PATH)exec_2.c $(EXEC_PATH)path.c $(EXEC_PATH)redirections.c $(UTILS_PATH)free_parsing.c
+# ---------- SOURCES  ----------
+SRCS = main.c \
+		$(UTILS_PATH)builtin_utils.c $(UTILS_PATH)utils_tokenization.c $(UTILS_PATH)utils_tokenization2.c \
+		$(UTILS_PATH)utils_check_quotes.c $(UTILS_PATH)utils_parsing.c $(UTILS_PATH)execution_utils.c \
+		$(UTILS_PATH)utils_handle_error.c $(UTILS_PATH)free_parsing.c \
+		$(PARSING_PATH)tokenization.c $(PARSING_PATH)handle_interpreting.c $(PARSING_PATH)parser.c \
+		$(PARSING_PATH)hashtable_builtins.c $(PARSING_PATH)hashtable_operators.c $(PARSING_PATH)handle_error.c \
+		$(PARSING_PATH)handle_heredoc.c \
+		$(BUILTIN_PATH)cd.c $(BUILTIN_PATH)echo.c $(BUILTIN_PATH)env.c $(BUILTIN_PATH)exit.c \
+		$(BUILTIN_PATH)export.c $(BUILTIN_PATH)pwd.c $(BUILTIN_PATH)unset.c \
+		$(EXEC_PATH)exec.c $(EXEC_PATH)path.c $(EXEC_PATH)redirections.c $(EXEC_PATH)single_cmd.c\
+		$(EXEC_PATH)pipeline_cmd.c
 
-# ---------- REGLES MAKEFILE  ----------
+# ---------- MAKEFILE RULES  ----------
 all : $(RL) $(NAME)
 
 $(NAME): $(OBJS)

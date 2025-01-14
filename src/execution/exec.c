@@ -12,120 +12,11 @@
 
 #include "../../include/minishell.h"
 
-static void cmd_child(t_minishell *minishell)
-{
-	char	**envp;
-
-	envp = lst_to_arr(minishell->env);
-	if (!envp)
-		return ; // need to free
-	pipe_redir(minishell);
-	if (file_redir(minishell->command_line) == FAIL)
-	{
-		minishell->data->return_value = FAIL;
-		return ;
-	}
-	if (build_cmd(minishell) == FAIL)
-		exit(127);
-	if (execve(minishell->command_line->cmd_path,
-			minishell->command_line->command, envp) == -1)
-		perror("execve");
-}
-static int single_builtin(t_minishell *minishell)
-{
-	if (file_redir(minishell->command_line) == FAIL)
-	{
-		minishell->data->return_value = FAIL;
-		return (1);
-	}
-	execute_builtin(minishell);
-	// free_execution;
-	return (0);
-}
-
-static void single_cmd(t_minishell *minishell)
-{
-	pid_t single_pid;
-
-	single_pid = fork();
-	if (single_pid == -1)
-	{
-		perror("fork");
-		return ;
-	}
-	if (single_pid == 0)
-		cmd_child(minishell);
-	else
-		waitpid(single_pid, NULL, 0);
-}
-
-static void builtin_child(t_minishell *minishell)
-{
-	pipe_redir(minishell);
-	if (file_redir(minishell->command_line) == FAIL)
-	{
-		minishell->data->return_value = FAIL;
-		return ;
-	}
-	fprintf(stderr,"open : %d", minishell->command_line->redirection->pipe[1]);
-	fprintf(stderr,"open : %d", minishell->command_line->redirection->pipe[0]);
-	execute_builtin(minishell);
-	exit(1);
-}
-
-static void close_fds(t_minishell *minishell)
-{
-	if (minishell->command_line == NULL)
-		printf("t nul\n");
-	while(minishell->command_line->prev)
-		minishell->command_line = minishell->command_line->prev;
-	while(minishell->command_line->next)
-	{
-		close(minishell->command_line->redirection->pipe[0]);
-		close(minishell->command_line->redirection->pipe[1]);
-		minishell->command_line = minishell->command_line->next;
-	}
-}
-
-static int need_fork(t_minishell *minishell, int count)
-{
-	t_command_line *head;
-
-	head = minishell->command_line;
-	minishell->data->pid_table = malloc(sizeof(pid_t) * minishell->data->pipe_count + 1);
-	while(count > 0)
-	{
-		if(minishell->command_line->next)
-		{
-			if (pipe(minishell->command_line->redirection->pipe) == -1)
-			{
-				perror("pipe");
-				return (FAIL);	
-			}
-		}
-		minishell->data->pid_table[minishell->data->pid_nbr] = fork();
-		if (minishell->data->pid_table[minishell->data->pid_nbr] == -1)
-		{
-			perror("fork");
-			return (FAIL);
-		}
-		if (minishell->data->pid_table[minishell->data->pid_nbr] == 0)
-		{
-			if(minishell->command_line->is_builtin == TRUE)
-				builtin_child(minishell);
-			else
-				cmd_child(minishell);
-		}
-		minishell->data->pid_nbr++;
-		count--;
-		minishell->command_line = minishell->command_line->next;
-	}
-	minishell->command_line = head;
-	close_fds(minishell);
-	if (minishell->data->pid_nbr > 0)
-		minishell->data->return_value = wait_for_all(minishell);
-	return (0);
-}
+/*-----------------Prototypes------------------*/
+static void close_fds(t_minishell *minishell);
+static int wait_for_all(t_minishell *minishell);
+// static void free_execution(t_minishell *minishell);
+/*---------------------------------------------*/
 
 void execution(t_minishell *minishell)
 {
@@ -143,15 +34,108 @@ void execution(t_minishell *minishell)
 	minishell->data->pipe_count = count - 1;
 	if (!minishell->command_line->next)
 	{
-		if (minishell->command_line->is_builtin == TRUE)
-			single_builtin(minishell);
-		else
-			single_cmd(minishell);
+		single_cmd(minishell);
 	}
 	else
-		need_fork(minishell, count);
+	{
+		pipeline_cmd(minishell, count);
+		close_fds(minishell);
+		if (minishell->data->pid_nbr > 0)
+			minishell->data->return_value = wait_for_all(minishell);
+	}
+	// free_execution(minishell);
 }
 
+void	execute_builtin(t_minishell *minishell)
+{
+	if (ft_strncmp(minishell->command_line->command[0], "cd", 3) == 0)
+		minishell->data->return_value = mini_cd(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "echo", 5) == 0)
+		minishell->data->return_value = mini_echo(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "env", 4) == 0)
+		minishell->data->return_value = mini_env(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "export", 7) == 0)
+		minishell->data->return_value = mini_export(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "pwd", 4) == 0)
+		minishell->data->return_value = mini_pwd();
+	else if (ft_strncmp(minishell->command_line->command[0], "unset", 6) == 0)
+		minishell->data->return_value = mini_unset(minishell);
+	else if (ft_strncmp(minishell->command_line->command[0], "exit", 5) == 0)
+		minishell->data->return_value = mini_exit(minishell);
+}
+
+static void close_fds(t_minishell *minishell)
+{
+	if (minishell->command_line == NULL)
+		printf("t nul\n");
+	while(minishell->command_line->prev)
+		minishell->command_line = minishell->command_line->prev;
+	while(minishell->command_line->next)
+	{
+		close(minishell->command_line->redirection->pipe[0]);
+		close(minishell->command_line->redirection->pipe[1]);
+		minishell->command_line = minishell->command_line->next;
+	}
+}
+
+// WIFSIGNALED returns true if the child process was terminated by a signal.
+// WTERMSIG returns the number of the signal that caused the child process to terminate.
+// WEXITSTATUS returns the exit status of the child process.
+
+static int wait_for_all(t_minishell *minishell)
+{
+    int index;
+    int status;
+    int last_status = 0;
+    pid_t wait_pid;
+
+    index = minishell->data->pid_nbr - 1;
+    while (index >= 0)
+    {
+        wait_pid = waitpid(minishell->data->pid_table[index], &status, 0);
+        if (wait_pid == minishell->data->pid)
+            last_status = status;
+        index--;
+    }
+    if (WIFSIGNALED(last_status))
+    {
+        if (WTERMSIG(last_status) == SIGPIPE)
+            return (0);
+        return (128 + WTERMSIG(last_status));
+    }
+    if (WIFEXITED(last_status))
+        return (WEXITSTATUS(last_status));
+    return (last_status);
+}
+
+// static void free_execution(t_minishell *minishell)
+// {
+// 	t_command_line *tmp;
+// 	t_redirection *redir_tmp;
+// 	while (minishell->command_line_head)
+// 	{
+// 		tmp = minishell->command_line_head;
+// 		minishell->command_line_head = minishell->command_line_head->next;
+// 		if(tmp->cmd_path)
+// 			free(tmp->cmd_path);
+// 		// if(tmp->command)
+// 		// 	free_table(tmp->command);
+// 		if(tmp->redirection)
+// 		{
+// 			while(tmp->redirection->next)
+// 			{
+// 				redir_tmp = tmp->redirection;
+// 				tmp->redirection = tmp->redirection->next;
+// 				free(tmp->redirection->input_file);
+// 				free(tmp->redirection->output_file);
+// 				free(tmp->redirection);
+// 			}
+// 			free(tmp->redirection);
+// 		}
+// 		free(redir_tmp);
+// 		free(tmp);
+// 	}
+// }
 /* Questions que je me suis posé */
 	/* 
 		Q:	Pourquoi je dois créé un pipe si il y a déja un outfile alors que bash priorise les outfile ?

@@ -12,14 +12,12 @@
 
 #include "../../include/minishell.h"
 
-static int cmd_not_found(char *cmd)
-{
-	write(2, cmd, ft_strlen(cmd));
-	write(2, ": command not found\n", 21);
-	return (FAIL);
-}
+/*-----------------Prototypes------------------*/
+static int cmd_not_found(char *cmd);
+void	free_table(char **table);
+/*---------------------------------------------*/
 
-int	build_cmd(t_minishell *minishell)
+int	build_path(t_minishell *minishell)
 {
 	char	**path_tab;
 	char	*path;
@@ -61,4 +59,11 @@ void	free_table(char **table)
 	}
 	free(table);
 	table = NULL;
+}
+
+static int cmd_not_found(char *cmd)
+{
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": command not found\n", 21);
+	return (FAIL);
 }
