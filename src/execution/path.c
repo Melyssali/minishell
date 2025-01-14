@@ -13,8 +13,8 @@
 #include "../../include/minishell.h"
 
 /*-----------------Prototypes------------------*/
-static int cmd_not_found(char *cmd);
-void	free_table(char **table);
+static int	cmd_not_found(char *cmd);
+void		free_table(char **table);
 /*---------------------------------------------*/
 
 int	build_path(t_minishell *minishell)
@@ -42,7 +42,7 @@ int	build_path(t_minishell *minishell)
 		i++;
 	}
 	free_table(path_tab);
-	return(cmd_not_found(minishell->command_line->command[0]));
+	return (cmd_not_found(minishell->command_line->command[0]));
 }
 
 void	free_table(char **table)
@@ -61,7 +61,7 @@ void	free_table(char **table)
 	table = NULL;
 }
 
-static int cmd_not_found(char *cmd)
+static int	cmd_not_found(char *cmd)
 {
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": command not found\n", 21);

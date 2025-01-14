@@ -22,26 +22,26 @@ int	file_redir(t_command_line *command_line)
 	t_command_line	*tmp;
 
 	tmp = command_line;
-	while(tmp != NULL)
+	while (tmp != NULL)
 	{
 		if (tmp->redirection->input_file != NULL)
 		{
 			if (handle_infile(tmp->redirection) == FAIL)
-				return(FAIL);
+				return (FAIL);
 		}
 		if (tmp->redirection->output_file != NULL)
 		{
 			if (handle_outfile(tmp->redirection) == FAIL)
-				return(FAIL);
+				return (FAIL);
 		}
-		if(tmp->redirection->next != NULL)
+		if (tmp->redirection->next != NULL)
 			tmp->redirection = tmp->redirection->next;
 		else if (tmp->redirection->next == NULL)
-			return(SUCCESS);
+			return (SUCCESS);
 	}
 	return (SUCCESS);
 }
- 
+
 static int	handle_infile(t_redirection *redirection)
 {
 	if (access(redirection->input_file, F_OK) != 0)
@@ -90,26 +90,26 @@ static int	handle_outfile(t_redirection *redirection)
 	return (SUCCESS);
 }
 
-void pipe_redir(t_minishell *minishell)
+void	pipe_redir(t_minishell *minishell)
 {
-    if (minishell->command_line->prev && 
-        minishell->command_line->redirection->input_file == NULL)
-    {
-        dup2(minishell->command_line->prev->redirection->pipe[0], STDIN_FILENO);
-    }
-    if (minishell->command_line->next && 
-        minishell->command_line->redirection->output_file == NULL)
-    {
-        dup2(minishell->command_line->redirection->pipe[1], STDOUT_FILENO);
-    }
-    if (minishell->command_line->prev)
-    {
-        close(minishell->command_line->prev->redirection->pipe[0]);
-        close(minishell->command_line->prev->redirection->pipe[1]);
-    }
-    if (minishell->command_line->next)
-    {
-        close(minishell->command_line->redirection->pipe[0]);
-        close(minishell->command_line->redirection->pipe[1]);
-    }
+	if (minishell->command_line->prev
+		&& minishell->command_line->redirection->input_file == NULL)
+	{
+		dup2(minishell->command_line->prev->redirection->pipe[0], STDIN_FILENO);
+	}
+	if (minishell->command_line->next
+		&& minishell->command_line->redirection->output_file == NULL)
+	{
+		dup2(minishell->command_line->redirection->pipe[1], STDOUT_FILENO);
+	}
+	if (minishell->command_line->prev)
+	{
+		close(minishell->command_line->prev->redirection->pipe[0]);
+		close(minishell->command_line->prev->redirection->pipe[1]);
+	}
+	if (minishell->command_line->next)
+	{
+		close(minishell->command_line->redirection->pipe[0]);
+		close(minishell->command_line->redirection->pipe[1]);
+	}
 }
